@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_cart_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context="com.allandroidprojects.ecomsample.options.CartListActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9.5"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:background="@color/gen_black"
+        android:elevation="30dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/text_action_bottom1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/gen_white"
+            android:gravity="center"
+            android:text="₱ Total Amount"
+            android:textColor="@color/gen_black"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <!--        <TextView android:id="@+id/text_action_bottom2"-->
+        <!--                  android:layout_width="wrap_content"-->
+        <!--                  android:layout_height="match_parent"-->
+        <!--                  android:layout_weight="1"-->
+        <!--                  android:background="@color/colorPrimary"-->
+        <!--                  android:text="PICK UP"-->
+        <!--                  android:textSize="14dp"-->
+        <!--                  android:textColor="@color/gen_white"-->
+        <!--                  android:textStyle="bold"-->
+        <!--                  android:gravity="center"/>-->
+    </LinearLayout>
+
+    <include
+        android:id="@+id/layout_cart_empty"
+        layout="@layout/empty_message_layout_action"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

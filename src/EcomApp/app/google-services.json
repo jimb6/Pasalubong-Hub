@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "471981681934",
+    "firebase_url": "https://pasalubong-hub-66cfd.firebaseio.com",
+    "project_id": "pasalubong-hub-66cfd",
+    "storage_bucket": "pasalubong-hub-66cfd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471981681934:android:cfbded1c6641f0fa6c7b5f",
+        "android_client_info": {
+          "package_name": "com.allandroidprojects.ecomsample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "471981681934-2hqnp46ur8fkbi25126vrh21ubgbqspb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.allandroidprojects.ecomsample",
+            "certificate_hash": "3180766fa6cd02ae8f370f8bacc6293213ba96b2"
+          }
+        },
+        {
+          "client_id": "471981681934-fp9r69fn43eb1mugpa3kl7c4cpci8pet.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr_GHli0n1haCoN5T1yg3EqswoojylwcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471981681934-fp9r69fn43eb1mugpa3kl7c4cpci8pet.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
