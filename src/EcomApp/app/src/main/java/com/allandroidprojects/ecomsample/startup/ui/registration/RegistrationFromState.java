@@ -1,27 +1,28 @@
-package com.allandroidprojects.ecomsample.startup.ui.login;
+package com.allandroidprojects.ecomsample.startup.ui.registration;
 
 import androidx.annotation.Nullable;
 
-/**
- * Data validation state of the login form.
- */
-class LoginFormState {
+public class RegistrationFromState {
     @Nullable
     private Integer usernameError;
     @Nullable
     private Integer passwordError;
+    @Nullable
+    private Integer confirmPasswordError;
     private boolean isDataValid;
 
 
-    LoginFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
+    RegistrationFromState(@Nullable Integer usernameError, @Nullable Integer passwordError, @Nullable Integer confirmPasswordError) {
         this.usernameError = usernameError;
         this.passwordError = passwordError;
+        this.confirmPasswordError = confirmPasswordError;
         this.isDataValid = false;
     }
 
-    LoginFormState(boolean isDataValid) {
+    RegistrationFromState(boolean isDataValid) {
         this.usernameError = null;
         this.passwordError = null;
+        this.confirmPasswordError = null;
         this.isDataValid = isDataValid;
     }
 
@@ -33,6 +34,11 @@ class LoginFormState {
     @Nullable
     Integer getPasswordError() {
         return passwordError;
+    }
+
+    @Nullable
+    Integer getConfirmPasswordError() {
+        return confirmPasswordError;
     }
 
     boolean isDataValid() {

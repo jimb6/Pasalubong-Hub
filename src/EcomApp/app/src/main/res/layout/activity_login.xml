@@ -34,6 +34,17 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="64dp"
+            android:visibility="gone"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,24 +85,22 @@
                 android:layout_marginStart="48dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="48dp"
-                android:layout_marginBottom="64dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/dot_dark_screen1"
                 android:enabled="false"
                 android:text="@string/action_sign_in"
                 android:textColor="@color/cardview_light_background" />
 
-        </LinearLayout>
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/google_sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <ProgressBar
-            android:id="@+id/loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="64dp"
-            android:visibility="gone" />
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                app:buttonSize="wide" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvRegister"

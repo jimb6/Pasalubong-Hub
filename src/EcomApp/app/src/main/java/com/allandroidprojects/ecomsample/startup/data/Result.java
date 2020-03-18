@@ -5,7 +5,7 @@ package com.allandroidprojects.ecomsample.startup.data;
  */
 public class Result<T> {
     // hide the private constructor to limit subclass types (Success, Error)
-    private Result() {
+    public Result() {
     }
 
     @Override

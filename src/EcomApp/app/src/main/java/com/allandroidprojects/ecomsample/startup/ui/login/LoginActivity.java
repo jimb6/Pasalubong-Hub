@@ -13,76 +13,67 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.startup.MainActivity;
+import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
 import com.allandroidprojects.ecomsample.startup.ui.registration.RegistrationActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private SignInButton googleSignInButton;
+    private TextView register;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
+    private ProgressBar loadingProgressBar;
+    private GoogleSignInClient googleSignInClient;
+    private int RC_SIGN_IN = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        initLoginViewModel();
+        initComponents();
+        initGoogleSignInClient();
+        checkIfUserIsAuthenticated();
 
-        final TextView register = findViewById(R.id.tvRegister);
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-
-        register.setOnClickListener(new View.OnClickListener() {
+        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
-            public void onClick(View v) {
-                showRegistrationForm();
+            public void onChanged(@Nullable LoginFormState loginFormState) {
+                if (loginFormState == null) {
+                    return;
+                }
+                loginButton.setEnabled(loginFormState.isDataValid());
+                if (loginFormState.getUsernameError() != null) {
+                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                }
+                if (loginFormState.getPasswordError() != null) {
+                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                }
             }
         });
-
-
-//        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-//            @Override
-//            public void onChanged(@Nullable LoginFormState loginFormState) {
-//                if (loginFormState == null) {
-//                    return;
-//                }
-//                loginButton.setEnabled(loginFormState.isDataValid());
-//                if (loginFormState.getUsernameError() != null) {
-//                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-//                }
-//                if (loginFormState.getPasswordError() != null) {
-//                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-//                }
-//            }
-//        });
 //
-//        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-//            @Override
-//            public void onChanged(@Nullable LoginResult loginResult) {
-//                if (loginResult == null) {
-//                    return;
-//                }
-//                loadingProgressBar.setVisibility(View.GONE);
-//                if (loginResult.getError() != null) {
-//                    showLoginFailed(loginResult.getError());
-//                }
-//                if (loginResult.getSuccess() != null) {
-//                    updateUiWithUser(loginResult.getSuccess());
-//                }
-//                setResult(Activity.RESULT_OK);
-//
-//                //Complete and destroy login activity once successful
-//                finish();
-//            }
-//        });
-
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -103,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -113,25 +103,151 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                loginViewModel.getLoginResult().observe(LoginActivity.this, user -> {
+                    if (user.isAuthenticated) {
+                        goToMainActivity(user);
+                    } else {
+                        showLoginFailed("Invalid Username or Password. Please Try again");
+                    }
+                    loadingProgressBar.setVisibility(View.GONE);
+                });
             }
         });
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null)
-//            finish();
-//    }
+    private void ifEmailVerivied(LoggedInUser user){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        Intent intent = getIntent();
+        String emailLink = intent.getData().toString();
+
+// Confirm the link is a sign-in with email link.
+        if (auth.isSignInWithEmailLink(emailLink)) {
+            // Retrieve this from wherever you stored it
+            String email = user.getEmail();
+            // The client SDK will parse the code from the link for you.
+            auth.signInWithEmailLink(email, emailLink)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                AuthResult result = task.getResult();
+                                // You can access the new user via result.getUser()
+                                // Additional user info profile *not* available via:
+                                // result.getAdditionalUserInfo().getProfile() == null
+                                // You can check if the user is new or existing:
+                                // result.getAdditionalUserInfo().isNewUser()
+                            } else {
+                            }
+                        }
+                    });
+        }
+
+    }
+    private void checkIfUserIsAuthenticated() {
+        loginViewModel.checkIfUserIsAuthenticated();
+        loginViewModel.isUserAuthenticatedLiveData.observe(this, user -> {
+            if (user.isAuthenticated) {
+                goToMainActivity(user);
+            }
+        });
+    }
+
+    private void getUserFromDatabase(String uid) {
+        loginViewModel.setUid(uid);
+        loginViewModel.userLiveData.observe(this, user -> {
+            goToMainActivity(user);
+            finish();
+        });
+    }
+
+    private void initComponents() {
+        register = findViewById(R.id.tvRegister);
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
+        loginButton = findViewById(R.id.login);
+        loadingProgressBar = findViewById(R.id.loading);
+        googleSignInButton = findViewById(R.id.google_sign_in_button);
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                LoginActivity.this.signIn();
+            }
+        });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRegistrationForm();
+            }
+        });
+    }
+
+    private void initLoginViewModel(){
+        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
+                .get(LoginViewModel.class);
+    }
+
+    private void initGoogleSignInClient() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+    }
+
+    private void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void getGoogleAuthCredential(GoogleSignInAccount googleSignInAccount) {
+        String googleTokenId = googleSignInAccount.getIdToken();
+        AuthCredential googleAuthCredential = GoogleAuthProvider.getCredential(googleTokenId, null);
+        signInWithGoogleAuthCredential(googleAuthCredential);
+    }
+
+    private void signInWithGoogleAuthCredential(AuthCredential googleAuthCredential) {
+        loginViewModel.signInWithGoogle(googleAuthCredential);
+        loginViewModel.authenticatedUserLiveData.observe(this, new Observer<LoggedInUser>() {
+            @Override
+            public void onChanged(LoggedInUser authenticatedUser) {
+                if (authenticatedUser.isNew) {
+                    LoginActivity.this.createNewUser(authenticatedUser);
+                } else if(authenticatedUser.isAuthenticated){
+                    LoginActivity.this.goToMainActivity(authenticatedUser);
+                } else {
+                    Toast.makeText(getApplicationContext(), authenticatedUser.userStatus, Toast.LENGTH_SHORT).show();
+                }
+                loadingProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void createNewUser(LoggedInUser authenticatedUser) {
+        loginViewModel.createUser(authenticatedUser);
+        loginViewModel.createdUserLiveData.observe(this, user -> {
+            if (user.isCreated) {
+                Toast.makeText(getApplicationContext(), user.getDisplayName(), Toast.LENGTH_SHORT).show();
+            }
+            goToMainActivity(user);
+        });
+    }
+
+    private void goToMainActivity(LoggedInUser user) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("USER", user);
+        startActivity(intent);
+        loadingProgressBar.setVisibility(View.GONE);
+        finish();
+    }
 
     private void showRegistrationForm(){
         startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
@@ -144,8 +260,23 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showLoginFailed(String errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount googleSignInAccount = task.getResult(ApiException.class);
+                if (googleSignInAccount != null) {
+                    getGoogleAuthCredential(googleSignInAccount);
+                }
+            } catch (ApiException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
 }

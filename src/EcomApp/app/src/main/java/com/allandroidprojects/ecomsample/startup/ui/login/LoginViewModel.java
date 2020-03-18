@@ -8,14 +8,19 @@ import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.startup.data.LoginRepository;
-import com.allandroidprojects.ecomsample.startup.data.Result;
 import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.google.firebase.auth.AuthCredential;
 
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    private MutableLiveData<LoggedInUser> loginResult;
     private LoginRepository loginRepository;
+    public LiveData<LoggedInUser> authenticatedUserLiveData;
+    public LiveData<LoggedInUser> createdUserLiveData;
+    public LiveData<LoggedInUser> isUserAuthenticatedLiveData;
+    public LiveData<LoggedInUser> userLiveData;
+
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
@@ -24,24 +29,13 @@ public class LoginViewModel extends ViewModel {
     LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
     }
-
-    LiveData<LoginResult> getLoginResult() {
+    public LiveData<LoggedInUser> getLoginResult() {
         return loginResult;
     }
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-        if (result == null) {
-            login(username, password);
-        }
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+        loginResult = loginRepository.login(username, password);
     }
 
     public void loginDataChanged(String username, String password) {
@@ -69,5 +63,21 @@ public class LoginViewModel extends ViewModel {
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
+    }
+
+    void checkIfUserIsAuthenticated() {
+        isUserAuthenticatedLiveData = loginRepository.checkIfUserIsAuthenticatedInFirebase();
+    }
+
+    void setUid(String uid) {
+        userLiveData = loginRepository.addUserToLiveData(uid);
+    }
+
+    void signInWithGoogle(AuthCredential googleAuthCredential) {
+        authenticatedUserLiveData = loginRepository.firebaseSignInWithGoogle(googleAuthCredential);
+    }
+
+    void createUser(LoggedInUser authenticatedUser) {
+        createdUserLiveData = loginRepository.createUserInFirestoreIfNotExists(authenticatedUser);
     }
 }

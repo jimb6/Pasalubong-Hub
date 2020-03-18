@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -27,9 +28,14 @@ import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
-import com.allandroidprojects.ecomsample.utility.ImageUrlUtils;
+import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +45,12 @@ public class MainActivity extends AppCompatActivity
 
     public static int notificationCountCart = 0;
     private ImageView user_profile;
+    private TextView user_displayName;
+    private TextView user_email;
     static ViewPager viewPager;
     static TabLayout tabLayout;
+    private GoogleSignInClient googleSignInClient;
+    private NavigationView navigationView;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -56,20 +66,21 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
          viewPager = (ViewPager) findViewById(R.id.viewpager);
          tabLayout = (TabLayout) findViewById(R.id.tabs);
-         View header = navigationView.getHeaderView(0);
-         user_profile = header.findViewById(R.id.profileicon);
-         user_profile.setImageURI(Uri.parse(ImageUrlUtils.getImageProfile()));
 
         if (viewPager != null) {
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
         }
+
+        LoggedInUser user = getUserFromIntent();
+        initGoogleSignInClient();
+        setUserPreferences(user);
 
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -80,6 +91,27 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });*/
+    }
+
+    private LoggedInUser getUserFromIntent() {
+        return (LoggedInUser) getIntent().getSerializableExtra("USER");
+    }
+
+    private void initGoogleSignInClient() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+    }
+
+    private void setUserPreferences(LoggedInUser user) {
+        View header = navigationView.getHeaderView(0);
+        user_profile = header.findViewById(R.id.profileicon);
+        user_profile.setImageURI(Uri.parse(user.getPhotoUrl()));
+        user_displayName = header.findViewById(R.id.tvAccountName);
+        user_displayName.setText(user.getDisplayName());
+        user_email = header.findViewById(R.id.tvEmail);
+        user_email.setText(user.getEmail());
     }
 
     @Override
@@ -201,6 +233,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
         }else if (id == R.id.my_cart) {
             startActivity(new Intent(MainActivity.this, CartListActivity.class));
+        }else if (id == R.id.logout) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }

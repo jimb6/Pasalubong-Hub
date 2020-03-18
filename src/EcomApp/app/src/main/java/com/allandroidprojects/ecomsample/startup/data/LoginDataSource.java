@@ -19,7 +19,7 @@ public class LoginDataSource {
 
             LoggedInUser user = new LoggedInUser(
                     java.util.UUID.randomUUID().toString(),
-                    "Jane Doe", "jane.doe@gmail.com", "https://static.pexels.com/photos/5854/sea-woman-legs-water-medium.jpg");
+                    "Jane Doe", "jane.doe@gmail.com","https://static.pexels.com/photos/5854/sea-woman-legs-water-medium.jpg");
             return new Result.Success<>(user);
         } catch (Exception e) {
             return new Result.Error(new IOException("Error logging in", e));

@@ -1,8 +1,10 @@
 package com.allandroidprojects.ecomsample.startup.ui.registration;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.allandroidprojects.ecomsample.R;
 
 public class EmailVerificationActivity extends AppCompatActivity {
 
