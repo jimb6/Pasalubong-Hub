@@ -22,7 +22,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.account.AccountActivity;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
+import com.allandroidprojects.ecomsample.location.MapsActivity;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     static TabLayout tabLayout;
     private GoogleSignInClient googleSignInClient;
     private NavigationView navigationView;
+    private LoggedInUser user;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity
             tabLayout.setupWithViewPager(viewPager);
         }
 
-        LoggedInUser user = getUserFromIntent();
+        user = getUserFromIntent();
         initGoogleSignInClient();
         setUserPreferences(user);
 
@@ -227,17 +230,27 @@ public class MainActivity extends AppCompatActivity
             viewPager.setCurrentItem(3);
         } else if (id == R.id.nav_item5) {
             viewPager.setCurrentItem(4);
-        }else if (id == R.id.nav_item6) {
+        } else if (id == R.id.nav_item6) {
             viewPager.setCurrentItem(5);
-        }else if (id == R.id.my_wishlist) {
+        } else if (id == R.id.map){
+            startActivity(new Intent(MainActivity.this, MapsActivity.class));
+        } else if (id == R.id.my_orders){
+            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
+        } else if (id == R.id.my_wishlist) {
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
         }else if (id == R.id.my_cart) {
             startActivity(new Intent(MainActivity.this, CartListActivity.class));
-        }else if (id == R.id.logout) {
+        } else if (id == R.id.my_rewards){
+            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
+        } else if (id == R.id.my_account){
+            Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+            intent.putExtra("USER", user);
+            startActivity(intent);
+        } else if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
-        }else {
+        } else {
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
@@ -26,8 +27,13 @@
             android:id="@+id/nav_item6"
             android:icon="@drawable/more"
             android:title="@string/item_6" />
-    </group>
 
+        <item
+            android:id="@+id/map"
+            android:icon="@drawable/ic_location_on_black_24dp"
+            android:title="@string/map_navigation" />
+
+    </group>
     <item android:title="@string/my_profile">
         <menu>
             <item
@@ -47,13 +53,13 @@
                 android:icon="@drawable/ic_card_giftcard_black_24dp"
                 android:title="@string/my_rewards" />
             <item
-            android:id="@+id/my_account"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="@string/my_account" />
+                android:id="@+id/my_account"
+                android:icon="@drawable/ic_person_black_24dp"
+                android:title="@string/my_account" />
 
             <item
                 android:id="@+id/logout"
-                android:icon="@drawable/ic_person_black_24dp"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
                 android:title="@string/sign_out" />
         </menu>
     </item>

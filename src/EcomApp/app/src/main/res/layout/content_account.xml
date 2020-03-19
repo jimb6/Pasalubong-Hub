@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".account.AccountActivity"
+    tools:showIn="@layout/activity_account">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/headerText"
+                android:layout_marginBottom="20dp"
+                android:text="Account Info" />
+
+            <RelativeLayout style="@style/profileDetailsLayout">
+
+                <ImageView
+                    android:id="@+id/nameImageView"
+                    style="@style/profileDetailsImage"
+                    android:src="@drawable/ic_name" />
+
+                <TextView
+                    android:id="@+id/nameTextView"
+                    style="@style/profileDetailsTextMain"
+                    android:layout_toRightOf="@id/nameImageView"
+                    android:text="Name" />
+
+                <TextView
+                    android:id="@+id/profile_name"
+                    style="@style/profileDetailsMiniText"
+                    android:layout_toRightOf="@id/nameImageView"
+                    android:text="developer" />
+
+            </RelativeLayout>
+
+            <View style="@style/proifleDetailsView" />
+
+            <RelativeLayout style="@style/profileDetailsLayout">
+
+                <ImageView
+                    android:id="@+id/emailImageView"
+                    style="@style/profileDetailsImage"
+                    android:src="@drawable/ic_email" />
+
+                <TextView
+                    style="@style/profileDetailsTextMain"
+                    android:layout_toRightOf="@id/emailImageView"
+                    android:text="Email" />
+
+                <TextView
+                    android:id="@+id/profile_email"
+                    style="@style/profileDetailsMiniText"
+                    android:layout_toRightOf="@id/emailImageView"
+                    android:text="email" />
+
+            </RelativeLayout>
+
+            <View style="@style/proifleDetailsView" />
+
+            <RelativeLayout style="@style/profileDetailsLayout">
+
+                <ImageView
+                    android:id="@+id/addressImageView"
+                    style="@style/profileDetailsImage"
+                    android:src="@drawable/ic_address" />
+
+                <TextView
+                    android:id="@+id/profile_address"
+                    style="@style/profileDetailsTextMain"
+                    android:layout_toRightOf="@id/addressImageView"
+                    android:text="Address" />
+
+                <TextView
+                    style="@style/profileDetailsMiniText"
+                    android:layout_toRightOf="@id/addressImageView"
+                    android:text="Mati Davao Oriental" />
+
+            </RelativeLayout>
+
+            <View style="@style/proifleDetailsView" />
+
+            <RelativeLayout style="@style/profileDetailsLayout">
+
+                <ImageView
+                    android:id="@+id/mobileImageView"
+                    style="@style/profileDetailsImage"
+                    android:src="@drawable/ic_mobile" />
+
+                <TextView
+                    android:id="@+id/profile_mobile"
+                    style="@style/profileDetailsTextMain"
+                    android:layout_toRightOf="@id/mobileImageView"
+                    android:text="Mobile" />
+
+                <TextView
+                    style="@style/profileDetailsMiniText"
+                    android:layout_toRightOf="@id/mobileImageView"
+                    android:text="Not Available" />
+
+            </RelativeLayout>
+
+            <View style="@style/proifleDetailsView" />
+
+            <View style="@style/proifleDetailsView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/accent">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -6,23 +6,37 @@
               android:orientation="vertical">
 
 
-    <ImageView
-        android:id="@+id/ivEmptyStates"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="10sp"
-        android:src="@drawable/pashub" />
-
-
     <TextView
         android:id="@+id/tvInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:gravity="center"
-        android:text="Account Name"
+        android:text="404"
         android:textColor="#848484"
-        android:textSize="15sp" />
+        android:textSize="74sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="PAGE NOT FOUND"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="We're sorry, but we can't find the page you were looking for. It's probablysome thing we've done wrong butnow we know about it and we'll try to fix it in the meantime."
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/home_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go to Homepage" />
 </LinearLayout>
