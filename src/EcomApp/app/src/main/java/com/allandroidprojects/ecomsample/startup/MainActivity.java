@@ -30,7 +30,7 @@ import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;

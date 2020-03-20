@@ -1,6 +1,6 @@
 package com.allandroidprojects.ecomsample.startup.data;
 
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;

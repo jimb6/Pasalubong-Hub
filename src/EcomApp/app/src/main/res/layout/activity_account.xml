@@ -72,10 +72,9 @@
 
                     <TextView
                         android:id="@+id/account_home_button"
-                        android:text="Back to\nHome"
-                        style="@style/profileStyledBackButton" />
+                        style="@style/profileStyledBackButton"
+                        android:text="Back to\nHome" />
                 </RelativeLayout>
-
             </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar
@@ -88,9 +87,16 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
     <include layout="@layout/content_account" />
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
 <!--        android:id="@+id/fab"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->

@@ -101,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
 //        Removes any previously specified upper and lower zoom bounds.
         googleMap.resetMinMaxZoomPreference();
         googleMap.setBuildingsEnabled(true);
-        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         // Position the map's camera near Sydney, Australia.
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);

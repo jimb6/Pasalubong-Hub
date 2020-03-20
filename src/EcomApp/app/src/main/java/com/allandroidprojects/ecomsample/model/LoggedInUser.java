@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.startup.data.model;
+package com.allandroidprojects.ecomsample.model;
 
 import java.io.Serializable;
 
@@ -17,6 +17,12 @@ public class LoggedInUser implements Serializable {
     public String userStatus;
 
     public LoggedInUser(){}
+    public LoggedInUser(LoggedInUser user){
+        this.userId = user.getUserId();
+        this.displayName = user.getDisplayName();
+        this.email = user.getEmail();
+        this.photoUrl = user.getPhotoUrl();
+    }
     public LoggedInUser(String userId, String displayName, String email, String photoUrl) {
         this.userId = userId;
         this.displayName = displayName;

@@ -69,6 +69,15 @@ public class ImageUrlUtils {
         return urls;
     }
 
+    public static String[] getMyProducts() {
+        String[] urls = new String[]{
+                "https://static.pexels.com/photos/67442/pexels-photo-67442-medium.jpeg",
+                "https://static.pexels.com/photos/159494/book-glasses-read-study-159494-medium.jpeg",
+                "https://static.pexels.com/photos/33283/stack-of-books-vintage-books-book-books-medium.jpg",
+        };
+        return urls;
+    }
+
     // Methods for Wishlist
     public void addWishlistImageUri(String wishlistImageUri) {
         this.wishlistImageUri.add(0,wishlistImageUri);

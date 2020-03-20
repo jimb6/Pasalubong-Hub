@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.startup.data.RegistrationRepository;
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 
 public class RegistrationViewModel extends ViewModel {
 

@@ -3,7 +3,7 @@ package com.allandroidprojects.ecomsample.startup.data;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;

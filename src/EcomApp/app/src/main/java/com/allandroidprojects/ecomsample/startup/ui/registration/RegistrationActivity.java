@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.startup.MainActivity;
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
 
 public class RegistrationActivity extends AppCompatActivity {

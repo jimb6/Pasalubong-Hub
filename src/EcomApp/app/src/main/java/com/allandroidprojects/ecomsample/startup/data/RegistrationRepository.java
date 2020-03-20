@@ -2,7 +2,7 @@ package com.allandroidprojects.ecomsample.startup.data;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,7 +17,6 @@ public class RegistrationRepository {
     private CollectionReference usersRef = rootRef.collection("USERS");
 
     private RegistrationRepository() {
-
     }
 
     public static RegistrationRepository getInstance() {

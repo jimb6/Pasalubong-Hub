@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.startup.data.LoginRepository;
-import com.allandroidprojects.ecomsample.startup.data.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.google.firebase.auth.AuthCredential;
 
 public class LoginViewModel extends ViewModel {
