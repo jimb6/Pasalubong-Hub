@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_messages"
-        android:name="com.allandroidprojects.ecomsample.shop.ui.messages.MessagesFragment"
+        android:name="com.allandroidprojects.ecomsample.messages.MessagesFragment"
         android:label="@string/messages"
         tools:layout="@layout/fragment_messages" />
 

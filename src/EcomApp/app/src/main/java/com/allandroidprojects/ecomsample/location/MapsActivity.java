@@ -34,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
 
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private GoogleMap mMap;
+    public static boolean isActivityRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,5 +144,17 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
                 super.onActivityResult(requestCode, resultCode, data);// The user canceled the operation.
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
     }
 }

@@ -20,8 +20,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.startup.MainActivity;
+import com.allandroidprojects.ecomsample.messages.models.Chatroom;
 import com.allandroidprojects.ecomsample.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.startup.MainActivity;
 import com.allandroidprojects.ecomsample.startup.ui.registration.RegistrationActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -48,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loadingProgressBar;
     private GoogleSignInClient googleSignInClient;
     private int RC_SIGN_IN = 0;
+    public static boolean isActivityRunning = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +121,18 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
     }
 
     private void ifEmailVerivied(LoggedInUser user){
@@ -242,9 +256,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity(LoggedInUser user) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("USER", user);
-        startActivity(intent);
+
+        Intent intent = getIntent();
+        Intent toIntent = new Intent(LoginActivity.this, MainActivity.class);
+        if (intent.hasExtra(getString(R.string.intent_chatroom))){
+            Chatroom chatroom = (Chatroom) intent.getParcelableExtra(getString(R.string.intent_chatroom));
+            toIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
+        }
+
+        toIntent.putExtra("USER", user);
+        startActivity(toIntent);
         loadingProgressBar.setVisibility(View.GONE);
         finish();
     }

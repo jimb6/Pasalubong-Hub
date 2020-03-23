@@ -27,6 +27,7 @@ public class AccountActivity extends AppCompatActivity {
     private ProgressBar loadingProgressBar;
     private boolean hasBusiness;
     private Business userBusiness;
+    public static boolean isActivityRunning = false;
 
     //        private GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
     @Override
@@ -130,5 +131,17 @@ public class AccountActivity extends AppCompatActivity {
     protected void onPostResume() {
         super.onPostResume();
         checkUserBusiness();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
     }
 }

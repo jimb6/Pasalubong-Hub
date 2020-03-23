@@ -125,4 +125,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ProjectSearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@color/White</item>
+        <item name="android:queryHint">@string/projects_search_hint</item>
+    </style>
+
 </resources>

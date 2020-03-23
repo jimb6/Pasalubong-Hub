@@ -1,5 +1,6 @@
 package com.allandroidprojects.ecomsample.shop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -11,8 +12,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.messages.models.Chatroom;
 import com.allandroidprojects.ecomsample.model.Business;
 import com.allandroidprojects.ecomsample.shop.data.DataResult;
+import com.allandroidprojects.ecomsample.shop.ui.chat_room.MessagingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentChange;
 
@@ -21,6 +24,7 @@ public class ShopActivity extends AppCompatActivity {
     private ShopViewModel shopViewModel;
     private DocumentChange documentChange;
     private Business myBusiness;
+    public static boolean isActivityRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class ShopActivity extends AppCompatActivity {
         
         myBusiness = getUserFromIntent();
         registerBusinessEvent();
+        getPendingIntent();
 
 //  Badge
 //        BadgeDrawable messageBadge = navView.getOrCreateBadge(R.id.navigation_messages);
@@ -53,6 +58,16 @@ public class ShopActivity extends AppCompatActivity {
 //        BadgeDrawable productBadge = navView.getOrCreateBadge(R.id.navigation_product);
 //        productBadge.setVisible(true);
 //        productBadge.setNumber(2);
+    }
+
+    private void getPendingIntent(){
+        Intent intent = getIntent();
+        if (intent.hasExtra(getString(R.string.intent_chatroom))){
+            Chatroom chatroom = (Chatroom) intent.getSerializableExtra(getString(R.string.intent_chatroom));
+            Intent chatroomIntent = new Intent(ShopActivity.this, MessagingActivity.class);
+            chatroomIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
+            startActivity(chatroomIntent);
+        }
     }
 
     private Business getUserFromIntent() {
@@ -74,5 +89,16 @@ public class ShopActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
+    }
 
 }

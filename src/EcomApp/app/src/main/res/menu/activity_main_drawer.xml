@@ -9,23 +9,23 @@
             android:title="@string/item_1" />
         <item
             android:id="@+id/nav_item2"
-            android:icon="@drawable/dessert"
+            android:icon="@drawable/ic_android"
             android:title="@string/item_2" />
         <item
             android:id="@+id/nav_item3"
-            android:icon="@drawable/product"
+            android:icon="@drawable/ic_android"
             android:title="@string/item_3" />
         <item
             android:id="@+id/nav_item4"
-            android:icon="@drawable/clothes"
+            android:icon="@drawable/ic_android"
             android:title="@string/item_4" />
         <item
             android:id="@+id/nav_item5"
-            android:icon="@drawable/book"
+            android:icon="@drawable/ic_android"
             android:title="@string/item_5" />
         <item
             android:id="@+id/nav_item6"
-            android:icon="@drawable/more"
+            android:icon="@drawable/ic_android"
             android:title="@string/item_6" />
 
         <item

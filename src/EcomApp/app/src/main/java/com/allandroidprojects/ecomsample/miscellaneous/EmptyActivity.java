@@ -10,7 +10,7 @@ import com.allandroidprojects.ecomsample.R;
 public class EmptyActivity extends AppCompatActivity {
 
     private Button homepage;
-
+    public static boolean isActivityRunning = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,5 +23,17 @@ public class EmptyActivity extends AppCompatActivity {
         homepage.setOnClickListener(v -> {
             onBackPressed();
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
     }
 }

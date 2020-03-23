@@ -16,8 +16,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.startup.MainActivity;
 import com.allandroidprojects.ecomsample.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.startup.MainActivity;
 import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -26,7 +26,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button btnSignup;
     private TextView linkLogin, emailVerification;
     private ProgressBar loadingProgressBar;
-
+    public static boolean isActivityRunning = false;
     private RegistrationViewModel registrationViewModel;
 
     @Override
@@ -36,6 +36,18 @@ public class RegistrationActivity extends AppCompatActivity {
         initRegistrationViewModel();
         initComponents();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
     }
 
     private void initRegistrationViewModel() {
@@ -122,4 +134,5 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
         finish();
     }
+
 }

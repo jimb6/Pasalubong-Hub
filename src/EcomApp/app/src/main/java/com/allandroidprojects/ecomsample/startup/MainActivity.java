@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,22 +27,31 @@ import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.account.AccountActivity;
 import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
 import com.allandroidprojects.ecomsample.location.MapsActivity;
+import com.allandroidprojects.ecomsample.messages.ChatroomActivity;
+import com.allandroidprojects.ecomsample.messages.models.Chatroom;
 import com.allandroidprojects.ecomsample.miscellaneous.EmptyActivity;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.allandroidprojects.ecomsample.notification.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.options.CartListActivity;
 import com.allandroidprojects.ecomsample.options.SearchResultActivity;
 import com.allandroidprojects.ecomsample.options.WishlistActivity;
-import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleSignInClient googleSignInClient;
     private NavigationView navigationView;
     private LoggedInUser user;
+    public static boolean isActivityRunning = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -84,7 +96,8 @@ public class MainActivity extends AppCompatActivity
         user = getUserFromIntent();
         initGoogleSignInClient();
         setUserPreferences(user);
-
+        initFCMToken();
+        getPendingIntent();
 
       /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +107,58 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });*/
+    }
+
+    private void checkAuthenticationState(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user == null){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }else{
+        }
+    }
+
+    private void getPendingIntent(){
+        Intent intent = getIntent();
+        if (intent.hasExtra(getString(R.string.intent_chatroom))){
+            Chatroom chatroom = (Chatroom) intent.getParcelableExtra(getString(R.string.intent_chatroom));
+            Intent chatroomIntent = new Intent(MainActivity.this, ChatroomActivity.class);
+            chatroomIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
+            startActivity(chatroomIntent);
+        }
+    }
+
+    private void initFCMToken() {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        FirebaseInstanceId.getInstance().getId();
+        sendRegistrationToServer(token);
+    }
+
+    private void sendRegistrationToServer(String token) {
+        // TODO: Implement this method to send token to your app server.
+        try{
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Map<String, Object> data = new HashMap<>();
+            data.put("messaging_token", token);
+
+            db.collection("USERS").document(user.getUserId()).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("TAG", "TOKEN Saved to the database: " + token);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("TAG", "FAILED TO SAVE TOKEN:  " + e.getMessage());
+                }
+            });
+        } catch (Exception e){
+            Log.e("TAG", "FAILED TO SAVE TOKEN:  " + e.getMessage());
+        }
+
     }
 
     private LoggedInUser getUserFromIntent() {
@@ -121,6 +186,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         invalidateOptionsMenu();
+        checkAuthenticationState();
     }
 
     @Override
@@ -177,6 +243,18 @@ public class MainActivity extends AppCompatActivity
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActivityRunning = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActivityRunning = false;
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -258,6 +336,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
