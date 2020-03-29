@@ -29,6 +29,7 @@
     <string name="terms_conditions">Terms \u0026 Conditions</string>
     <string name="help_center">Help Center</string>
 
+
     <string name="search_hint">Search for Products, Brands and More</string>
 
 
@@ -89,12 +90,12 @@
     <string name="no_business_text">Sell on\nPasalubong Hub</string>
     <string name="has_business_text">Go to your\nPasalubong Hub</string>
     <string name="add_product">Add Product</string>
-    <string name="default_notification_channel_id" >fcm_default_channel</string>
-    <string name="fcm_message" >Pasalubong Hub</string>
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string name="fcm_message">Pasalubong Hub</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
 
 
-<!--  Firebase Properties  -->
+    <!--  Firebase Properties  -->
     <string name="firebase_messaging_server_key">No Data</string>
     <string name="firebase_messaging_leacy_server_key">No Data</string>
     <string name="firebase_user_node">USERS</string>
@@ -103,285 +104,217 @@
     <string name="firebase_data_type_admin_broadcast">data_type_admin_broadcast</string>
     <string name="firebase_data_type_chat_broadcast">data_type_chat_broadcast</string>
     <string name="data_type">data_type</string>
-    <string name="data_title" >title</string>
-    <string name="data_message" >message</string>
-    <string name="default_notification_channel_name" >Pasalubong Hub</string>
-    <string name="chat_room_collection" >chatrooms</string>
-    <string name="chat_room_id" >chat_room_id</string>
-    <string name="field_chat_room_id" >chatroom_id</string>
-    <string name="field_chat_room_name" >chatroom_name</string>
-    <string name="field_chat_room_creator_id" >creator_id</string>
-    <string name="field_chat_room_security_level" >security_level</string>
-    <string name="field_chat_room_users" >users</string>
-    <string name="field_chat_room_messages" >chatroom_messages</string>
-    <string name="field_chat_room_last_seen_message" >last_message_seen</string>
-    <string name="intent_chatroom" >intent_chatroom</string>
+    <string name="data_title">title</string>
+    <string name="data_message">message</string>
+    <string name="default_notification_channel_name">Pasalubong Hub</string>
+    <string name="chat_room_collection">chatrooms</string>
+    <string name="chat_room_id">chat_room_id</string>
+    <string name="field_chat_room_id">chatroom_id</string>
+    <string name="field_chat_room_name">chatroom_name</string>
+    <string name="field_chat_room_creator_id">creator_id</string>
+    <string name="field_chat_room_security_level">security_level</string>
+    <string name="field_chat_room_users">users</string>
+    <string name="field_chat_room_messages">chatroom_messages</string>
+    <string name="field_chat_room_last_seen_message">last_message_seen</string>
+    <string name="intent_chatroom">intent_chatroom</string>
+    <string name="peso_sign">₱</string>
+
+    <!--    Database Fields Firestore   -->
 
 
+    <!--    Root Collection -->
+    <string name="db_root_users">users</string>
+    <string name="db_root_customers">customers</string>
+    <string name="db_root_publish_product">publish_product</string>
+    <string name="db_root_products">products</string>
+    <string name="db_root_ratings">ratings</string>
+    <string name="db_root_sales">sales</string>
+    <string name="db_root_server">server</string>
+
+    <!--    Shop's Fields-->
+    <string name="db_shop_field_display_name">display_name</string>
+    <string name="db_shop_field_location">location</string>
+    <string name="db_shop_field_lat">lat</string>
+    <string name="db_shop_field_long">long</string>
+    <string name="db_shop_field_email">email</string>
+    <string name="db_shop_field_owner">owner_id</string>
+
+    <!--    Customer's Fields-->
+    <string name="db_customer_field_display_name">display_name</string>
+    <string name="db_customer_field_name">name</string>
+    <string name="db_customer_field_email">email</string>
+    <string name="db_customer_field_messaging_token">messaging_token</string>
+    <string name="db_customer_field_photo_url">photo_url</string>
+    <string name="db_customer_field_id">user_id</string>
 
 
-<!--    Tabian Consulting -->
+    <!--    Productsr's Fields-->
+    <string name="db_product_field_name">name</string>
+    <string name="db_product_field_description">description</string>
+    <string name="db_product_field_category">category</string>
+    <string name="db_product_field_brand">brand</string>
+    <string name="db_product_field_price">price</string>
+    <string name="db_product_field_stocks">stocks</string>
+    <string name="db_product_field_variation">variation</string>
+    <string name="db_product_field_whole_sale">whole_sale</string>
+    <string name="db_product_field_shop_id">shop_id</string>
+    <string name="db_product_field_product_status">product_status</string>
 
+    <!--    Productsr's Fields-->
+    <string name="db_product_field_product_reference">product_reference</string>
+
+
+    <!--    Tabian Consulting -->
     <!-- Strings related to login -->
-
     <string name="error_invalid_email">This email address is invalid</string>
-
     <string name="error_invalid_password">This password is too short</string>
-
     <string name="error_incorrect_password">This password is incorrect</string>
-
     <string name="error_field_required">This field is required</string>
-
     <string name="permission_rationale">"Contacts permissions are needed for providing emailcompletions." </string>
-
     <string name="resend_verification_email">Resend Verification Email</string>
-
     <string name="forgot_password">Forgot Password</string>
-
     <string name="register">Register</string>
-
     <string name="sign_in">Sign In</string>
-
     <string name="tabian_consulting_logo">Pasalubon Hub Consulting Logo</string>
-
     <string name="email_registration">Email Registration</string>
-
     <string name="employee_dashboard">Employee Dashboard</string>
-
     <string name="this_week_s_initiatives">This week\'s initiatives</string>
-
     <string name="employee_schedule">Employee Schedule</string>
-
     <string name="company_culture">Company Culture</string>
-
     <string name="tabian_consulting_sales_chart">Pasalubong Hub Consulting Sales Chart</string>
-
     <string name="cancel">CANCEL</string>
-
     <string name="confirm">CONFIRM</string>
-
     <string name="reset_password">Reset Password</string>
-
     <string name="account_settings">Account Settings</string>
-
     <string name="current_password">Current Password</string>
-
     <string name="new_password">New Password</string>
-
     <string name="confirm_new_password">Confirm New Password</string>
-
     <string name="first_and_last_name">First and last name</string>
-
     <string name="save">Save</string>
-
     <string name="change_password">Change Password</string>
-
     <string name="primary_phone_contact">Primary phone contact #</string>
-
     <string name="chat">Chat</string>
-
     <string name="issues">Issues</string>
-
     <!-- FCM Related String -->
+    <!--    <string name="default_notification_channel_id" translatable="false">courses.pluralsight.com.tabianconsulting.default_notification_channel_id</string>-->
 
-
-<!--    <string name="default_notification_channel_id" translatable="false">courses.pluralsight.com.tabianconsulting.default_notification_channel_id</string>-->
-
-<!--    <string name="default_notification_channel_name" translatable="true">courses.pluralsight.com.tabianconsulting.default_notification_channel_name</string>-->
-
+    <!--    <string name="default_notification_channel_name" translatable="true">courses.pluralsight.com.tabianconsulting.default_notification_channel_name</string>-->
     <string name="data_type_chat_message">data_type_chat_message</string>
-
     <string name="data_type_admin_broadcast">data_type_admin_broadcast</string>
-
-
     <string name="data_chatroom_id">chatroom_id</string>
-
     <string name="reply_label">intent_data_payload</string>
-
     <string name="label">new message...</string>
-
     <!-- Intent Extras -->
 
-
     <string name="intent_data_payload">intent_data_payload</string>
-
     <string name="intent_message">intent_data_payload</string>
-
     <string name="intent_project">intent_project</string>
-
     <string name="intent_attachments">intent_attachments</string>
-
     <string name="intent_project_id">intent_project_id</string>
-
     <string name="intent_issue_id">intent_issue_id</string>
-
     <string name="intent_snackbar_message">intent_snackbar_message</string>
-
     <string name="intent_issue">intent_issue</string>
-
     <string name="intent_image">intent_image</string>
-
     <!-- Dialog Names -->
 
-
     <string name="dialog_change_photo">ChangePhotoDialog</string>
-
     <string name="dialog_new_chatroom">NewChatroomDialog</string>
-
     <string name="dialog_delete_chatroom">DeleteChatroomDialog</string>
-
     <string name="dialog_add_department">AddDepartmentDialog</string>
-
     <!-- Firebase Database Nodes -->
 
-
     <string name="dbnode_users">users</string>
-
     <string name="dbnode_chatrooms">chatrooms</string>
-
     <string name="dbnode_departments">departments</string>
-
     <string name="dbnode_server">server</string>
-
     <!-- Firebase Database Fields & Cloud Firestore Fields -->
-
-
     <string name="field_chatroom_name">chatroom_name</string>
-
     <string name="field_creator_id">creator_id</string>
-
     <string name="field_security_level">security_level</string>
-
     <string name="field_email">email</string>
-
     <string name="field_name">name</string>
-
     <string name="field_phone">phone</string>
-
     <string name="field_profile_image">profile_image</string>
-
     <string name="field_user_id">user_id</string>
-
     <string name="field_chatroom_id">chatroom_id</string>
-
     <string name="field_chatroom_messages">chatroom_messages</string>
-
     <string name="field_message">message</string>
-
     <string name="field_timestamp">timestamp</string>
-
     <string name="field_messaging_token">messaging_token</string>
-
     <string name="field_department">department</string>
-
     <string name="field_server_key">server_key</string>
-
     <string name="field_users">users</string>
-
     <string name="field_last_message_seen">last_message_seen</string>
-
     <string name="field_avatar">avatar</string>
-
     <string name="field_description">description</string>
-
     <string name="field_time_created">time_created</string>
-
     <string name="field_assignee">assignee</string>
-
     <string name="field_issue_type">issue_type</string>
-
     <string name="field_priority">priority</string>
-
     <string name="field_reporter">reporter</string>
-
     <string name="field_status">status</string>
-
     <string name="field_summary">summary</string>
-
     <string name="field_time_reported">time_reported</string>
-
     <string name="field_url">url</string>
-
     <string name="field_comment">comment</string>
-
     <!-- Firebase Cloud Firestore Collection/Document names -->
 
-
     <string name="collection_projects">projects</string>
-
     <string name="collection_issues">issues</string>
-
     <string name="collection_attachments">attachments</string>
-
     <string name="collection_comments">comments</string>
 
     <!-- Fragment names -->
 
-
     <string name="fragment_issues">Issues</string>
-
     <string name="fragment_projects">Projects</string>
-
     <string name="fragment_full_screen">Full Screen</string>
-
     <!-- Strings -->
 
-
     <string name="alert_dialog_delete">DELETE</string>
-
     <string name="alert_dialog_cancel">Cancel</string>
-
     <string name="string_admin">Admin</string>
-
     <string name="new_issue">New Issue</string>
-
     <string name="create">CREATE</string>
-
     <string name="close">close</string>
-
     <string name="new_project">New Project</string>
-
     <string name="projects_search_hint">Search Projects...</string>
-
     <string name="project_name">Project name</string>
-
     <string name="description">Description</string>
-
     <string name="date_created">Date created</string>
-
     <string name="summary">Summary</string>
-
     <string name="add_attachment">Add attachment</string>
-
     <string name="priority">Priority</string>
-
     <string name="assign_to_project">Assign to project</string>
-
     <string name="select_a_project">Select a project</string>
-
     <string name="required">Required</string>
-
     <string name="created_new_issue">Created new issue</string>
-
     <string name="failed_to_create_new_issue">Failed to create new issue</string>
-
     <string name="created_new_project">Created new project</string>
-
     <string name="issue_edit_success">Issue Edit Success</string>
-
     <string name="issue_edit_fail">Issue Edit Failed</string>
-
     <string name="project_edit_success">Project Edit Success</string>
-
     <string name="project_edit_fail">Project Edit Failed</string>
-
     <string name="failed_create_new_project">Failed to create new project</string>
-
     <string name="admin_broadcast">Admin Broadcast</string>
-
     <string name="issue_details">Issue Details</string>
-
     <string name="assignee">Assignee</string>
-
     <string name="issue_type">Issue Type</string>
+    <string name="title_activity_add_product">Add Product</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_description">Product Description</string>
+    <string name="product_category">Product Category</string>
+    <string name="price">Price</string>
+    <string name="stock">Stock</string>
+    <string name="whole_sale">Whole Sale</string>
+    <string name="item_add_to_cart_success">Product Added to Cart Successfully!</string>
+    <string name="go_to_cart">Go To Cart</string>
+    <string name="item_add_to_cart_error">Product Not Added to Cart!</string>
 </resources>

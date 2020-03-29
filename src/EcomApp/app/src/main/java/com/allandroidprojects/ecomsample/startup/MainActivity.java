@@ -1,7 +1,6 @@
 package com.allandroidprojects.ecomsample.startup;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +24,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.account.AccountActivity;
-import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
+import com.allandroidprojects.ecomsample.fragments.ProductListFragment;
 import com.allandroidprojects.ecomsample.location.MapsActivity;
 import com.allandroidprojects.ecomsample.messages.ChatroomActivity;
 import com.allandroidprojects.ecomsample.messages.models.Chatroom;
@@ -65,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleSignInClient googleSignInClient;
     private NavigationView navigationView;
     private LoggedInUser user;
+    private FirebaseUser firebaseUser;
     public static boolean isActivityRunning = false;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -93,9 +93,10 @@ public class MainActivity extends AppCompatActivity
             tabLayout.setupWithViewPager(viewPager);
         }
 
-        user = getUserFromIntent();
+
+        checkAuthenticationState();
         initGoogleSignInClient();
-        setUserPreferences(user);
+        setUserPreferences();
         initFCMToken();
         getPendingIntent();
 
@@ -110,9 +111,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkAuthenticationState(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if(user == null){
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String photo = firebaseUser.getPhotoUrl() == null?
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQMX7u2vT0EXHHAobJCKBcqwJAfFKWpgdZ59McdkiYVyVeU_27H" :
+                firebaseUser.getPhotoUrl().toString();
+        user = new LoggedInUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), photo);
+        if(firebaseUser == null){
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -172,10 +176,13 @@ public class MainActivity extends AppCompatActivity
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
     }
 
-    private void setUserPreferences(LoggedInUser user) {
+    private void setUserPreferences() {
         View header = navigationView.getHeaderView(0);
         user_profile = header.findViewById(R.id.profileicon);
-        user_profile.setImageURI(Uri.parse(user.getPhotoUrl()));
+
+        if(firebaseUser.getPhotoUrl() != null)
+            user_profile.setImageURI(firebaseUser.getPhotoUrl());
+
         user_displayName = header.findViewById(R.id.tvAccountName);
         user_displayName.setText(user.getDisplayName());
         user_email = header.findViewById(R.id.tvEmail);
@@ -259,32 +266,33 @@ public class MainActivity extends AppCompatActivity
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        ImageListFragment fragment = new ImageListFragment();
+        ProductListFragment fragment = new ProductListFragment();
+
         Bundle bundle = new Bundle();
         bundle.putInt("type", 1);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_1));
-        fragment = new ImageListFragment();
+        fragment = new ProductListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 2);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_2));
-        fragment = new ImageListFragment();
+        fragment = new ProductListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 3);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_3));
-        fragment = new ImageListFragment();
+        fragment = new ProductListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 4);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_4));
-        fragment = new ImageListFragment();
+        fragment = new ProductListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 5);
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, getString(R.string.item_5));
-        fragment = new ImageListFragment();
+        fragment = new ProductListFragment();
         bundle = new Bundle();
         bundle.putInt("type", 6);
         fragment.setArguments(bundle);
@@ -322,7 +330,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         } else if (id == R.id.my_account){
             Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-            intent.putExtra("USER", user);
             startActivity(intent);
         } else if (id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();

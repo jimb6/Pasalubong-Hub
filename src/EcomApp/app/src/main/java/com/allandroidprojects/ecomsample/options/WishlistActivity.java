@@ -21,8 +21,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
-import static com.allandroidprojects.ecomsample.fragments.ImageListFragment.STRING_IMAGE_POSITION;
-import static com.allandroidprojects.ecomsample.fragments.ImageListFragment.STRING_IMAGE_URI;
+import static com.allandroidprojects.ecomsample.fragments.ProductListFragment.STRING_IMAGE_POSITION;
+import static com.allandroidprojects.ecomsample.fragments.ProductListFragment.STRING_IMAGE_URI;
 
 public class WishlistActivity extends AppCompatActivity {
     private static Context mContext;

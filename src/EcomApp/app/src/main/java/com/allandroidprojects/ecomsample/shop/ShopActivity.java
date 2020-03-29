@@ -14,23 +14,45 @@ import androidx.navigation.ui.NavigationUI;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.messages.models.Chatroom;
 import com.allandroidprojects.ecomsample.model.Business;
+import com.allandroidprojects.ecomsample.model.LoggedInUser;
+import com.allandroidprojects.ecomsample.mvvm.factory.ShopViewModelFactory;
+import com.allandroidprojects.ecomsample.mvvm.view_model.ShopViewModel;
 import com.allandroidprojects.ecomsample.shop.data.DataResult;
 import com.allandroidprojects.ecomsample.shop.ui.chat_room.MessagingActivity;
+import com.allandroidprojects.ecomsample.startup.data.Result;
+import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 
 public class ShopActivity extends AppCompatActivity {
 
     private ShopViewModel shopViewModel;
     private DocumentChange documentChange;
-    private Business myBusiness;
+    public static Business myBusiness;
+    public static LoggedInUser user;
+    public static FirebaseUser firebaseUser;
     public static boolean isActivityRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
+//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                if (item.getItemId() == R.id.navigation_product) {
+//                    // on favorites clicked
+//
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
         initializeViewModel();
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -42,8 +64,9 @@ public class ShopActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
         
-        myBusiness = getUserFromIntent();
-        registerBusinessEvent();
+//        myBusiness = getUserFromIntent();
+        checkAuthenticationState();
+        getMyBusinessPreference();
         getPendingIntent();
 
 //  Badge
@@ -60,6 +83,28 @@ public class ShopActivity extends AppCompatActivity {
 //        productBadge.setNumber(2);
     }
 
+    private void getMyBusinessPreference() {
+        shopViewModel.validateBusiness(user);
+        shopViewModel.getBusinessPreferences().observe(this, result -> {
+            if (result instanceof Result.Success){
+                myBusiness = (Business) ((Result.Success) result).getData();
+                registerBusinessEvent();
+            }
+        });
+    }
+
+    private void checkAuthenticationState(){
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        user = new LoggedInUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getPhotoUrl().getPath());
+        if(firebaseUser == null){
+            Intent intent = new Intent(ShopActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }else{
+        }
+    }
+
     private void getPendingIntent(){
         Intent intent = getIntent();
         if (intent.hasExtra(getString(R.string.intent_chatroom))){
@@ -71,7 +116,7 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     private Business getUserFromIntent() {
-        return (Business) getIntent().getSerializableExtra("BUSINESS");
+        return (Business) getIntent().getParcelableExtra("BUSINESS");
     }
 
 
@@ -100,5 +145,7 @@ public class ShopActivity extends AppCompatActivity {
         super.onStop();
         isActivityRunning = false;
     }
+
+
 
 }

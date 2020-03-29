@@ -29,8 +29,10 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.model.product.Product;
 import com.allandroidprojects.ecomsample.photoview.view.PhotoView;
-import com.allandroidprojects.ecomsample.utility.ImageUrlUtils;
+
+import java.util.ArrayList;
 
 /**
  * Lock/Unlock button is added to the ActionBar.
@@ -45,6 +47,8 @@ public class ViewPagerActivity extends Activity {
     private static final String ISLOCKED_ARG = "isLocked";
     private ViewPager mViewPager;
     private int position;
+    private Product item;
+    private static ArrayList<String> images = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +57,14 @@ public class ViewPagerActivity extends Activity {
         mViewPager = (HackyViewPager) findViewById(R.id.view_pager);
         setContentView(mViewPager);
 
-        mViewPager.setAdapter(new SamplePagerAdapter());
+
         if (getIntent() != null) {
             position = getIntent().getIntExtra("position", 0);
-            mViewPager.setCurrentItem(position);
+            images = getIntent().getStringArrayListExtra("images");
         }
+
+        mViewPager.setAdapter(new SamplePagerAdapter());
+        mViewPager.setCurrentItem(position);
 
         if (savedInstanceState != null) {
             boolean isLocked = savedInstanceState.getBoolean(ISLOCKED_ARG, false);
@@ -74,21 +81,20 @@ public class ViewPagerActivity extends Activity {
     static class SamplePagerAdapter extends PagerAdapter {
        /* Here I'm adding the demo pics, but you can add your Item related pics , just get your pics based on itemID (use asynctask) and
         fill the urls in arraylist*/
-        private static final String[] sDrawables = ImageUrlUtils.getImageUrls();
+//        private static final String[] sDrawables = ImageUrlUtils.getImageUrls();
+//        private static final ArrayList<String> sDrawables;
 
         @Override
         public int getCount() {
-            return sDrawables.length;
+            return images.size();
         }
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             PhotoView photoView = new PhotoView(container.getContext());
-            photoView.setImageUri(sDrawables[position]);
-
+            photoView.setImageUri(images.get(position));
             // Now just add PhotoView to ViewPager and return it
             container.addView(photoView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
             return photoView;
         }
 

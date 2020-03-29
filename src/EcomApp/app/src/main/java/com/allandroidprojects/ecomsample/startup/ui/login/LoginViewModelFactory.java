@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
 import com.allandroidprojects.ecomsample.startup.data.LoginDataSource;
-import com.allandroidprojects.ecomsample.startup.data.LoginRepository;
+import com.allandroidprojects.ecomsample.mvvm.repository.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

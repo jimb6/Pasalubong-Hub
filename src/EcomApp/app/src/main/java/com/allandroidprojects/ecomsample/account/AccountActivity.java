@@ -16,6 +16,9 @@ import com.allandroidprojects.ecomsample.model.Business;
 import com.allandroidprojects.ecomsample.model.LoggedInUser;
 import com.allandroidprojects.ecomsample.shop.ShopActivity;
 import com.allandroidprojects.ecomsample.startup.data.Result;
+import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AccountActivity extends AppCompatActivity {
@@ -27,6 +30,7 @@ public class AccountActivity extends AppCompatActivity {
     private ProgressBar loadingProgressBar;
     private boolean hasBusiness;
     private Business userBusiness;
+    private FirebaseUser firebaseUser;
     public static boolean isActivityRunning = false;
 
     //        private GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
@@ -39,9 +43,8 @@ public class AccountActivity extends AppCompatActivity {
         initializeViewModel();
         initializeComponents();
 
-        user = getUserFromIntent();
-        setupPreferences(user);
-
+        checkAuthenticationState();
+        setupPreferences();
         checkUserBusiness();
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +54,22 @@ public class AccountActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
 //            }
 //        });
+    }
+
+    private void checkAuthenticationState(){
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String photo = firebaseUser.getPhotoUrl() == null?
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQMX7u2vT0EXHHAobJCKBcqwJAfFKWpgdZ59McdkiYVyVeU_27H" :
+                firebaseUser.getPhotoUrl().toString();
+        user = new LoggedInUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), photo);
+        if(firebaseUser == null){
+            Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }else{
+
+        }
     }
 
     private void checkUserBusiness() {
@@ -66,6 +85,7 @@ public class AccountActivity extends AppCompatActivity {
                 shop_view.setText(R.string.no_business_text);
                 hasBusiness = false;
             }
+            shop_view.setClickable(true);
         });
     }
 
@@ -74,7 +94,10 @@ public class AccountActivity extends AppCompatActivity {
                 .get(AccountViewModel.class);
     }
 
-    private void setupPreferences(LoggedInUser user) {
+    private void setupPreferences() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        user = new LoggedInUser(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getPhotoUrl().getPath());
+
         profile_name.setText(user.getDisplayName() == null ? "No Name" : user.getDisplayName());
         profile_email.setText(user.getEmail());
         profile_name_header.setText(user.getDisplayName() == null ? "No Name" : user.getDisplayName());

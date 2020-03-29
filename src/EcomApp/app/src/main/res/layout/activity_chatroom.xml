@@ -9,31 +9,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_margin="10dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/toolbar"
-            android:background="@color/blue3"
-            android:elevation="10dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/White"
-                android:textSize="17sp"
-                android:id="@+id/text_chatroom_name"/>
-
-        </androidx.appcompat.widget.Toolbar>
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+             <androidx.cardview.widget.CardView
+                 android:layout_width="match_parent"
+                 android:layout_height="20dp"
+                 android:layout_margin="20dp" />
+         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="40dp"
-            android:layout_below="@+id/toolbar"
-            >
+            android:layout_below="@+id/toolbar">
+
+
 
             <ListView
                 android:layout_width="match_parent"

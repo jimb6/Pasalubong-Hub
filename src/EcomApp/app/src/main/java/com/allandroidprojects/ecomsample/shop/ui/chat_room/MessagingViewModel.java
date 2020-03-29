@@ -2,7 +2,7 @@ package com.allandroidprojects.ecomsample.shop.ui.chat_room;
 
 import androidx.lifecycle.ViewModel;
 
-import com.allandroidprojects.ecomsample.shop.data.MessagingRepository;
+import com.allandroidprojects.ecomsample.mvvm.repository.MessagingRepository;
 
 public class MessagingViewModel extends ViewModel {
 

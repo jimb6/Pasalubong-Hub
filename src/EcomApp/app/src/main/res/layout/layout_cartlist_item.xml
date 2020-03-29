@@ -22,17 +22,22 @@
                        android:layout_marginLeft="@dimen/activity_horizontal_margin">
 
             <TextView
+                android:id="@+id/tvProductName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Product Name"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="bold" />
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="Slim fit, cotton"
-                      android:textSize="@dimen/text_size_small"/>
 
             <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slim fit, cotton"
+                android:textSize="@dimen/text_size_small" />
+
+            <TextView
+                android:id="@+id/tvPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
@@ -41,6 +46,7 @@
                 android:textSize="@dimen/text_size_xmedium" />
 
             <TextView
+                android:id="@+id/tvWholeSeller"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delivery Not Available"
@@ -49,15 +55,14 @@
                           android:layout_height="wrap_content"
                           android:orientation="horizontal"
                           android:layout_marginTop="@dimen/margin_medium">
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Qty: 1"
-                          android:textSize="@dimen/text_size_small"/>
-                <TextView android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:text="Size: 41"
-                          android:textSize="@dimen/text_size_small"
-                          android:layout_marginLeft="@dimen/margin_medium"/>
+
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Qty: 1"
+                    android:textSize="@dimen/text_size_small" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

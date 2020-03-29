@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.mvvm.view_model.NotificationsViewModel;
 
 public class NotificationsFragment extends Fragment {
 

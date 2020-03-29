@@ -187,9 +187,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				);
 
 		//add properties to the builder
-		builder.setSmallIcon(R.drawable.tabian_consulting_logo)
+		builder.setSmallIcon(R.drawable.iconpas)
 				.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-						R.drawable.tabian_consulting_logo))
+						R.drawable.iconpas))
 				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 				.setContentTitle(title)
 				.setContentText("New messages in " + chatroom.getChatroom_name())
@@ -237,9 +237,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 				);
 
 		//add properties to the builder
-		builder.setSmallIcon(R.drawable.tabian_consulting_logo)
+		builder.setSmallIcon(R.drawable.iconpas)
 				.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-						R.drawable.tabian_consulting_logo))
+						R.drawable.iconpas))
 				.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 				.setContentTitle(title)
 				.setContentText(message)

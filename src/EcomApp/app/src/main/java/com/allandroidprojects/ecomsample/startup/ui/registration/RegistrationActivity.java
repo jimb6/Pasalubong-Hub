@@ -110,8 +110,11 @@ public class RegistrationActivity extends AppCompatActivity {
             registrationViewModel.register(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString());
             registrationViewModel.registrationResult().observe(RegistrationActivity.this, user -> {
+
                 if (user.isAuthenticated) {
                     Toast.makeText(this, ("Welcome! " + user.getDisplayName()==null?user.getEmail():user.getDisplayName()), Toast.LENGTH_SHORT).show();
+                    if (user.isNew)
+                        createNewUser(user);
                     goToMainActivity(user);
                 } else {
                     Toast.makeText(this, user.userStatus, Toast.LENGTH_SHORT).show();
@@ -120,6 +123,16 @@ public class RegistrationActivity extends AppCompatActivity {
             });
         });
 
+    }
+
+    private void createNewUser(LoggedInUser authenticatedUser) {
+        registrationViewModel.createUser(authenticatedUser);
+        registrationViewModel.createdUserLiveData.observe(this, user -> {
+            if (user.isCreated) {
+                Toast.makeText(getApplicationContext(), user.getDisplayName(), Toast.LENGTH_SHORT).show();
+            }
+            goToMainActivity(user);
+        });
     }
 
     private void goToMainActivity(LoggedInUser user) {

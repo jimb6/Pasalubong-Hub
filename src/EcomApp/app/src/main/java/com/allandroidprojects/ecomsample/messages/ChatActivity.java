@@ -69,8 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         mFob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewChatroomDialog dialog = new NewChatroomDialog();
-                dialog.show(getSupportFragmentManager(), getString(R.string.dialog_new_chatroom));
+
             }
         });
 
@@ -249,13 +248,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    public void showDeleteChatroomDialog(String chatroomId){
-        DeleteChatroomDialog dialog = new DeleteChatroomDialog();
-        Bundle args = new Bundle();
-        args.putString(getString(R.string.field_chatroom_id), chatroomId);
-        dialog.setArguments(args);
-        dialog.show(getSupportFragmentManager(), getString(R.string.dialog_delete_chatroom));
-    }
+
 
     @Override
     protected void onResume() {

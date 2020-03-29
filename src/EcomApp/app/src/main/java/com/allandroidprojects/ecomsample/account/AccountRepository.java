@@ -71,7 +71,7 @@ public class AccountRepository {
                         Map<String, Object> business = document.getData();
                         String userId = (String) business.get("Business_Owener");
                         String businessName = (String) business.get("Business_Name");
-                        Address businessAddress = (Address) business.get("Business_Address");
+                        String businessAddress = (String) business.get("Business_Address");
                         String businessPhotos = (String) business.get("Business_Photos");
                         Business business1 = new Business(user, businessName, businessAddress);
                         businessMutableData.setValue(new Result.Success<>(business1));

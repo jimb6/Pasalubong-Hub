@@ -6,70 +6,125 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.fragments.ImageListFragment;
-import com.allandroidprojects.ecomsample.product.ItemDetailsActivity;
+import com.allandroidprojects.ecomsample.model.Business;
+import com.allandroidprojects.ecomsample.model.product.Product;
+import com.allandroidprojects.ecomsample.mvvm.view_model.ProductViewModel;
 import com.allandroidprojects.ecomsample.shop.ShopActivity;
-import com.allandroidprojects.ecomsample.utility.ImageUrlUtils;
+import com.allandroidprojects.ecomsample.startup.data.Result;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductFragment extends Fragment {
 
-    private ProductViewModel homeViewModel;
+    private ProductViewModel viewModel;
     public static final String STRING_IMAGE_URI = "ImageUri";
     public static final String STRING_IMAGE_POSITION = "ImagePosition";
     private static ShopActivity shopActivity;
+    private ArrayList<Product> products = new ArrayList<>();;
+    static ViewPager viewPager;
+    static TabLayout tabLayout;
+    private Business business;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView recyclerView;
+    private View root;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         shopActivity = (ShopActivity) this.getActivity();
+        setHasOptionsMenu(true);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(ProductViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_product, container, false);
-        setHasOptionsMenu(true);
+        shopActivity = (ShopActivity) getActivity();
+        root = inflater.inflate(R.layout.fragment_product, container, false);
+        initViewModel();
+        initializeCompoinents();
 
-        RecyclerView rv = (RecyclerView) root.findViewById(R.id.product_recyler_view);
-        setupRecyclerView(rv);
 
+
+//        viewPager = (ViewPager) root.findViewById(R.id.viewpager);
+//        tabLayout = (TabLayout) root.findViewById(R.id.tabs);
+
+//        if (viewPager != null) {
+//            setupViewPager(viewPager);
+//            tabLayout.setupWithViewPager(viewPager);
+//        }
         return root;
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView) {
-      /*  if (ImageListFragment.this.getArguments().getInt("type") == 1) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        } else if (ImageListFragment.this.getArguments().getInt("type") == 2) {
-            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(layoutManager);
-        } else {
-            GridLayoutManager layoutManager = new GridLayoutManager(recyclerView.getContext(), 3);
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(layoutManager);
-        }*/
-        String[] items = null;
-        items = ImageUrlUtils.getMyProducts();
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel.fetchMyProducts(shopActivity.myBusiness);
+        viewModel.getMyProuducts().observe(getViewLifecycleOwner(), p -> {
+            if (p instanceof Result.Success) {
+                products.add((Product) ((Result.Success) p).getData());
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void initializeCompoinents() {
+        recyclerView = (RecyclerView) root.findViewById(R.id.product_recyler_view);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(recyclerView, items));
+        adapter = new ProductsRecyclerViewAdapter(recyclerView, products);
+        recyclerView.setAdapter(adapter);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        // Handle item selection
+        switch (menuItem.getItemId()) {
+            case R.id.product_add:
+                Intent intent = new Intent(getActivity(), AddProductActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(menuItem);
+        }
+    }
+
+    private void initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(ProductViewModel.class);
+    }
+
+//    private void setupViewPager(ViewPager viewPager) {
+//        Adapter adapter = new Adapter(getChildFragmentManager());
+//        ShopImageListFragment fragment = new ShopImageListFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("type", 1);
+//        bundle.putParcelableArrayList("products", (ArrayList<? extends Parcelable>) products);
+//        fragment.setArguments(bundle);
+//        adapter.addFragment(fragment, getString(R.string.item_1));
+//
+//        viewPager.setAdapter(adapter);
+//        adapter.notifyDataSetChanged();
+//    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -77,14 +132,15 @@ public class ProductFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public static class SimpleStringRecyclerViewAdapter
-            extends RecyclerView.Adapter<ImageListFragment.SimpleStringRecyclerViewAdapter.ViewHolder> {
+    public static class ProductsRecyclerViewAdapter
+            extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
-        private String[] mValues;
+        private List<Product> mValues;
         private RecyclerView mRecyclerView;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
+            public final TextView productName, productDescription, productPrice;
             public final SimpleDraweeView mImageView;
             public final LinearLayout mLayoutItem;
             public final ImageView mImageViewWishlist;
@@ -92,25 +148,30 @@ public class ProductFragment extends Fragment {
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
+
                 mImageView = (SimpleDraweeView) view.findViewById(R.id.image1);
+
+                productPrice = view.findViewById(R.id.price);
+                productName = view.findViewById(R.id.name);
+                productDescription = view.findViewById(R.id.description);
                 mLayoutItem = (LinearLayout) view.findViewById(R.id.layout_item);
                 mImageViewWishlist = (ImageView) view.findViewById(R.id.ic_wishlist);
             }
         }
 
-        public SimpleStringRecyclerViewAdapter(RecyclerView recyclerView, String[] items) {
+        public ProductsRecyclerViewAdapter(RecyclerView recyclerView, ArrayList<Product> items) {
             mValues = items;
             mRecyclerView = recyclerView;
         }
 
         @Override
-        public ImageListFragment.SimpleStringRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-            return new ImageListFragment.SimpleStringRecyclerViewAdapter.ViewHolder(view);
+        public ProductsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_list_item, parent, false);
+            return new ProductsRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onViewRecycled(ImageListFragment.SimpleStringRecyclerViewAdapter.ViewHolder holder) {
+        public void onViewRecycled(ProductsRecyclerViewAdapter.ViewHolder holder) {
             if (holder.mImageView.getController() != null) {
                 holder.mImageView.getController().onDetach();
             }
@@ -121,46 +182,72 @@ public class ProductFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(final ImageListFragment.SimpleStringRecyclerViewAdapter.ViewHolder holder, final int position) {
-           /* FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) holder.mImageView.getLayoutParams();
-            if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
-                layoutParams.height = 200;
-            } else if (mRecyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-                layoutParams.height = 600;
-            } else {
-                layoutParams.height = 800;
-            }*/
-            final Uri uri = Uri.parse(mValues[position]);
+        public void onBindViewHolder(final ProductsRecyclerViewAdapter.ViewHolder holder, final int position) {
+            Product item = mValues.get(position);
+            final Uri uri = Uri.parse(item.getImageUrls().get(0));
             holder.mImageView.setImageURI(uri);
-            holder.mLayoutItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(shopActivity, ItemDetailsActivity.class);
-                    intent.putExtra(STRING_IMAGE_URI, mValues[position]);
-                    intent.putExtra(STRING_IMAGE_POSITION, position);
-                    shopActivity.startActivity(intent);
+            holder.productName.setText(item.getProductname());
+            holder.productDescription.setText(item.getProductDescription());
+            holder.productPrice.setText(String.valueOf(item.getPrice()));
 
-                }
-            });
+//            holder.mLayoutItem.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(shopActivity, ItemDetailsActivity.class);
+//                    intent.putExtra(STRING_IMAGE_URI, mValues[position]);
+//                    intent.putExtra(STRING_IMAGE_POSITION, position);
+//                    shopActivity.startActivity(intent);
+//
+//                }
+//            });
 
-            //Set click action for wishlist
-            holder.mImageViewWishlist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
-                    imageUrlUtils.addWishlistImageUri(mValues[position]);
-                    holder.mImageViewWishlist.setImageResource(R.drawable.ic_favorite_black_18dp);
-                    notifyDataSetChanged();
-                    Toast.makeText(shopActivity, "Item added to wishlist.", Toast.LENGTH_SHORT).show();
-
-                }
-            });
+//            //Set click action for wishlist
+//            holder.mImageViewWishlist.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
+//                    imageUrlUtils.addWishlistImageUri(mValues[position]);
+//                    holder.mImageViewWishlist.setImageResource(R.drawable.ic_favorite_black_18dp);
+//                    notifyDataSetChanged();
+//                    Toast.makeText(shopActivity, "Item added to wishlist.", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            });
 
         }
 
         @Override
         public int getItemCount() {
-            return mValues.length;
+            return mValues.size();
+        }
+    }
+
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
         }
     }
 }

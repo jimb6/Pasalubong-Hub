@@ -7,14 +7,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.startup.data.RegistrationRepository;
+import com.allandroidprojects.ecomsample.mvvm.repository.RegistrationRepository;
 import com.allandroidprojects.ecomsample.model.LoggedInUser;
 
 public class RegistrationViewModel extends ViewModel {
 
     private MutableLiveData<RegistrationFromState> registrationFormState = new MutableLiveData<>();
     private RegistrationRepository registrationRepository;
-    LiveData<LoggedInUser> accountRegistrationLiveData;
+    private LiveData<LoggedInUser> accountRegistrationLiveData;
+    public LiveData<LoggedInUser> createdUserLiveData;
 
     RegistrationViewModel(RegistrationRepository registrationRepository) {
         this.registrationRepository = registrationRepository;
@@ -64,5 +65,9 @@ public class RegistrationViewModel extends ViewModel {
     // A placeholder password validation check
     private boolean isConfirmPasswordValid(String password, String confirmPassword) {
         return password != null && password.trim().length() > 5 && password.equals(confirmPassword);
+    }
+
+    void createUser(LoggedInUser authenticatedUser) {
+        createdUserLiveData = registrationRepository.createUserInFirestoreIfNotExists(authenticatedUser);
     }
 }

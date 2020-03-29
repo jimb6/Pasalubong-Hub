@@ -19,7 +19,11 @@ import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.messages.models.ChatMessage;
 import com.allandroidprojects.ecomsample.messages.models.Chatroom;
 import com.allandroidprojects.ecomsample.messages.models.User;
+import com.allandroidprojects.ecomsample.messages.models.fcm.Data;
+import com.allandroidprojects.ecomsample.messages.models.fcm.FirebaseCloudMessage;
 import com.allandroidprojects.ecomsample.messages.utility.ChatMessageListAdapter;
+import com.allandroidprojects.ecomsample.messages.utility.FCM;
+import com.allandroidprojects.ecomsample.model.product.Product;
 import com.allandroidprojects.ecomsample.startup.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,18 +37,26 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ChatroomActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatroomActivity";
-
+    //widgets
+    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/";
     //firebase
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mMessagesReference;
@@ -56,11 +68,14 @@ public class ChatroomActivity extends AppCompatActivity {
     private ImageView mCheckmark;
 
     //vars
+    private Set<String> mTokens;
     private Chatroom mChatroom;
     private List<ChatMessage> mMessagesList;
+    private String mServerKey;
     private Set<String> mMessageIdSet;
     private ChatMessageListAdapter mAdapter;
     public static boolean isActivityRunning;
+    private Product item;
 
 
     @Override
@@ -71,13 +86,18 @@ public class ChatroomActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
         mMessage = (EditText) findViewById(R.id.input_message);
         mCheckmark = (ImageView) findViewById(R.id.checkmark);
-        getSupportActionBar().hide();
-        Log.d(TAG, "onCreate: started.");
+
+        if (getIntent() != null) {
+            if (getIntent().hasExtra("product")) {
+                item = getIntent().getParcelableExtra("product");
+            }
+//            stringImageUri = getIntent().getStringExtra(ProductListFragment.STRING_IMAGE_URI);
+        }
 
         setupFirebaseAuth();
-        getChatroom();
-        init();
-        hideSoftKeyboard();
+//        getChatroom();
+//        init();
+//        hideSoftKeyboard();
     }
 
     private void init(){
@@ -120,11 +140,98 @@ public class ChatroomActivity extends AppCompatActivity {
                     //clear the EditText
                     mMessage.setText("");
 
+                    String myMessage = mMessage.getText().toString();
+                    String title = "Pasalubong Hub";
+
+
+                        //send message
+                        sendMessageToDepartment(title, message);
+
+                        mMessage.setText("");
+//                        mTitle.setText("");
+
+
+
+
                     //refresh the messages list? Or is it done by the listener??
+                }else{
+                    Toast.makeText(ChatroomActivity.this, "Fill out the title and message fields", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    /**
+     * Retrieves the server key for the Firebase server.
+     * This is required to send FCM messages.
+     */
+    private void getServerKey(){
+        Log.d(TAG, "getServerKey: retrieving server key.");
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query = reference.child(getString(R.string.dbnode_server))
+                .orderByValue();
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange: got the server key.");
+                DataSnapshot singleSnapshot = dataSnapshot.getChildren().iterator().next();
+                mServerKey = singleSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void sendMessageToDepartment(String title, String message){
+        Log.d(TAG, "sendMessageToDepartment: sending message to selected departments.");
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //create the interface
+        FCM fcmAPI = retrofit.create(FCM.class);
+
+        //attach the headers
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Authorization", "key=" + "AAAAbeRM7Q4:APA91bGyabDgRxpBF8vg0M-dv-XjKVlZWpWmTuak-eOxkWU6dDKAipjK59aNuPkWg54kBENhvnmXILu1uu3x0WZT7DpMVc8MIV2sG3t-jI8vP8u34BRUUWAC-C6RnBco47SZ7XV861Fk");
+
+        //send the message to all the tokens
+        for(String token : mTokens){
+            Log.d(TAG, "sendMessageToDepartment: sending to token: " + token);
+            Data data = new Data();
+            data.setMessage(message);
+            data.setTitle(title);
+            data.setData_type(getString(R.string.data_type_chat_message));
+            FirebaseCloudMessage firebaseCloudMessage = new FirebaseCloudMessage();
+            firebaseCloudMessage.setData(data);
+            firebaseCloudMessage.setTo(token);
+
+            Call<ResponseBody> call = fcmAPI.send(headers, firebaseCloudMessage);
+
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Log.d(TAG, "onResponse: Server Response: "  + response.toString());
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "onFailure: Unable to send the message." + t.getMessage() );
+                    Toast.makeText(ChatroomActivity.this, "error", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
     }
 
     /**

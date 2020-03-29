@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.startup.data.RegistrationRepository;
+import com.allandroidprojects.ecomsample.mvvm.repository.RegistrationRepository;
 
 public class RegistrationViewModelFactory implements ViewModelProvider.Factory {
     @NonNull

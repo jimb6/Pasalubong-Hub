@@ -123,11 +123,21 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name="ProjectSearchViewStyle" parent="Widget.AppCompat.SearchView">
         <item name="queryBackground">@color/White</item>
         <item name="android:queryHint">@string/projects_search_hint</item>
     </style>
+
+    <style name="BadgeTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="BadgeTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="BadgeTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

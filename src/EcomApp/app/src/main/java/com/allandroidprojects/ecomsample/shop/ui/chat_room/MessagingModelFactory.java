@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.shop.data.MessagingRepository;
+import com.allandroidprojects.ecomsample.mvvm.repository.MessagingRepository;
 
 public class MessagingModelFactory implements ViewModelProvider.Factory {
     @NonNull

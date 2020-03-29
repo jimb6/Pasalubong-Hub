@@ -116,7 +116,7 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
                 public void onClick(View v) {
                     if(getItem(position).getCreator_id().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                         Log.d(TAG, "onClick: asking for permission to delete icon.");
-                        ((ChatActivity)mContext).showDeleteChatroomDialog(getItem(position).getChatroom_id());
+//                        ((ChatActivity)mContext).showDeleteChatroomDialog(getItem(position).getChatroom_id());
                     }else{
                         Toast.makeText(mContext, "You didn't create this chatroom", Toast.LENGTH_SHORT).show();
                     }
