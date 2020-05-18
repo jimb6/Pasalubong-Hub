@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.services;
+package com.allandroidprojects.ecomsample.data.services;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,18 +18,18 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.user.accounts.AccountActivity;
-import com.allandroidprojects.ecomsample.activities.auth.login.LoginActivity;
-import com.allandroidprojects.ecomsample.activities.auth.registration.RegistrationActivity;
-import com.allandroidprojects.ecomsample.user.startup.MainActivity;
-import com.allandroidprojects.ecomsample.user.startup.SplashActivity;
-import com.allandroidprojects.ecomsample.user.startup.WelcomeActivity;
-import com.allandroidprojects.ecomsample.config.helpers.utility.UniversalImageLoader;
+import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.authentication.registration.RegistrationActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.SplashActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.WelcomeActivity;
+import com.allandroidprojects.ecomsample.util.UniversalImageLoader;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
-import com.allandroidprojects.ecomsample.merchant.messaging.ChatroomActivity;
-import com.allandroidprojects.ecomsample.merchant.messaging.MessagingActivity;
-import com.allandroidprojects.ecomsample.merchant.startup.ShopActivity;
-import com.allandroidprojects.ecomsample.user.maps.MapsActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

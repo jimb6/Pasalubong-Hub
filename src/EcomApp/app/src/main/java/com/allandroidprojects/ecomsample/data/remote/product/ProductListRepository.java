@@ -1,10 +1,11 @@
-package com.allandroidprojects.ecomsample.data.repository.product;
+package com.allandroidprojects.ecomsample.data.remote.product;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,33 +33,49 @@ public class ProductListRepository {
         db.collection("products")
                 .whereEqualTo("productCategory", category)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
 //                            ArrayList<Product> products = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                                Map<String, Object> productData = document.getData();
-                                Product product = new Product();
-                                product.setBusinessOwnerId((String) productData.get("businessOwnerId"));
-                                product.setProductname((String) productData.get("productname"));
-                                product.setProductDescription((String) productData.get("productDescription"));
-                                product.setProductCategory((String) productData.get("productCategory"));
-                                product.setBrand((String) productData.get("brand"));
-                                product.setPrice(Double.parseDouble(productData.get("price").toString()));
-                                product.setStock(Integer.parseInt(productData.get("stock").toString()));
-                                product.setWholeSeller((String) productData.get("wholeSeller"));
-                                product.setImageUrls((ArrayList<String>) productData.get("imageUrls"));
-//                                product.setVariation((Map<String, Object>) productData.get("variation"));
-//                                DocumentReference rating  = (DocumentReference) productData.get("ratings");
-//                                Map<String, Object> rate = (Map<String, Object>) rating.get().getResult();
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            Map<String, Object> productData = document.getData();
+                            Product product = new Product();
+                            product.setBusinessOwnerId((String) productData.get("businessOwnerId"));
+                            product.setProductname((String) productData.get("productname"));
+                            product.setProductDescription((String) productData.get("productDescription"));
+                            product.setProductCategory((String) productData.get("productCategory"));
+                            product.setBrand((String) productData.get("brand"));
+                            product.setPrice(Double.parseDouble(productData.get("price").toString()));
+                            product.setStock(Integer.parseInt(productData.get("stock").toString()));
+                            product.setWholeSeller((String) productData.get("wholeSeller"));
+                            product.setImageUrls((ArrayList<String>) productData.get("imageUrls"));
+                            product.setTotalSales(Integer.parseInt(String.valueOf(productData.get("totalSales"))));
 
-                                productListMutableLiveData.setValue(new Result.Success<Product>(product));
-                            }
-                            productListMutableLiveData.setValue(new Result.Error(new Exception("No products remaining.")));
-                        } else {
-                            productListMutableLiveData.setValue(new Result.Error(task.getException()));
+                            document.getReference()
+                                    .collection("ratings")
+                                    .get().addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    ArrayList<Rating> ratings = new ArrayList<>();
+                                    for (QueryDocumentSnapshot document1 : Objects.requireNonNull(task1.getResult())) {
+                                        Map<String, Object> ratingsData = document1.getData();
+                                        Rating rating = new Rating();
+                                        rating.setAuthorId((String) ratingsData.get("userId"));
+                                        rating.setComment((String) ratingsData.get("comment"));
+                                        rating.setRating(Double.parseDouble(String.valueOf(ratingsData.get("rate"))));
+                                        rating.setAuthornName((String) ratingsData.get("userName"));
+                                        rating.setAuthornName((String) ratingsData.get("userName"));
+                                        rating.setDate(String.valueOf(ratingsData.get("date")));
+                                        rating.setUrls((ArrayList<String>) ratingsData.get("imagesUrl"));
+                                        rating.setUserImage((String) ratingsData.get("userImage"));
+                                        ratings.add(rating);
+                                    }
+                                    product.setRatings(ratings);
+                                    productListMutableLiveData.setValue(new Result.Success<Product>(product));
+                                }
+                            });
                         }
+                        productListMutableLiveData.setValue(new Result.Error(new Exception("No products remaining.")));
+                    } else {
+                        productListMutableLiveData.setValue(new Result.Error(task.getException()));
                     }
                 });
         return productListMutableLiveData;

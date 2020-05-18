@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data;
+package com.allandroidprojects.ecomsample.data.models;
 
 class MemberData {
     private String name;

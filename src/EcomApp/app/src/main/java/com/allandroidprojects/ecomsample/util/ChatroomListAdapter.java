@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.utility;
+package com.allandroidprojects.ecomsample.util;
 
 import android.content.Context;
 import android.util.Log;
@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.User;
-import com.allandroidprojects.ecomsample.merchant.startup.ChatActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

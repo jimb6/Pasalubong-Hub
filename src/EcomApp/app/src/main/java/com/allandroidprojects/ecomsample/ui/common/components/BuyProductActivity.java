@@ -1,11 +1,10 @@
-package com.allandroidprojects.ecomsample.activities.product;
+package com.allandroidprojects.ecomsample.ui.common.components;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.activities.product.ui.buyproduct.BuyProductFragment;
 
 public class BuyProductActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.model;
+package com.allandroidprojects.ecomsample.data.models;
 
 import android.location.Location;
 

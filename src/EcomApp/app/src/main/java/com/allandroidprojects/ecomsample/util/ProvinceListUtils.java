@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.utility;
+package com.allandroidprojects.ecomsample.util;
 
 public class ProvinceListUtils {
 

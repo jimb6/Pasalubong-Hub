@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data;
+package com.allandroidprojects.ecomsample.data.models;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

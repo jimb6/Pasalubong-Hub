@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.account;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.account;
 
 import androidx.lifecycle.ViewModel;
 

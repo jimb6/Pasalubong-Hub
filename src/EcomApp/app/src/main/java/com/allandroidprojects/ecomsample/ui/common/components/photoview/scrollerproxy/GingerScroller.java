@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.photoview.scrollerproxy;
+package com.allandroidprojects.ecomsample.ui.common.components.photoview.scrollerproxy;
 
 import android.annotation.TargetApi;
 import android.content.Context;

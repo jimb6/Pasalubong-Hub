@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.composer.user.maps;
+package com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps;
 
 import android.content.Intent;
 import android.content.res.Resources;

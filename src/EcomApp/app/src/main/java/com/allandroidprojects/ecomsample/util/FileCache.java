@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.cache;
+package com.allandroidprojects.ecomsample.util;
 
 /**
  * Created by 06peng on 2015-07-03.

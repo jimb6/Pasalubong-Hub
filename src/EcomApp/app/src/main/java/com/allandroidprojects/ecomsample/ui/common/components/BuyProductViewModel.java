@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.activities.product.ui.buyproduct;
+package com.allandroidprojects.ecomsample.ui.common.components;
 
 import androidx.lifecycle.ViewModel;
 

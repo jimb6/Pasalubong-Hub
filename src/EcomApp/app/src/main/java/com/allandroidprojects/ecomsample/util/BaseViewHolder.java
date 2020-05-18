@@ -1,5 +1,9 @@
 package com.allandroidprojects.ecomsample.util;
 
+import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     private int mCurrentPosition;
     public BaseViewHolder(View itemView) {

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.utility;
+package com.allandroidprojects.ecomsample.util;
 
 
 import android.app.NotificationManager;
@@ -14,16 +14,16 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.user.accounts.AccountActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.registration.RegistrationActivity;
-import com.allandroidprojects.ecomsample.user.startup.MainActivity;
-import com.allandroidprojects.ecomsample.user.startup.SplashActivity;
-import com.allandroidprojects.ecomsample.user.startup.WelcomeActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.SplashActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.WelcomeActivity;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
-import com.allandroidprojects.ecomsample.merchant.messaging.MessagingActivity;
-import com.allandroidprojects.ecomsample.merchant.startup.ShopActivity;
-import com.allandroidprojects.ecomsample.user.maps.MapsActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

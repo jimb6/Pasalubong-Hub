@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.products;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.products;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,11 +24,12 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.config.helpers.IDataHelper;
+import com.allandroidprojects.ecomsample.data.models.Rating;
+import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
-import com.allandroidprojects.ecomsample.data.view_model.product.ProductViewModel;
-import com.allandroidprojects.ecomsample.merchant.startup.MerchantActivity;
+import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.data.viewmodel.product.ProductViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.faltenreich.skeletonlayout.Skeleton;
 import com.faltenreich.skeletonlayout.SkeletonLayoutUtils;
@@ -67,7 +69,7 @@ public class ProductFragment extends Fragment implements IDataHelper {
     private void refreshData() {
 
         products = new ArrayList<>();
-        adapter.notifyDataSetChanged();
+        initializeCompoinents();
         skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.shop_list_item, 4);
         skeleton.showSkeleton();
 
@@ -75,11 +77,11 @@ public class ProductFragment extends Fragment implements IDataHelper {
         products.add(new Product());
         viewModel.fetchMyProducts(MerchantActivity.myBusiness);
         viewModel.getMyProuducts().observe(getViewLifecycleOwner(), p -> {
+            skeleton.showOriginal();
+            initializeCompoinents();
             if (p instanceof Result.Success) {
                 products.add((Product) ((Result.Success) p).getData());
-            } else {
-                skeleton.showOriginal();
-                initializeCompoinents();
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -170,13 +172,15 @@ public class ProductFragment extends Fragment implements IDataHelper {
                 holder.productName.setText(item.getProductname());
                 holder.productDescription.setText(item.getProductDescription());
                 holder.productPrice.setText(String.valueOf(item.getPrice()));
+                holder.ratingbar.setRating((float) calculateAverageRatings(item.getRatings()));
+                holder.totalSales.setText(String.valueOf(item.getTotalSales()));
                 holder.mLayoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Intent intent = new Intent(merchantActivity, AddProductActivity.class);
-//                        intent.putExtra("PRODUCT", item);
-//                        intent.putExtra(STRING_IMAGE_POSITION, position);
-//                        merchantActivity.startActivity(intent);
+                        Intent intent = new Intent(merchantActivity, AddProductActivity.class);
+                        intent.putExtra("PRODUCT", item);
+                        intent.putExtra(STRING_IMAGE_POSITION, position);
+                        merchantActivity.startActivity(intent);
                     }
                 });
             }
@@ -205,6 +209,13 @@ public class ProductFragment extends Fragment implements IDataHelper {
             }
         }
 
+        double calculateAverageRatings(ArrayList<Rating> ratings){
+            double avg = 0;
+            for (Rating rate : ratings)
+                avg+= rate.getRating();
+            return avg / (double) ratings.size();
+        }
+
         public static class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final TextView productName, productDescription, productPrice;
@@ -212,6 +223,8 @@ public class ProductFragment extends Fragment implements IDataHelper {
             public final LinearLayout mLayoutItem;
             public final ImageView mImageViewWishlist;
             public final View addProductItem;
+            public final TextView totalSales;
+            public final RatingBar ratingbar;
 
             public ViewHolder(View view) {
                 super(view);
@@ -225,6 +238,8 @@ public class ProductFragment extends Fragment implements IDataHelper {
                 mLayoutItem = view.findViewById(R.id.layout_item);
                 mImageViewWishlist = view.findViewById(R.id.ic_wishlist);
                 addProductItem = view.findViewById(R.id.add_product_item);
+                totalSales = view.findViewById(R.id.totalSales);
+                ratingbar = view.findViewById(R.id.ratingBar);
             }
         }
 

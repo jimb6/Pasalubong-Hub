@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user.merchant.AboutStoreFragment">
+    android:orientation="vertical"
+    tools:context=".ui.composer.user.merchant.AboutStoreFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/tvBusiness"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="Business Name"
+        android:textSize="18sp" />
 
-</FrameLayout>
+    <View style="@style/proifleDetailsView" />
+
+    <TextView
+        android:id="@+id/tvBusinessEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Business Email"
+        android:textSize="18sp" />
+
+    <View style="@style/proifleDetailsView" />
+
+    <TextView
+        android:id="@+id/tvBusinessAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Business Address"
+        android:textSize="18sp" />
+
+    <View style="@style/proifleDetailsView" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="314dp" />
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.notification;
+package com.allandroidprojects.ecomsample.util;
 
 import android.content.Context;
 import android.graphics.Canvas;

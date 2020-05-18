@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.activities.auth.login;
+package com.allandroidprojects.ecomsample.ui.composer.user.authentication.login;
 
 import android.util.Patterns;
 
@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
-import com.allandroidprojects.ecomsample.data.repository.auth.LoginRepository;
+import com.allandroidprojects.ecomsample.data.remote.auth.LoginRepository;
 import com.google.firebase.auth.AuthCredential;
 
 public class LoginViewModel extends ViewModel {

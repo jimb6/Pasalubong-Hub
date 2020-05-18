@@ -7,20 +7,36 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".startup.FrescoApplication"
+        android:name=".util.FrescoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_bag"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/BadgeTheme">
-        <activity android:name=".product.BuyProductActivity"></activity>
+
+
         <activity
-            android:name=".shop.ui.products.AddProductActivity"
+            android:name=".ui.composer.user.merchant.MerchantProfileActivity"
+            android:label="@string/title_activity_merchant_profile"
+            android:theme="@style/BadgeTheme.NoActionBar"></activity>
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity
+            android:name=".ui.composer.merchant.startup.MerchantActivity"
+            android:label="@string/title_activity_merchant"
+            android:theme="@style/BadgeTheme.NoActionBar" />
+        <activity android:name=".ui.common.components.BuyProductActivity" />
+        <activity
+            android:name=".ui.composer.merchant.products.AddProductActivity"
             android:label="@string/title_activity_add_product"
             android:theme="@style/BadgeTheme.NoActionBar" />
         <!--
@@ -38,10 +54,10 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".shop.ui.chat_room.MessagingActivity" />
-        <activity android:name=".messages.ChatroomActivity" />
+        <activity android:name=".ui.composer.merchant.messaging.MessagingActivity" />
+        <activity android:name=".ui.composer.merchant.messaging.ChatroomActivity" />
         <activity
-            android:name=".shop.ShopActivity"
+            android:name=".ui.composer.merchant.startup.ShopActivity"
             android:label="@string/title_activity_shop" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -56,22 +72,22 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".location.MapsActivity"
+            android:name=".ui.composer.user.merchant.maps.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".account.AccountActivity"
+            android:name=".ui.composer.user.accounts.AccountActivity"
             android:label=""
             android:theme="@style/AppTheme.ProfileTheme" />
-        <activity android:name=".startup.ui.registration.EmailVerificationActivity" />
+        <activity android:name=".ui.composer.user.authentication.registration.EmailVerificationActivity" />
         <activity
-            android:name=".startup.ui.registration.RegistrationActivity"
+            android:name=".ui.composer.user.authentication.registration.RegistrationActivity"
             android:label="Sign up" /> <!-- <activity -->
         <!-- android:name=".ui.login.LoginActivity" -->
         <!-- android:label="@string/title_activity_login" /> -->
         <activity
-            android:name=".startup.ui.login.LoginActivity"
+            android:name=".ui.composer.user.authentication.login.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".startup.SplashActivity">
+        <activity android:name=".ui.composer.user.startup.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -83,36 +99,35 @@
                 android:value=".options.SearchResultsActivity" />
         </activity>
         <activity
-            android:name=".startup.WelcomeActivity"
+            android:name=".ui.composer.user.startup.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".startup.MainActivity"
+            android:name=".ui.composer.user.startup.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".fragments.ViewPagerActivity" />
-        <activity android:name=".product.ItemDetailsActivity" />
+        <activity android:name=".ui.startup.ViewPagerActivity" />
+        <activity android:name=".ui.common.components.ItemDetailsActivity" />
         <activity
-            android:name=".options.WishlistActivity"
+            android:name=".ui.composer.user.product.WishlistActivity"
             android:label="@string/my_wishlist" />
         <activity
-            android:name=".options.CartListActivity"
+            android:name=".ui.composer.user.product.CartListActivity"
             android:label="@string/my_cart" />
-        <activity android:name=".options.SearchResultActivity">
 
+        <activity android:name=".ui.composer.user.product.SearchResultActivity">
             <!-- to identify this activity as "searchable.xml" -->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".miscellaneous.EmptyActivity" />
 
-        <service android:name=".services.MessagingService">
+        <activity android:name=".ui.common.components.EmptyActivity" />
+
+        <service android:name=".data.services.MessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

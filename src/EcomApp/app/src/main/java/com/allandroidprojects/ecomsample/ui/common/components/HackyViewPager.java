@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.fragments;
+package com.allandroidprojects.ecomsample.ui.common.components;
 
 import android.content.Context;
 import android.util.AttributeSet;

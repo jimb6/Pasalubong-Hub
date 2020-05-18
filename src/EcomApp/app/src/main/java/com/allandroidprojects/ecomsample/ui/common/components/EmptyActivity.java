@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.miscellaneous;
+package com.allandroidprojects.ecomsample.ui.common.components;
 
 import android.os.Bundle;
 import android.widget.Button;

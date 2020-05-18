@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.activities.auth.login;
+package com.allandroidprojects.ecomsample.ui.composer.user.authentication.login;
 
 import androidx.annotation.Nullable;
 

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.utility;
+package com.allandroidprojects.ecomsample.interfaces;
 
 public interface OnDataCompleteListener {
     void onDataComplete();

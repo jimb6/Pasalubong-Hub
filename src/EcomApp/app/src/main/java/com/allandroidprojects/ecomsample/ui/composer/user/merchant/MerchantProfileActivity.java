@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.merchant;
+package com.allandroidprojects.ecomsample.ui.composer.user.merchant;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
 import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;
-import com.allandroidprojects.ecomsample.user.maps.MapFragment;
+import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapFragment;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.tabs.TabLayout;
 

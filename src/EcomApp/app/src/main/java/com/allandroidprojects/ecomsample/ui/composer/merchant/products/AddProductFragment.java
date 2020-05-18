@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.products;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.products;
 
 import android.Manifest;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,16 +28,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.factory.product.AddProductViewModelFactory;
+import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
-import com.allandroidprojects.ecomsample.data.view_model.product.AddProductViewModel;
-import com.allandroidprojects.ecomsample.merchant.startup.MerchantActivity;
+import com.allandroidprojects.ecomsample.data.viewmodel.product.AddProductViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
+import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
-import com.roger.catloadinglibrary.CatLoadingView;
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.ArrayList;
@@ -50,30 +50,261 @@ import static android.app.Activity.RESULT_OK;
 public class AddProductFragment extends Fragment {
 
     private AddProductActivity activity;
-    private Button upload, save, update, delete;
+
+    private Button save, update, delete;
     private View root;
-    private ArrayList<Uri> images = new ArrayList<>();
-    //    private Map<Integer, Uri> images = new HashMap<>();
-    private int REQUEST_CODE_READ_STORAGE = 1;
-    private RecyclerView.LayoutManager recylerViewLayoutManager;
+    private TextInputEditText productName, productDescription, productPrice, productStock, productTags;
+    private TransactionType transactionType;
     private RecyclerView recyclerView;
+    private AutoCompleteTextView actcategory, actcondition, actWholeSale;
+    private ChipGroup tagsGroup;
+
+    private RecyclerView.LayoutManager recylerViewLayoutManager;
     private RecyclerView.Adapter adapter;
     private AddProductViewModel viewModel;
-    private AutoCompleteTextView actcategory, actcondition, actWholeSale;
-    private CatLoadingView mView;
-    private int imagesUniqueId = 0;
-    private ChipGroup tagsGroup;
+
     private String[] categories = new String[]{"Sweets", "Goods", "Clothing", "Decoration", "Souvenir"};
-    private String[] conditions = new String[] {"New", "Used"};
-    private String[] wholeSale = new String[] {"Available", "Planned", "Not Available"};
+    private String[] conditions = new String[]{"New", "Used"};
+    private String[] wholeSale = new String[]{"Available", "Planned", "Not Available"};
+
     private Product productToUpdate;
-    private int SpannedLength = 0, chipLength = 4;
     private Product newProduct = new Product();
-    private ArrayList<String> tempImages = new ArrayList<>();
-    private TextInputEditText productName, productDescription, productPrice, productStock, productTags;
-    private View loadingLayout;
 
 
+    private ArrayList<Uri> images = new ArrayList<>();
+
+    private ArrayList<String> imagesLinksToSave = new ArrayList<>();
+    private int REQUEST_CODE_READ_STORAGE = 1;
+    private LottieAlertDialog alertDialog;
+
+
+    private boolean isValidInputsForSave() {
+        //Now we reomve the images first index because its null to avoid any error
+        //
+        images.remove(0);
+
+        if (!isTextInputsValid()) {
+            images.add(0, null);
+            showErrorAlert("Invalid Inputs", "Please fill out all inputs.");
+            return false;
+        }
+
+        if (!isImageInputsValid()) {
+            images.add(0, null);
+            showErrorAlert("Invalid Images", "Please upload atleast 1 image for your product.");
+            return false;
+        }
+
+        if (!isProducTagsValid()) {
+            images.add(0, null);
+            showErrorAlert("Invalid Tags", "Please input some tags for your products. " +
+                    "Tags serves as the search text of your product.");
+            return false;
+        }
+
+        showSavingDialog();
+        Product product = dataMapping();
+        uploadImages(product);
+
+        return true;
+    }
+
+    private boolean isValidInputsForUpdate() {
+        //Now we reomve the images first index because its null to avoid any error
+        //
+        images.remove(0);
+        if (!isTextInputsValid()) {
+            images.add(0, null);
+            showErrorAlert("Invalid Inputs", "Please fill out all inputs.");
+            return false;
+        }
+
+        if (!isProducTagsValid()) {
+            images.add(0, null);
+            showErrorAlert("Invalid Tags", "Please input some tags for your products. " +
+                    "Tags serves as the search text of your product.");
+            return false;
+        }
+
+        if (!isImageInputsValid()) {
+            images.add(0, null);
+            showErrorAlert("Invalid Images", "Please upload atleast 1 image for your product.");
+            return false;
+        }
+
+
+        for (int i = 0; i < images.size(); ) {
+            Uri image = images.get(i);
+            if (productToUpdate.getImageUrls().contains(image.toString())) {
+                images.remove(i);
+                imagesLinksToSave.add(image.toString());
+            } else {
+                i++;
+            }
+        }
+
+        showSavingDialog();
+        Product product = dataMapping();
+        if (images.size() > 0)
+            uploadImages(product);
+        else
+            updateProduct(product);
+        return true;
+    }
+
+    private boolean isTextInputsValid() {
+        if (isEmpty(
+                productName.getText().toString(),
+                productDescription.getText().toString(),
+                productPrice.getText().toString(),
+                productPrice.getText().toString(),
+                productStock.getText().toString()
+        )) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isImageInputsValid() {
+        if (isClear(images.size())) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isProducTagsValid() {
+        if (isClear(tagsGroup.getChildCount())) {
+            return false;
+        }
+        return true;
+    }
+
+    private void showErrorAlert(String title, String body) {
+        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(getActivity(), DialogTypes.TYPE_ERROR)
+                .setTitle(title)
+                .setDescription(body)
+                .setPositiveText("Close")
+                .setPositiveListener(lottieAlertDialog -> {
+                    lottieAlertDialog.dismiss();
+                })
+                .build();
+        alertDialog.show();
+    }
+
+    private void showSuccessAlert(String title, String body) {
+        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(getActivity(), DialogTypes.TYPE_SUCCESS)
+                .setTitle(title)
+                .setDescription(body)
+                .setPositiveText("Close")
+                .setPositiveListener(lottieAlertDialog -> {
+                    lottieAlertDialog.dismiss();
+                }).build();
+        alertDialog.dismiss();
+    }
+
+    private boolean isClear(int... sizes) {
+        for (int size : sizes)
+            if (size < 1)
+                return true;
+        return false;
+    }
+
+    private boolean isEmpty(Object... objs) {
+        for (Object obj : objs)
+            if (objs.equals(""))
+                return true;
+        return false;
+    }
+
+    private LottieAlertDialog showSavingDialog() {
+        alertDialog = new LottieAlertDialog.Builder(getContext(), DialogTypes.TYPE_LOADING)
+                .setTitle("Saving")
+                .setDescription("Please Wait")
+                .build();
+
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+        return alertDialog;
+    }
+
+    private void dismisSavingDialog() {
+        alertDialog.dismiss();
+    }
+
+    private Product dataMapping() {
+        //Data Mapping for new product to be save
+        Product product = new Product();
+        product.setProductname(productName.getText().toString());
+        product.setProductDescription(productDescription.getText().toString());
+        product.setProductCategory(actcategory.getText().toString());
+        product.setPrice(Double.parseDouble(productPrice.getText().toString()));
+        product.setStock(Integer.parseInt(productStock.getText().toString()));
+        product.setCondition(actcondition.getText().toString());
+        product.setWholeSeller(actWholeSale.getText().toString());
+        ArrayList<String> tags = new ArrayList<>();
+        for (int i = 0; i < tagsGroup.getChildCount(); i++) {
+            Chip chipObj = (Chip) tagsGroup.getChildAt(i);
+            tags.add(chipObj.getText().toString());
+        }
+        product.setTags(tags);
+        product.setBusinessOwnerId(MerchantActivity.myBusiness.getOwnerId());
+        product.setImageUrls(imagesLinksToSave);
+        product.setTotalSales(0);
+
+
+        if (transactionType == TransactionType.EDIT) {
+            product.setProductReference(productToUpdate.getProductReference());
+            product.setTotalSales(productToUpdate.getTotalSales());
+        }
+
+        return product;
+    }
+
+    private void saveNewproduct(Product product) {
+        alertDialog.setMessage("Saving new prouct. Please wait...");
+
+        viewModel.saveNewProduct(product);
+        viewModel.getNewProductResult().observe(getViewLifecycleOwner(), p -> {
+            dismisSavingDialog(); // Dismiss the loading dialog
+            if (p instanceof Result.Success) {
+                showSuccessAlert("Saved!", "New product saved to your store.");
+                Product reference = (Product) ((Result.Success) p).getData();
+            } else if (p instanceof Result.Error) {
+                showErrorAlert("Error", ((Result.Error) p).getError().getMessage());
+            }
+        });
+    }
+
+    private void updateProduct(Product product) {
+        alertDialog.setMessage("Updating product please wait...");
+
+        newProduct.setImageUrls(imagesLinksToSave);
+        viewModel.updateProduct(product);
+        viewModel.getUpdatedProduct().observe(getViewLifecycleOwner(), p -> {
+            dismisSavingDialog();
+            if (p instanceof Result.Success) {
+                showSuccessAlert("Success", "Product has been upated!");
+                Product reference = (Product) ((Result.Success) p).getData();
+                finishFragmentTransaction();
+            } else if (p instanceof Result.Error) {
+                showErrorAlert("Error", ((Result.Error) p).getError().getMessage());
+            }
+
+        });
+    }
+
+    private void checkFragmentTransactionInstance() {
+        productToUpdate = activity.getProduct();
+        if (productToUpdate != null)
+            transactionType = TransactionType.EDIT;
+        else
+            transactionType = TransactionType.CREATE;
+    }
+
+    private void finishFragmentTransaction() {
+        getActivity().finish();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,40 +319,19 @@ public class AddProductFragment extends Fragment {
     ) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_first, container, false);
+
+        images.add(null); // This is for ad image button put in recycler view
+
         initializeViewModel();
+        checkFragmentTransactionInstance();
         initializeComponents();
         setupRecyclerView();
         return root;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 1:
                 // If request is cancelled, the result arrays are empty.
@@ -141,6 +351,7 @@ public class AddProductFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         super.onActivityResult(requestCode, resultCode, resultData);
 
+        //This request code is for image croping
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(resultData);
             if (resultCode == RESULT_OK) {
@@ -153,29 +364,10 @@ public class AddProductFragment extends Fragment {
             }
         }
 
+        //This request code is for save the image uri and display in recyclerview
         if (requestCode == REQUEST_CODE_READ_STORAGE) {
             if (resultCode == RESULT_OK) {
                 if (resultData != null) {
-//                    if (resultData.getClipData() != null) {
-//                        int count = resultData.getClipData().getItemCount();
-//                        int currentItem = 0;
-//                        while (currentItem < count) {
-//                            Uri imageUri = resultData.getClipData().getItemAt(currentItem).getUri();
-//                            currentItem = currentItem + 1;
-//
-//                            Log.d("Uri Selected", imageUri.toString());
-//
-//                            try {
-//                                images.add(imageUri);
-//                                adapter.notifyItemInserted(images.size() - 1);
-////                                MyAdapter mAdapter = new MyAdapter(MainActivity.this, arrayList);
-////                                listView.setAdapter(mAdapter);
-//
-//                            } catch (Exception e) {
-//                                Log.e("File Chooser", "File select error", e);
-//                            }
-//                        }
-//                    }
                     if (resultData.getData() != null) {
                         final Uri uri = resultData.getData();
                         try {
@@ -193,19 +385,15 @@ public class AddProductFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private void initializeViewModel(){
+    private void initializeViewModel() {
         this.viewModel = ViewModelProviders.of(activity, new AddProductViewModelFactory()).get(AddProductViewModel.class);
     }
 
     private void initializeComponents() {
-//        mView = new CatLoadingView();
-//        mView.setCanceledOnTouchOutside(false);
-        loadingLayout = root.findViewById(R.id.custom_loading);
-
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(
-                        getContext(),
-                        R.layout.product_category_menu_dropdown,
-                        categories);
+                getContext(),
+                R.layout.product_category_menu_dropdown,
+                categories);
 
         ArrayAdapter<String> conditionAdapter = new ArrayAdapter<>(
                 getContext(),
@@ -233,43 +421,27 @@ public class AddProductFragment extends Fragment {
 
         tagsGroup = root.findViewById(R.id.tags_group);
         productTags = root.findViewById(R.id.tags);
-        productTags.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    String txtVal = v.getText().toString();
-                    if (!txtVal.equals("")) {
-                        addChipToGroup(txtVal, tagsGroup);
-                        productTags.setText("");
-                    }
-                    return true;
+        productTags.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                String txtVal = v.getText().toString();
+                if (!txtVal.equals("")) {
+                    addChipToGroup(txtVal, tagsGroup);
+                    productTags.setText("");
                 }
-                return false;
+                return true;
             }
-        });
-
-        upload = root.findViewById(R.id.btnChoose);
-        upload.setOnClickListener(v -> {
-            // Display the file chooser dialog
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                askForPermission();
-            } else {
-                showChooser();
-            }
+            return false;
         });
 
         save = root.findViewById(R.id.button_first);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                validateInput("Save");
-            }
+        save.setOnClickListener(view -> {
+            isValidInputsForSave();
         });
 
         update = root.findViewById(R.id.button_update);
         update.setVisibility(View.GONE);
         update.setOnClickListener(c -> {
-            validateInput("Update");
+            isValidInputsForUpdate();
         });
 
         delete = root.findViewById(R.id.button_delete);
@@ -290,9 +462,7 @@ public class AddProductFragment extends Fragment {
                     .show();
         });
 
-
-        productToUpdate = activity.getProduct();
-        if (productToUpdate != null) {
+        if (transactionType == TransactionType.EDIT) {
             update.setVisibility(View.VISIBLE);
             delete.setVisibility(View.VISIBLE);
             save.setVisibility(View.GONE);
@@ -316,7 +486,7 @@ public class AddProductFragment extends Fragment {
         }
     }
 
-    private void setupRecyclerView(){
+    private void setupRecyclerView() {
         recyclerView = root.findViewById(R.id.uploadedImage);
         recylerViewLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
 
@@ -326,7 +496,6 @@ public class AddProductFragment extends Fragment {
     }
 
     private void deleteProduct() {
-        loadingLayout.setVisibility(View.VISIBLE);
         viewModel.deleteProduct(productToUpdate);
         viewModel.isProductDeleted().observe(getViewLifecycleOwner(), p -> {
             if (p) {
@@ -335,156 +504,32 @@ public class AddProductFragment extends Fragment {
             } else {
                 Toast.makeText(getContext(), "Unable to Delete Product.", Toast.LENGTH_SHORT).show();
             }
-            loadingLayout.setVisibility(View.GONE);
-//            mView.dismiss();
         });
     }
 
-    private void saveProductImages(String action)
-    {
-        loadingLayout.setVisibility(View.VISIBLE);
+    private void uploadImages(Product product) {
+//        This atomic integer is the indicator if all images are uploaded
+//        alert dialog set title.
+        alertDialog.setMessage("Uploading images...");
 
-//        mView.show(getParentFragmentManager(), "");
         AtomicInteger numberOfResult = new AtomicInteger();
         viewModel.saveNewProductImages(MerchantActivity.myBusiness.getOwnerId(), images);
         viewModel.getNewProductImagesResult().observe(getViewLifecycleOwner(), result -> {
-            if (result instanceof Result.Success){
-                tempImages.add(((Result.Success) result).getData().toString());
+            if (result instanceof Result.Success) {
+                imagesLinksToSave.add(((Result.Success) result).getData().toString());
                 numberOfResult.getAndIncrement();
                 Toast.makeText(activity, "Successfully Uploaded", Toast.LENGTH_SHORT).show();
                 if (numberOfResult.get() == images.size()) {
-                    if (action.equals("Save")) {
-                        saveProductInfo(tempImages);
-                    } else if (action.equals("Update")) {
-                        updateProductInfo(tempImages, true);
+                    if (transactionType == TransactionType.EDIT) {
+                        updateProduct(product);
+                    } else {
+                        saveNewproduct(product);
                     }
                 }
-            }else{
-                numberOfResult.getAndIncrement();
-                Toast.makeText(activity, "Failed to upload Image", Toast.LENGTH_SHORT).show();
-                loadingLayout.setVisibility(View.GONE);
+            } else {
+                showErrorAlert("Upload Image Failed", "Sorry, some image are failed to upload in our server. Try again later.");
+                dismisSavingDialog();
             }
-        });
-
-
-    }
-
-    private void saveProductInfo(ArrayList<String> links) {
-        Product product = new Product();
-        product.setProductname(productName.getText().toString());
-        product.setProductDescription(productDescription.getText().toString());
-        product.setProductCategory(actcategory.getText().toString());
-        product.setPrice(Double.parseDouble(productPrice.getText().toString()));
-        product.setStock(Integer.parseInt(productStock.getText().toString()));
-        product.setCondition(actcondition.getText().toString());
-        product.setWholeSeller(actWholeSale.getText().toString());
-        ArrayList<String> tags = new ArrayList<>();
-        for (int i = 0; i < tagsGroup.getChildCount(); i++) {
-            Chip chipObj = (Chip) tagsGroup.getChildAt(i);
-            tags.add(chipObj.getText().toString());
-        }
-        product.setTags(tags);
-
-//        product.setImageUrls(arrayList);
-        product.setBusinessOwnerId(MerchantActivity.myBusiness.getOwnerId());
-//        String[] imageLinks = new String[links.size()];
-//        for (int i=0; i<links.size();i++)
-//            imageLinks[i] = links.get(i).toString();
-
-        product.setImageUrls(links);
-        viewModel.saveNewProduct(product);
-        viewModel.getNewProductResult().observe(getViewLifecycleOwner(), p -> {
-            if (p instanceof Result.Success){
-                Toast.makeText(getContext(), "Product Added Successfully.", Toast.LENGTH_SHORT).show();
-                Product reference = (Product) ((Result.Success) p).getData();
-//                saveImages();
-                activity.finish();
-            }else if (p instanceof Result.Error){
-                Toast.makeText(getContext(), ((Result.Error) p).getError().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            loadingLayout.setVisibility(View.GONE);
-//            mView.dismiss();
-        });
-    }
-
-    private void validateInput(String action) {
-
-        if (productName.getText().toString().equals(""))
-            return;
-        if (productDescription.getText().toString().equals(""))
-            return;
-        if (actcategory.getText().toString().equals(""))
-            return;
-        if (productPrice.getText().toString().equals(""))
-            return;
-        if (productStock.getText().toString().equals(""))
-            return;
-        if (actcondition.getText().toString().equals(""))
-            return;
-        if (actWholeSale.getText().toString().equals(""))
-            return;
-
-        newProduct.setProductname(productName.getText().toString());
-        newProduct.setProductDescription(productDescription.getText().toString());
-        newProduct.setProductCategory(actcategory.getText().toString());
-        newProduct.setPrice(Double.parseDouble(productPrice.getText().toString()));
-        newProduct.setStock(Integer.parseInt(productStock.getText().toString()));
-        newProduct.setCondition(actcondition.getText().toString());
-        newProduct.setWholeSeller(actWholeSale.getText().toString());
-
-        if (productToUpdate != null) {
-            newProduct.setBusinessOwnerId(productToUpdate.getBusinessOwnerId());
-            newProduct.setProductReference(productToUpdate.getProductReference());
-        }
-
-        ArrayList<String> tags = new ArrayList<>();
-        for (int i = 0; i < tagsGroup.getChildCount(); i++) {
-            Chip chipObj = (Chip) tagsGroup.getChildAt(i);
-            tags.add(chipObj.getText().toString());
-        }
-
-        newProduct.setTags(tags);
-
-        if (tags.size() < 1)
-            return;
-
-        if (images.size() < 1)
-            return;
-
-//        Checks if new images added
-        if (productToUpdate != null) {
-            for (int i = 0; i < images.size(); ) {
-                Uri image = images.get(i);
-                if (productToUpdate.getImageUrls().contains(image.toString())) {
-                    images.remove(i);
-                    tempImages.add(image.toString());
-                } else {
-                    i++;
-                }
-            }
-        }
-
-        if (images.size() > 0)
-            saveProductImages(action);
-        else
-            updateProductInfo(tempImages, false);
-    }
-
-    private void updateProductInfo(ArrayList<String> links, boolean hasNewImages) {
-        if (!hasNewImages)
-            loadingLayout.setVisibility(View.VISIBLE);
-
-        newProduct.setImageUrls(links);
-        viewModel.updateProduct(newProduct);
-        viewModel.getUpdatedProduct().observe(getViewLifecycleOwner(), p -> {
-            if (p instanceof Result.Success) {
-                Toast.makeText(getContext(), "Product Updated.", Toast.LENGTH_SHORT).show();
-                Product reference = (Product) ((Result.Success) p).getData();
-                activity.finish();
-            } else if (p instanceof Result.Error) {
-                Toast.makeText(getContext(), ((Result.Error) p).getError().getMessage(), Toast.LENGTH_SHORT).show();
-            }
-            loadingLayout.setVisibility(View.GONE);
         });
     }
 
@@ -535,14 +580,6 @@ public class AddProductFragment extends Fragment {
     }
 
 
-
-
-
-
-
-
-
-
     public class SimpleStringRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
 
@@ -552,12 +589,45 @@ public class AddProductFragment extends Fragment {
         @Override
         public void onBindViewHolder(final SimpleStringRecyclerViewAdapter.ViewHolder holder, final int position) {
             final Uri uri = imageUri.get(position);
-            holder.mImageView.setImageURI(uri);
-            holder.mImageView.setOnClickListener(v -> {
-            });
-            holder.deleteImage.setOnClickListener(v -> {
-                removeImage(position);
-            });
+
+            if (uri == null) {
+                holder.add_new_button.setVisibility(View.VISIBLE);
+                holder.add_new_button.setOnClickListener(v -> {
+                    // Display the file chooser dialog
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        askForPermission();
+                    } else {
+                        showChooser();
+                    }
+                });
+                holder.deleteImage.setVisibility(View.GONE);
+            } else {
+
+                holder.mImageView.setImageURI(uri);
+                holder.mImageView.setOnClickListener(v -> {
+
+                    //Image Viewr will show when Image are greater than 1
+//                    because we set image 1 as null in order to show add button
+
+                    if (imageUri.size() > 1) {
+                        ArrayList<String> imageUriString = new ArrayList<>();
+                        for (Uri uriStr : imageUri) {
+                            if (uriStr == null)
+                                continue;
+                            imageUriString.add(uriStr.toString());
+                        }
+
+                        Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
+                        intent.putExtra("position", position);
+                        intent.putStringArrayListExtra("images", imageUriString);
+                        startActivity(intent);
+                    }
+                });
+                holder.deleteImage.setOnClickListener(v -> {
+                    removeImage(position);
+                });
+            }
+
 
         }
 
@@ -583,10 +653,14 @@ public class AddProductFragment extends Fragment {
             }
         }
 
+
+
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final SimpleDraweeView mImageView;
             public final ImageView deleteImage;
+            public final View add_new_button;
+
 
             public ViewHolder(View view) {
                 super(view);
@@ -594,6 +668,8 @@ public class AddProductFragment extends Fragment {
                 mImageView = view.findViewById(R.id.image1);
                 deleteImage = view.findViewById(R.id.delete_image_button);
                 deleteImage.bringToFront();
+                add_new_button = view.findViewById(R.id.add_image_item);
+
             }
         }
 
@@ -601,5 +677,10 @@ public class AddProductFragment extends Fragment {
         public int getItemCount() {
             return imageUri.size();
         }
+    }
+
+
+    enum TransactionType {
+        CREATE, EDIT
     }
 }

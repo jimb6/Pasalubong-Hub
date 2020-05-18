@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.model;
+package com.allandroidprojects.ecomsample.data.models;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ public class SearchData {
     public ArrayList<String> ratings;
     public ArrayList<String> locations;
 
-    public SearchData(){
+    public SearchData() {
         this.query = "";
         this.priceFrom = 0d;
         this.priceTo = 999999999;

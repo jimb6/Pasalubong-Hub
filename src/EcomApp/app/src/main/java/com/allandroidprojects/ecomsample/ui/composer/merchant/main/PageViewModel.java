@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.main;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.main;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

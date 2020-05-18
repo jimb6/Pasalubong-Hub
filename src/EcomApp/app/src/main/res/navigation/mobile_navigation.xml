@@ -7,26 +7,32 @@
 
     <fragment
         android:id="@+id/navigation_product"
-        android:name="com.allandroidprojects.ecomsample.shop.ui.products.ProductFragment"
+        android:name="com.allandroidprojects.ecomsample.ui.composer.merchant.products.ProductFragment"
         android:label="@string/title_products"
         tools:layout="@layout/fragment_product" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.allandroidprojects.ecomsample.shop.ui.dashboard.DashboardFragment"
+        android:name="com.allandroidprojects.ecomsample.ui.composer.merchant.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.allandroidprojects.ecomsample.shop.ui.notifications.NotificationsFragment"
+        android:name="com.allandroidprojects.ecomsample.ui.composer.merchant.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_messages"
-        android:name="com.allandroidprojects.ecomsample.messages.MessagesFragment"
+        android:name="com.allandroidprojects.ecomsample.ui.common.components.MessagesFragment"
         android:label="@string/messages"
         tools:layout="@layout/fragment_messages" />
+
+    <fragment
+        android:id="@+id/navigation_shop"
+        android:name="com.allandroidprojects.ecomsample.ui.composer.merchant.account.ShopInfoFragment"
+        android:label="My Shop"
+        tools:layout="@layout/fragment_shop_info" />
 
 </navigation>

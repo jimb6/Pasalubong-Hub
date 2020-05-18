@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.fragments;
+package com.allandroidprojects.ecomsample.ui.common.components;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.view_model.notification.MessagesViewModel;
-import com.allandroidprojects.ecomsample.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagesViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
 
 public class MessagesFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.activities.auth.registration;
+package com.allandroidprojects.ecomsample.ui.composer.user.authentication.registration;
 
 import androidx.annotation.Nullable;
 

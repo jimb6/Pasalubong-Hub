@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.services;
+package com.allandroidprojects.ecomsample.data.services;
 
 import android.content.Context;
 import android.util.Log;

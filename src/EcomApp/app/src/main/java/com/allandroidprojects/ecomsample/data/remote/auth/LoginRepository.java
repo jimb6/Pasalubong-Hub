@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.repository.auth;
+package com.allandroidprojects.ecomsample.data.remote.auth;
 
 import android.net.Uri;
 

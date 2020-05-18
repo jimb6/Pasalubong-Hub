@@ -1,12 +1,11 @@
-package com.allandroidprojects.ecomsample.data.factory;
+package com.allandroidprojects.ecomsample.data.factory.account;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.allandroidprojects.ecomsample.data.view_model.*;
 
-import com.allandroidprojects.ecomsample.data.repository.AccountRepository;
-import com.allandroidprojects.ecomsample.data.view_model.AccountViewModel;
+import com.allandroidprojects.ecomsample.data.repository.account.AccountRepository;
+import com.allandroidprojects.ecomsample.data.viewmodel.account.AccountViewModel;
 
 public class AccountViewModelFactory implements ViewModelProvider.Factory{
 

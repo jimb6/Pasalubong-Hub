@@ -1,8 +1,10 @@
-package com.allandroidprojects.ecomsample.miscellaneous;
+package com.allandroidprojects.ecomsample.ui.common.widget;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+
+import com.allandroidprojects.ecomsample.interfaces.ImageDownloadListener;
 
 /**
  * Created by 06peng on 15/6/26.

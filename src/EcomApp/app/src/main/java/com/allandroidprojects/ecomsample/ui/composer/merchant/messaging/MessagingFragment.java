@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.messaging;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.messaging;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

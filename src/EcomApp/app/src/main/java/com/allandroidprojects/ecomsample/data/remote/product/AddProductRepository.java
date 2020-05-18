@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.repository.product;
+package com.allandroidprojects.ecomsample.data.remote.product;
 
 import android.net.Uri;
 
@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
+import com.allandroidprojects.ecomsample.data.models.Product;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.photoview.view;
+package com.allandroidprojects.ecomsample.ui.common.components.photoview.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,10 +19,10 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.allandroidprojects.ecomsample.config.helpers.log.LogManager;
-import com.allandroidprojects.ecomsample.config.helpers.photoview.gestures.OnGestureListener;
-import com.allandroidprojects.ecomsample.config.helpers.photoview.gestures.VersionedGestureDetector;
-import com.allandroidprojects.ecomsample.config.helpers.photoview.scrollerproxy.ScrollerProxy;
+import com.allandroidprojects.ecomsample.util.LogManager;
+import com.allandroidprojects.ecomsample.ui.common.components.photoview.gestures.OnGestureListener;
+import com.allandroidprojects.ecomsample.ui.common.components.photoview.gestures.VersionedGestureDetector;
+import com.allandroidprojects.ecomsample.ui.common.components.photoview.scrollerproxy.ScrollerProxy;
 
 import java.lang.ref.WeakReference;
 
@@ -72,7 +72,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         return null != imageView && null != imageView.getDrawable();
     }
 
-    private com.allandroidprojects.ecomsample.config.helpers.photoview.gestures.GestureDetector mScaleDragDetector;
+    private com.allandroidprojects.ecomsample.ui.common.components.photoview.gestures.GestureDetector mScaleDragDetector;
 
     /**
      * Set's the ImageView's ScaleType to Matrix.

@@ -1,12 +1,12 @@
-package com.allandroidprojects.ecomsample.data.factory;
+package com.allandroidprojects.ecomsample.data.factory.product;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.data.view_model.ProductViewModel;
-import com.allandroidprojects.ecomsample.data.view_model.ShopViewModel;
-import com.allandroidprojects.ecomsample.data.repository.ShopRepository;
+import com.allandroidprojects.ecomsample.data.repository.account.ShopRepository;
+import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
+import com.allandroidprojects.ecomsample.data.viewmodel.product.ProductViewModel;
 
 public class ProductViewModelFactory implements ViewModelProvider.Factory {
     @NonNull

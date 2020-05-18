@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.product;
+package com.allandroidprojects.ecomsample.ui.composer.user.product;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -130,10 +130,10 @@ public class SearchResultActivity extends AppCompatActivity implements Navigatio
             viewModel.searchProducts(searchData);
             viewModel.getSearchProduct().observe(this, p -> {
                 if (p instanceof Result.Success) {
-                    search_result.setText((result++) + "Search results for " + query);
                     searchProducts.add((Product) ((Result.Success) p).getData());
                     adapter.notifyDataSetChanged();
                 }
+                search_result.setText("Search results for " + query);
             });
         }
     }

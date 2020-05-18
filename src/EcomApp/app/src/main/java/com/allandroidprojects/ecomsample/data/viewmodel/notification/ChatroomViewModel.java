@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.view_model.notification;
+package com.allandroidprojects.ecomsample.data.viewmodel.notification;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

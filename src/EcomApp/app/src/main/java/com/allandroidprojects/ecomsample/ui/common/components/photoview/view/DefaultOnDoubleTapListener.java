@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.photoview.view;
+package com.allandroidprojects.ecomsample.ui.common.components.photoview.view;
 
 import android.graphics.RectF;
 import android.view.GestureDetector;

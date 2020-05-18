@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.product;
+package com.allandroidprojects.ecomsample.ui.composer.user.product;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.ui.common.components.ItemDetailsActivity;
-import com.allandroidprojects.ecomsample.user.startup.MainActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
 import com.allandroidprojects.ecomsample.util.ImageUrlUtils;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.Product;
@@ -29,8 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
-import static com.allandroidprojects.ecomsample.user.product.ProductListFragment.STRING_IMAGE_POSITION;
-import static com.allandroidprojects.ecomsample.user.product.ProductListFragment.STRING_IMAGE_URI;
+import static com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment.STRING_IMAGE_POSITION;
+import static com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment.STRING_IMAGE_URI;
 
 public class CartListActivity extends AppCompatActivity {
     private static Context mContext;

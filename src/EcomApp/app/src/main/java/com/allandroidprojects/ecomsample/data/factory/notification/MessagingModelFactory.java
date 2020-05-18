@@ -1,11 +1,11 @@
-package com.allandroidprojects.ecomsample.data;
+package com.allandroidprojects.ecomsample.data.factory.notification;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.data.repository.MessagingRepository;
-import com.allandroidprojects.ecomsample.data.view_model.MessagingViewModel;
+import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
+import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
 
 public class MessagingModelFactory implements ViewModelProvider.Factory {
     @NonNull

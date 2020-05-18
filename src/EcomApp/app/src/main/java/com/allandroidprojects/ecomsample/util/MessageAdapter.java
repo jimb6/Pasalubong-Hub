@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.adapters;
+package com.allandroidprojects.ecomsample.util;
 
 import android.app.Activity;
 import android.content.Context;

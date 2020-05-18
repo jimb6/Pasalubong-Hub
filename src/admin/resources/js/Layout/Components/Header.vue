@@ -11,7 +11,9 @@
         </div>
         <div class="app-header__mobile-menu">
             <div>
-                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic" v-bind:class="{ 'is-active' : isOpen }" @click="toggleMobile('closed-sidebar-open')">
+                <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
+                        v-bind:class="{ 'is-active' : isOpen }"
+                        @click="toggleMobile('closed-sidebar-open')">
                     <span class="hamburger-box">
                         <span class="hamburger-inner"></span>
                     </span>
@@ -20,7 +22,8 @@
         </div>
         <div class="app-header__menu">
             <span>
-                <b-button class="btn-icon btn-icon-only" variant="primary" size="sm" v-bind:class="{ 'active' : isOpenMobileMenu }" @click="toggleMobile2('header-menu-open')">
+                <b-button class="btn-icon btn-icon-only" variant="primary" size="sm"
+                          v-bind:class="{ 'active' : isOpenMobileMenu }" @click="toggleMobile2('header-menu-open')">
                     <div class="btn-icon-wrapper">
                         <font-awesome-icon icon="ellipsis-v"/>
                     </div>
@@ -58,10 +61,7 @@
                 isOpenMobileMenu: false,
             }
         },
-        props: {
-
-
-        },
+        props: {},
         methods: {
             toggleMobile(className) {
                 const el = document.body;

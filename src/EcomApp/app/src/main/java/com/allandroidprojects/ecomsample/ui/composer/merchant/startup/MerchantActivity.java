@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.startup;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.startup;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -7,17 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.config.helpers.IDataHelper;
+import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
 import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
-import com.allandroidprojects.ecomsample.data.view_model.account.ShopViewModel;
-import com.allandroidprojects.ecomsample.merchant.account.ShopInfoFragment;
-import com.allandroidprojects.ecomsample.merchant.dashboard.DashboardFragment;
-import com.allandroidprojects.ecomsample.merchant.main.SectionsPagerAdapter;
-import com.allandroidprojects.ecomsample.merchant.messaging.MessagingFragment;
-import com.allandroidprojects.ecomsample.merchant.notifications.NotificationsFragment;
-import com.allandroidprojects.ecomsample.merchant.ordermanagement.OrderManagement;
-import com.allandroidprojects.ecomsample.merchant.products.ProductFragment;
+import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.account.ShopInfoFragment;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.dashboard.DashboardFragment;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingFragment;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.notifications.NotificationsFragment;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement.OrderManagement;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.products.ProductFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;

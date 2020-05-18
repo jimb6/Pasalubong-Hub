@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.messaging;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.messaging;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.adapters.MessageAdapter;
+import com.allandroidprojects.ecomsample.util.MessageAdapter;
 import com.allandroidprojects.ecomsample.data.factory.notification.MessagingModelFactory;
-import com.allandroidprojects.ecomsample.data.view_model.notification.MessagingViewModel;
+import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;

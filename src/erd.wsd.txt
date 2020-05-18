@@ -1,0 +1,81 @@
+@startuml
+
+entity Customer  {
+  + id (PK)
+  --
+  name
+  email
+}
+
+entity Orders  {
+  + id (PK)
+  --
+  # customer id (FK)
+  # products id (FK)
+  bundle id
+  quantity
+  total amount
+  status
+  order date
+}
+
+entity Products  {
+  + id (PK)
+  --
+  # merchant id (FK)
+  name
+  description
+  condition
+  category
+  price
+  availability
+  wholesale
+  product images
+  search tags
+  added date
+}
+
+
+entity Merchants  {
+  + id (PK)
+  --
+  # customer id (FK)
+  name
+  address
+  email
+  images
+  registration date
+}
+
+entity Ratings  {
+  + id (PK)
+  --
+  # customer id (FK)
+  # product id (FK)
+  # merchant id (FK)
+  rating
+  comment
+  rating date
+}
+
+
+entity Images  {
+  + id (PK)
+  --
+  tag
+  added date
+}
+
+
+Customer ||-right-o{ Orders
+Orders }o-right-|{ Products
+Merchants |o-down-||Customer
+Products }o-up-|| Merchants
+Products ||-right-|{ Ratings
+Ratings }o-up-||Customer
+Images }|-up-o| Merchants
+Images }|-right-o| Customer
+Products |o-up-|{ Images
+
+
+@enduml

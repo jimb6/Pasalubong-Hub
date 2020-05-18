@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.config.helpers.photoview.gestures;
+package com.allandroidprojects.ecomsample.ui.common.components.photoview.gestures;
 
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.

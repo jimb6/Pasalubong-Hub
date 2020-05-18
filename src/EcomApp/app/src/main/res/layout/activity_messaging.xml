@@ -6,7 +6,7 @@ android:layout_height="match_parent"
 android:orientation="vertical"
 android:clipToPadding="false"
 android:focusableInTouchMode="true"
-tools:context=".shop.ui.chat_room.MessagingActivity">
+    tools:context=".ui.composer.merchant.messaging.MessagingActivity">
 
 <ListView
     android:layout_width="match_parent"

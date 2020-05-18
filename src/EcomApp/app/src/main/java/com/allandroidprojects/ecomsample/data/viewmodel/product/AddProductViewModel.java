@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.view_model.product;
+package com.allandroidprojects.ecomsample.data.viewmodel.product;
 
 import android.net.Uri;
 
@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
+import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.remote.product.AddProductRepository;
 
 import java.util.ArrayList;

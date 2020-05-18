@@ -1,9 +1,8 @@
-package com.allandroidprojects.ecomsample.messages.models;
+package com.allandroidprojects.ecomsample.data.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashMap;
 import java.util.List;
 
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  * *****************************************************************************
  */
-package com.allandroidprojects.ecomsample.fragments;
+package com.allandroidprojects.ecomsample.ui.startup;
 
 import android.app.Activity;
 import android.os.Build;
@@ -29,8 +29,9 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.config.helpers.photoview.view.PhotoView;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
+import com.allandroidprojects.ecomsample.ui.common.components.HackyViewPager;
+import com.allandroidprojects.ecomsample.ui.common.components.photoview.view.PhotoView;
+import com.allandroidprojects.ecomsample.data.models.Product;
 
 import java.util.ArrayList;
 

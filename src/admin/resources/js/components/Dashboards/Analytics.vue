@@ -464,7 +464,7 @@
                                             </div>
                                             <div class="widget-content-left mr-3">
                                                 <div class="widget-content-left">
-                                                    <img width="42" class="rounded" src="@/assets/images/avatars/1.jpg"
+                                                    <img width="42" class="rounded" src="/resources/sass/images/avatars/1.jpg"
                                                          alt="">
                                                 </div>
                                             </div>

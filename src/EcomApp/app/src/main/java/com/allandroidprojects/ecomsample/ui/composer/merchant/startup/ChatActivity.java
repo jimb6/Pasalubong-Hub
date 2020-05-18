@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.startup;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
-import com.allandroidprojects.ecomsample.config.helpers.utility.ChatroomListAdapter;
+import com.allandroidprojects.ecomsample.util.ChatroomListAdapter;
 import com.allandroidprojects.ecomsample.data.models.ChatMessage;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.User;
-import com.allandroidprojects.ecomsample.merchant.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

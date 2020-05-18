@@ -1,6 +1,8 @@
-package com.allandroidprojects.ecomsample.config.helpers.log;
+package com.allandroidprojects.ecomsample.util;
 
 import android.util.Log;
+
+import com.allandroidprojects.ecomsample.interfaces.Logger;
 
 /**
  * class that holds the {@link Logger} for this library, defaults to {@link LoggerDefault} to send logs to android {@link Log}

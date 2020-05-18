@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.messages.models.fcm;
+package com.allandroidprojects.ecomsample.data.models.fcm;
 
 /**
  * Created by User on 10/26/2017.

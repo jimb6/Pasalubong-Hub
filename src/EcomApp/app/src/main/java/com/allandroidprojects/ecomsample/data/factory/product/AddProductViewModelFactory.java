@@ -1,11 +1,11 @@
-package com.allandroidprojects.ecomsample.data.factory;
+package com.allandroidprojects.ecomsample.data.factory.product;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.data.repository.AddProductRepository;
-import com.allandroidprojects.ecomsample.data.view_model.AddProductViewModel;
+import com.allandroidprojects.ecomsample.data.remote.product.AddProductRepository;
+import com.allandroidprojects.ecomsample.data.viewmodel.product.AddProductViewModel;
 
 
 public class AddProductViewModelFactory implements ViewModelProvider.Factory {

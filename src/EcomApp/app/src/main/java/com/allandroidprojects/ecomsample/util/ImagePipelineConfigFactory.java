@@ -10,7 +10,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.allandroidprojects.ecomsample.config.cache;
+package com.allandroidprojects.ecomsample.util;
 
 
 import android.content.Context;

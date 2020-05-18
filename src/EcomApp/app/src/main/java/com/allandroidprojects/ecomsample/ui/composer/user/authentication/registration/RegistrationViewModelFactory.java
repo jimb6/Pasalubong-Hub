@@ -1,10 +1,10 @@
-package com.allandroidprojects.ecomsample.activities.auth.registration;
+package com.allandroidprojects.ecomsample.ui.composer.user.authentication.registration;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.data.repository.auth.RegistrationRepository;
+import com.allandroidprojects.ecomsample.data.remote.auth.RegistrationRepository;
 
 public class RegistrationViewModelFactory implements ViewModelProvider.Factory {
     @NonNull

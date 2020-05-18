@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.activities.auth.registration;
+package com.allandroidprojects.ecomsample.ui.composer.user.authentication.registration;
 
 import android.util.Patterns;
 
@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
-import com.allandroidprojects.ecomsample.data.repository.auth.RegistrationRepository;
+import com.allandroidprojects.ecomsample.data.remote.auth.RegistrationRepository;
 
 public class RegistrationViewModel extends ViewModel {
 

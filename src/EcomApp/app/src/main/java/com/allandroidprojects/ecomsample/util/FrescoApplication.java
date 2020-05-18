@@ -1,8 +1,7 @@
-package com.allandroidprojects.ecomsample.config.helpers;
+package com.allandroidprojects.ecomsample.util;
 
 import android.app.Application;
 
-import com.allandroidprojects.ecomsample.config.cache.ImagePipelineConfigFactory;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 /**

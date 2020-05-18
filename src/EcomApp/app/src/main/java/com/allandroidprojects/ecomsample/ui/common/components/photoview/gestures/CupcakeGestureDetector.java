@@ -1,11 +1,11 @@
-package com.allandroidprojects.ecomsample.config.helpers.photoview.gestures;
+package com.allandroidprojects.ecomsample.ui.common.components.photoview.gestures;
 
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
-import com.allandroidprojects.ecomsample.config.helpers.log.LogManager;
+import com.allandroidprojects.ecomsample.util.LogManager;
 
 public class CupcakeGestureDetector implements GestureDetector {
 

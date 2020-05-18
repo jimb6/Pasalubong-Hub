@@ -1,6 +1,8 @@
-package com.allandroidprojects.ecomsample.config.helpers.log;
+package com.allandroidprojects.ecomsample.util;
 
 import android.util.Log;
+
+import com.allandroidprojects.ecomsample.interfaces.Logger;
 
 /**
  * Helper class to redirect  to {@link Log}

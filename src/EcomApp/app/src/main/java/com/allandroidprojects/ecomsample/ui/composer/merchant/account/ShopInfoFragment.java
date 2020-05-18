@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.account;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.account;
 
 import android.Manifest;
 import android.content.Context;
@@ -32,9 +32,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.ShopMenuOption;
-import com.allandroidprojects.ecomsample.merchant.products.AddProductActivity;
-import com.allandroidprojects.ecomsample.merchant.startup.MerchantActivity;
-import com.allandroidprojects.ecomsample.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.products.AddProductActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.textfield.TextInputEditText;
 

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.view_model.account;
+package com.allandroidprojects.ecomsample.data.viewmodel.account;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

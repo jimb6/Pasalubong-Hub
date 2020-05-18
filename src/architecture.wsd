@@ -1,0 +1,31 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rectangle
+actor USER
+actor MERCHANT
+
+rectangle checkout {
+  USER --> (Login)
+  USER --> (Logout)
+  USER --> (Register)
+  USER --> (ADD ORDER)
+  USER --> (CANCEL ORDER)
+  USER --> (NAVIGATE MAP)
+  USER --> (Search Products)
+  USER --> (Update Account Info)
+  USER --> (Create Store /One per account)
+  USER --> (Message Merchant/Store)
+  USER --> (Message Merchant/Store)
+  
+  (Login) <-- MERCHANT
+  (Logout) <-- MERCHANT
+  (Cancel Order) <-- MERCHANT
+  (Navigate Map) <-- MERCHANT
+  (Add Product) <-- MERCHANT
+  (Remove Product) <-- MERCHANT
+  (Register) <-- MERCHANT
+  (Update Account Info) <--  MERCHANT
+  (Message Customer/User) <--  MERCHANT
+}
+@enduml

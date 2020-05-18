@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.allandroidprojects.ecomsample.config.helpers.log;
+package com.allandroidprojects.ecomsample.interfaces;
 
 /**
  * interface for a logger class to replace the static calls to {@link android.util.Log}

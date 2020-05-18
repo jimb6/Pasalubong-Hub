@@ -1,9 +1,7 @@
-package com.allandroidprojects.ecomsample.data.models.product;
+package com.allandroidprojects.ecomsample.data.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.allandroidprojects.ecomsample.data.models.Business;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,12 +15,15 @@ public class Product implements Parcelable {
     private String brand;
     private double price;
     private int stock;
+    private int totalSales;
     private String condition;
     private Map<String, Object> variation;
     private String wholeSeller;
     private ArrayList<String> imageUrls;
     private String businessOwnerId;
     private ArrayList<String> tags;
+    private ArrayList<Rating> ratings;
+
 
     public Product(Business business) {
 
@@ -39,11 +40,13 @@ public class Product implements Parcelable {
         brand = in.readString();
         price = in.readDouble();
         stock = in.readInt();
+        totalSales = in.readInt();
         condition = in.readString();
         wholeSeller = in.readString();
         imageUrls = in.createStringArrayList();
         businessOwnerId = in.readString();
         tags = in.createStringArrayList();
+        ratings = in.createTypedArrayList(Rating.CREATOR);
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -130,6 +133,14 @@ public class Product implements Parcelable {
         this.stock = stock;
     }
 
+    public int getTotalSales() {
+        return totalSales;
+    }
+
+    public void setTotalSales(int totalSales) {
+        this.totalSales = totalSales;
+    }
+
     public String getCondition() {
         return condition;
     }
@@ -162,6 +173,15 @@ public class Product implements Parcelable {
         this.tags = tags;
     }
 
+    public ArrayList<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(ArrayList<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -176,10 +196,12 @@ public class Product implements Parcelable {
         dest.writeString(brand);
         dest.writeDouble(price);
         dest.writeInt(stock);
+        dest.writeInt(totalSales);
         dest.writeString(condition);
         dest.writeString(wholeSeller);
         dest.writeStringList(imageUrls);
         dest.writeString(businessOwnerId);
         dest.writeStringList(tags);
+        dest.writeTypedList(ratings);
     }
 }

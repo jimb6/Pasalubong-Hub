@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.messages.models;
+package com.allandroidprojects.ecomsample.data.models;
 
 
 public class ChatMessage {

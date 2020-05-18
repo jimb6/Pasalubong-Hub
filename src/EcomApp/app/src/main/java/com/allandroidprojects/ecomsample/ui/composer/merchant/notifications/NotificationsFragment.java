@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.notifications;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.view_model.notification.NotificationsViewModel;
+import com.allandroidprojects.ecomsample.data.viewmodel.notification.NotificationsViewModel;
 
 public class NotificationsFragment extends Fragment {
 

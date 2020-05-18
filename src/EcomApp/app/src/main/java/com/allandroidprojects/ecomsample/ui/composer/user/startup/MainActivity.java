@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.startup;
+package com.allandroidprojects.ecomsample.ui.composer.user.startup;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -26,19 +26,20 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.user.accounts.AccountActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
 import com.allandroidprojects.ecomsample.util.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
-import com.allandroidprojects.ecomsample.user.product.ProductListFragment;
+import com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.common.components.EmptyActivity;
-import com.allandroidprojects.ecomsample.user.maps.MapsActivity;
-import com.allandroidprojects.ecomsample.user.product.CartListActivity;
-import com.allandroidprojects.ecomsample.user.product.SearchResultActivity;
-import com.allandroidprojects.ecomsample.user.product.WishlistActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.product.CartListActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.product.SearchResultActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.product.WishlistActivity;
+import com.allandroidprojects.ecomsample.util.ProductCategory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -331,40 +333,40 @@ public class MainActivity extends AppCompatActivity
         Adapter adapter = new Adapter(getSupportFragmentManager());
         Bundle bundle = new Bundle();
 
-        ProductListFragment fragment = new ProductListFragment(this);
+        StartupFragment startup = new StartupFragment();
         bundle.putString("type", "Latest");
+        startup.setArguments(bundle);
+        adapter.addFragment(startup, "Welcome To Pasalubong Hub");
+
+        ProductListFragment fragment = new ProductListFragment(this);
+        bundle = new Bundle();
+        bundle.putString("type", ProductCategory.SWEETS.getValue());
         fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_1));
+        adapter.addFragment(fragment, ProductCategory.SWEETS.getValue());
 
         fragment = new ProductListFragment(this);
         bundle = new Bundle();
-        bundle.putString("type", "Sweets");
+        bundle.putString("type", ProductCategory.GOODS.getValue());
         fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_2));
+        adapter.addFragment(fragment, ProductCategory.GOODS.getValue());
 
         fragment = new ProductListFragment(this);
         bundle = new Bundle();
-        bundle.putString("type", "Goods");
+        bundle.putString("type", ProductCategory.CLOTHING.getValue());
         fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_3));
+        adapter.addFragment(fragment, ProductCategory.CLOTHING.getValue());
 
         fragment = new ProductListFragment(this);
         bundle = new Bundle();
-        bundle.putString("type", "Clothing");
+        bundle.putString("type", ProductCategory.DECORATION.getValue());
         fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_4));
+        adapter.addFragment(fragment,  ProductCategory.DECORATION.getValue());
 
         fragment = new ProductListFragment(this);
         bundle = new Bundle();
-        bundle.putString("type", "Books & More");
+        bundle.putString("type", ProductCategory.SOUVENIR.getValue());
         fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_5));
-
-        fragment = new ProductListFragment(this);
-        bundle = new Bundle();
-        bundle.putString("type", "More");
-        fragment.setArguments(bundle);
-        adapter.addFragment(fragment, getString(R.string.item_6));
+        adapter.addFragment(fragment, ProductCategory.SOUVENIR.getValue());
 
         viewPager.setAdapter(adapter);
 

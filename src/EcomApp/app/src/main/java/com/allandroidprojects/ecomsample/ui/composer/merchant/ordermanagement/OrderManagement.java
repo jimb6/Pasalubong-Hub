@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.ordermanagement;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

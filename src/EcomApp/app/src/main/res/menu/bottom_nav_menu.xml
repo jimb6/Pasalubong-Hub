@@ -21,4 +21,9 @@
         android:icon="@drawable/ic_chat_black_24dp"
         android:title="@string/messages" />
 
+    <item
+        android:id="@+id/navigation_shop"
+        android:icon="@drawable/iconpas"
+        android:title="@string/shop_name" />
+
 </menu>

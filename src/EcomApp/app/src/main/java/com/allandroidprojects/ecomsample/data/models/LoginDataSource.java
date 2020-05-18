@@ -1,7 +1,7 @@
-package com.allandroidprojects.ecomsample.data;
+package com.allandroidprojects.ecomsample.data.models;
 
-import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
-import com.allandroidprojects.ecomsample.data.models.Result;
+import android.net.Uri;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class LoginDataSource {
 
             LoggedInUser user = new LoggedInUser(
                     java.util.UUID.randomUUID().toString(),
-                    "Jane Doe", "jane.doe@gmail.com","https://static.pexels.com/photos/5854/sea-woman-legs-water-medium.jpg");
+                    "Jane Doe", "jane.doe@gmail.com", Uri.parse("https://static.pexels.com/photos/5854/sea-woman-legs-water-medium.jpg"));
             return new Result.Success<>(user);
         } catch (Exception e) {
             return new Result.Error(new IOException("Error logging in", e));

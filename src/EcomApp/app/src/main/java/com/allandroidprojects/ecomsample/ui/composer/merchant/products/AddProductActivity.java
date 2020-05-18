@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.products;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.products;
 
 import android.os.Bundle;
 
@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
+import com.allandroidprojects.ecomsample.data.models.Product;
 
 public class AddProductActivity extends AppCompatActivity {
 

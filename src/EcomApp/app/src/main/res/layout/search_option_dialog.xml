@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -14,10 +13,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:paddingEnd="16dp"
             android:paddingStart="6dp"
+            android:paddingEnd="16dp"
             app:contentInsetStartWithNavigation="0dp"
-            app:navigationIcon="@drawable/ic_close_black_24dp" />
+            app:navigationIcon="@drawable/back_to_home_button"
+            app:subtitleTextColor="@color/White"
+            app:title="Search Options"
+            app:titleTextColor="@color/White" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,12 +28,245 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <View style="@style/proifleDetailsView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price Sort"
+                android:textSize="18sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:prefixText="₱  "
+                app:prefixTextColor="@color/DarkGrey"
+                app:suffixText="From">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/price_from"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:prefixText="₱  "
+                app:prefixTextColor="@color/DarkGrey"
+                app:suffixText="To">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/price_to"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/price"
+                    android:inputType="numberDecimal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View style="@style/proifleDetailsView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textSize="18sp" />
+
+
+            <CheckBox
+                android:id="@+id/loc_mag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maguindanao" />
+
+            <CheckBox
+                android:id="@+id/loc_sult_kud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sultan Kudarat" />
+
+            <CheckBox
+                android:id="@+id/loc_south_cot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="South Cotabato" />
+
+            CheckBox
+            android:id="@+id/loc_sar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Hello I am a dialog!" />
+            android:text="Saranggani" />
 
+
+            <View style="@style/proifleDetailsView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rating"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/fiveStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarfive"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/fiveStar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginLeft="114dp"
+                    android:layout_toEndOf="@+id/fiveStar"
+                    android:clickable="false"
+                    android:foregroundGravity="center"
+                    android:numStars="5"
+                    android:rating="5"
+                    android:stepSize="1" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/fourStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarfour"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/fourStar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginLeft="114dp"
+                    android:layout_toEndOf="@+id/fourStar"
+                    android:clickable="false"
+                    android:foregroundGravity="center"
+                    android:numStars="5"
+                    android:rating="4"
+                    android:stepSize="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/threeStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarThree"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/threeStar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginLeft="114dp"
+                    android:layout_toEndOf="@+id/threeStar"
+                    android:clickable="false"
+                    android:foregroundGravity="center"
+                    android:numStars="5"
+                    android:rating="3"
+                    android:stepSize="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/twoStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarTwo"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/twoStar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginLeft="114dp"
+                    android:layout_toEndOf="@+id/twoStar"
+                    android:clickable="false"
+                    android:foregroundGravity="center"
+                    android:numStars="5"
+                    android:progress="3"
+                    android:rating="2"
+                    android:stepSize="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/oneStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1" />
+
+                <RatingBar
+                    android:id="@+id/ratingBarOne"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/oneStar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="66dp"
+                    android:layout_marginLeft="114dp"
+                    android:layout_toEndOf="@+id/oneStar"
+                    android:clickable="false"
+                    android:foregroundGravity="center"
+                    android:numStars="5"
+                    android:rating="1"
+                    android:stepSize="1" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

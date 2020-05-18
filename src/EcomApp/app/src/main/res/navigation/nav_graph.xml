@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.allandroidprojects.ecomsample.shop.ui.products.FirstFragment"
+        android:name="com.allandroidprojects.ecomsample.ui.composer.merchant.products.AddProductFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.allandroidprojects.ecomsample.shop.ui.products.SecondFragment"
+        android:name="com.allandroidprojects.ecomsample.fragments.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 

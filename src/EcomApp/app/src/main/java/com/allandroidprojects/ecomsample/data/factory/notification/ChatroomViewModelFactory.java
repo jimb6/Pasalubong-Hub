@@ -1,11 +1,11 @@
-package com.allandroidprojects.ecomsample.data.factory;
+package com.allandroidprojects.ecomsample.data.factory.notification;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.data.repository.ChatroomRepository;
-import com.allandroidprojects.ecomsample.data.view_model.ChatroomViewModel;
+import com.allandroidprojects.ecomsample.data.repository.notification.ChatroomRepository;
+import com.allandroidprojects.ecomsample.data.viewmodel.notification.ChatroomViewModel;
 
 public class ChatroomViewModelFactory implements ViewModelProvider.Factory {
     @NonNull

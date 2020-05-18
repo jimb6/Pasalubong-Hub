@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.startup;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +19,8 @@ import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.DataResult;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.view_model.account.ShopViewModel;
-import com.allandroidprojects.ecomsample.merchant.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

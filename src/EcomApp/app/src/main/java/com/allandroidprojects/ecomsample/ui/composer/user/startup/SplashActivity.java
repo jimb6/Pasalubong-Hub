@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.startup;
+package com.allandroidprojects.ecomsample.ui.composer.user.startup;
 
 import android.app.Activity;
 import android.content.Intent;

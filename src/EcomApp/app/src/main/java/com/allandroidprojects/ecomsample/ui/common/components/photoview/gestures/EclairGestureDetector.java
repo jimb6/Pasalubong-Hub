@@ -1,10 +1,10 @@
-package com.allandroidprojects.ecomsample.config.helpers.photoview.gestures;
+package com.allandroidprojects.ecomsample.ui.common.components.photoview.gestures;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.view.MotionEvent;
 
-import com.allandroidprojects.ecomsample.config.helpers.photoview.view.Compat;
+import com.allandroidprojects.ecomsample.ui.common.components.photoview.view.Compat;
 
 @TargetApi(5)
 public class EclairGestureDetector extends CupcakeGestureDetector {

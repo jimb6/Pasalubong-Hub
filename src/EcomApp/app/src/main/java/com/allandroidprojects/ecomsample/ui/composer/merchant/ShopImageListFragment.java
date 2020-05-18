@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.allandroidprojects.ecomsample.fragments;
+package com.allandroidprojects.ecomsample.ui.composer.merchant;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -31,9 +31,9 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.ui.common.components.ItemDetailsActivity;
-import com.allandroidprojects.ecomsample.config.helpers.utility.ImageUrlUtils;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
-import com.allandroidprojects.ecomsample.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.util.ImageUrlUtils;
+import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;

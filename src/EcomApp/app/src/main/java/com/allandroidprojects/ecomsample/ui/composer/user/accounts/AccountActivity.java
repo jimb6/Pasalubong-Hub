@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.accounts;
+package com.allandroidprojects.ecomsample.ui.composer.user.accounts;
 
 import android.content.Intent;
 import android.net.Uri;

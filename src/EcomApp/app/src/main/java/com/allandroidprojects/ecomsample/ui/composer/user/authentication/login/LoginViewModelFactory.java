@@ -1,11 +1,11 @@
-package com.allandroidprojects.ecomsample.activities.auth.login;
+package com.allandroidprojects.ecomsample.ui.composer.user.authentication.login;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.allandroidprojects.ecomsample.data.models.LoginDataSource;
-import com.allandroidprojects.ecomsample.data.repository.auth.LoginRepository;
+import com.allandroidprojects.ecomsample.data.remote.auth.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

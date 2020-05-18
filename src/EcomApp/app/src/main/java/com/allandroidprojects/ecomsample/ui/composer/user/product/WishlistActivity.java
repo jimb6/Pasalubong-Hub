@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.product;
+package com.allandroidprojects.ecomsample.ui.composer.user.product;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +21,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
-import static com.allandroidprojects.ecomsample.user.product.ProductListFragment.STRING_IMAGE_POSITION;
-import static com.allandroidprojects.ecomsample.user.product.ProductListFragment.STRING_IMAGE_URI;
+import static com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment.STRING_IMAGE_POSITION;
+import static com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment.STRING_IMAGE_URI;
 
 public class WishlistActivity extends AppCompatActivity {
     private static Context mContext;

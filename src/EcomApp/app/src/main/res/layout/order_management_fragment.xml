@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".merchant.ordermanagement.OrderManagement">
+    tools:context=".ui.composer.merchant.ordermanagement.OrderManagement">
 
     <TextView
         android:layout_width="match_parent"

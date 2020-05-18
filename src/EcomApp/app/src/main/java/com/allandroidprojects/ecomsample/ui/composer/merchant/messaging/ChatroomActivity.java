@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.messaging;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.messaging;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,14 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
-import com.allandroidprojects.ecomsample.config.helpers.utility.ChatMessageListAdapter;
-import com.allandroidprojects.ecomsample.config.helpers.utility.FCM;
+import com.allandroidprojects.ecomsample.util.ChatMessageListAdapter;
+import com.allandroidprojects.ecomsample.interfaces.FCM;
 import com.allandroidprojects.ecomsample.data.models.ChatMessage;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.User;
 import com.allandroidprojects.ecomsample.data.models.fcm.Data;
 import com.allandroidprojects.ecomsample.data.models.fcm.FirebaseCloudMessage;
-import com.allandroidprojects.ecomsample.data.models.product.Product;
+import com.allandroidprojects.ecomsample.data.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;

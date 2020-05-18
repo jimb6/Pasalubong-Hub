@@ -1,9 +1,8 @@
-package com.allandroidprojects.ecomsample.model;
+package com.allandroidprojects.ecomsample.data.models;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import java.io.Serializable;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
@@ -13,7 +12,7 @@ public class LoggedInUser implements Parcelable {
     private String userId;
     private String displayName;
     private String email;
-    private String photoUrl;
+    private Uri photoUrl;
     public boolean isNew;
     public boolean isCreated;
     public boolean isAuthenticated;
@@ -26,18 +25,20 @@ public class LoggedInUser implements Parcelable {
         this.email = user.getEmail();
         this.photoUrl = user.getPhotoUrl();
     }
-    public LoggedInUser(String userId, String displayName, String email, String photoUrl) {
+
+    public LoggedInUser(String userId, String displayName, String email, Uri photoUrl) {
         this.userId = userId;
         this.displayName = displayName;
         this.email = email;
         this.photoUrl = photoUrl;
     }
 
+
     protected LoggedInUser(Parcel in) {
         userId = in.readString();
         displayName = in.readString();
         email = in.readString();
-        photoUrl = in.readString();
+        photoUrl = in.readParcelable(Uri.class.getClassLoader());
         isNew = in.readByte() != 0;
         isCreated = in.readByte() != 0;
         isAuthenticated = in.readByte() != 0;
@@ -60,7 +61,7 @@ public class LoggedInUser implements Parcelable {
         return email;
     }
 
-    public String getPhotoUrl() {
+    public Uri getPhotoUrl() {
         return photoUrl;
     }
 
@@ -79,13 +80,15 @@ public class LoggedInUser implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         dest.writeString(userId);
         dest.writeString(displayName);
         dest.writeString(email);
-        dest.writeString(photoUrl);
+        dest.writeParcelable(photoUrl, flags);
         dest.writeByte((byte) (isNew ? 1 : 0));
         dest.writeByte((byte) (isCreated ? 1 : 0));
         dest.writeByte((byte) (isAuthenticated ? 1 : 0));
         dest.writeString(userStatus);
     }
+
 }

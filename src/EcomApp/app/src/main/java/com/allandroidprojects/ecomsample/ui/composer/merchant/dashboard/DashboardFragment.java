@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.dashboard;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.view_model.account.DashboardViewModel;
+import com.allandroidprojects.ecomsample.data.viewmodel.account.DashboardViewModel;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;

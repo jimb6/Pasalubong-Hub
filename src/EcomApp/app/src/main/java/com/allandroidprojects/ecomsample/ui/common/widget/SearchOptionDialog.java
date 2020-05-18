@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.dialog;
+package com.allandroidprojects.ecomsample.ui.common.widget;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -16,8 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.config.helpers.utility.OnSearchOptionDataChangeListener;
-import com.allandroidprojects.ecomsample.config.helpers.utility.PrefManager;
+import com.allandroidprojects.ecomsample.interfaces.OnSearchOptionDataChangeListener;
+import com.allandroidprojects.ecomsample.util.PrefManager;
 import com.allandroidprojects.ecomsample.data.models.SearchData;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;

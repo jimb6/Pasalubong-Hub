@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.merchant.products;
+package com.allandroidprojects.ecomsample.ui.composer.merchant.products;
 
 import android.app.Activity;
 import android.content.Context;

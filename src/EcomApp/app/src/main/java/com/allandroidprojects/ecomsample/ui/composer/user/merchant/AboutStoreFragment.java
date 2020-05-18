@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.user.merchant;
+package com.allandroidprojects.ecomsample.ui.composer.user.merchant;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
