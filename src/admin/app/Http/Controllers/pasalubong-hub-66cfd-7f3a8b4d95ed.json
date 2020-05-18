@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pasalubong-hub-66cfd",
+  "private_key_id": "7f3a8b4d95edecfbd584b90c6b15cd2fd9cb47d6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC1G3FoAzuyydbP\nFGH8+9kt2mOAe2TciYM5WXCJ1kBTyycWm0CsuGR1+oi9SPrsdCabQYhbnf2A5B6p\nLrTKgwtWwFpAe6jLB48D31uYXINiBLIpPdvQ2ZpDI54227OpHYC3CqComqeRSNEH\nLeZ82juqStljWhIL7GqtFe8iOl9J+wDjFgrvyrTf4hZW7NxFAUhylLhnMsq6OWRd\nJstvzfRkFyXc+e7/e6B5LU30gMtUR1QR2evQcxKEdFEjQ+Mp6FlsWJ+AjsNGBwcW\nJmBa4DJDvSgb3j6XQT/Cdyqaj/vpvzv2t9b0kjCqmUBN9s/oCCgGEuJarT2nXG9k\nHltX77cpAgMBAAECggEAAor2Q9UZH1CugkLRgLlShSPLVjBQAWQG4nprK5bwA/KB\nbn5TNqRHeNFB3pJ/P2xUEcWmR08HvP8MSn4m41mwAjxPfWyfDpa2addW1GP8I5dY\nSbRIzqe3fu4pmFtBAa9chsq7Pb100S6PYhqWtrW5CmeO93z6GDkYuFcV//Tc20+J\nAzwHtkQ2FfcL+69PLTgA5jWSsVp4wkXghnzcU/LkTTDXBD0Oi+72cq8FqJh02W2i\n5iRw8vQiBBdul+G9JYYhWiBJw8w+hifeqAr7SmjbsukXjIore+BcckexdAYb6kMt\npfyyfUEPXsfgOJTDZNLyJlHm3Q71pSDypdl/0oAnQQKBgQDfQYHQ1nhfmO3PWO72\nIeCv8jUQJXtPi57+ozYXRqCirz0mMCFU5skKHfGq5kj5JISwCKaKBsUEhLrVRL6q\nyphANf9sbagA1kBqCZq7+4DkCUDtCS/4ABIWbxylBstBUn4piPxMnLwOI25QCADf\nhYGcyQpn3T6UIvC1xeF+2f4WWQKBgQDPq2WwHeMXDE7Bqjcn+PmFSseMu/2m1uH0\nHW6lMMRFfRPPDyxPci+hKnYyoDM+89s3vAqxA6n7kxkLSsp8mZE79rEk9DP3Uw6V\nSI3eIakvyEqsl7J9G2CX1CBPlyLTzf1Cg1Y7ZCggQP1/PTOR0L3ShoNB4pxq5TZT\nD6kJj+UtUQKBgQCTjGawT940SAz7WWpszw0BG5FIP41UkBEfd1x7W5k0i55dS7fr\nta8ueYXLjfCygBkVglIWrMyu5M3Zv1pH5CdlYIqT7ZD4JKFjsz9Jd7nCe/8l6UmD\nnQBXRU3oHypb3Jo29yrPs1JyAaaZTADPuRtlNFUlOcpu+vydFc+nF4le2QKBgGC0\n6WLNWC4ofhhzosHLkK8AttKTzLhAAvMCLb9haVUOvQXEhBbvDr0Xn/lNXu/m8WQP\n/k6WbTcJNjVq+8ZwYRCyfaW+zuBS3kyof+A8fqQQuq2K6wSVljK+BtnpgL9vgovR\ny3tW1dTHTwVMw9IYif0axM8Or1acLOMbPNWGG+wxAoGBAM5jo/h8Qmip9mLrtCRp\nFf0l5Wz2XMqj2FL6yw1I+gS5WBALI0bntep86En5eL8wNxp4Ut3QWrIoe1VrYJUV\n0WXGZ7hcuMweR9fnOxniTCsKoZv6xz+ovdpe/BAgO7nd31GzMt5mhipJ4Nvqmqhq\nW6xTEcvexEsvs7sLOWKluQEB\n-----END PRIVATE KEY-----\n",
+  "client_email": "pasalubong-hub-66cfd@appspot.gserviceaccount.com",
+  "client_id": "117926487385300825355",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/pasalubong-hub-66cfd%40appspot.gserviceaccount.com"
+}
