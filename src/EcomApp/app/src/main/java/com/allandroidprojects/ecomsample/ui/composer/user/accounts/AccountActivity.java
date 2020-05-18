@@ -13,13 +13,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.data.factory.account.AccountViewModelFactory;
 import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.AccountViewModel;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -73,7 +74,7 @@ public class AccountActivity extends AppCompatActivity {
 
     private void checkUserBusiness() {
         loadingProgressBar.setVisibility(View.VISIBLE);
-        accountViewModel.getBusiness(user);
+        accountViewModel.getBusiness(user.getUserId());
         accountViewModel.getBusinessResult().observe(AccountActivity.this, business -> {
             loadingProgressBar.setVisibility(View.GONE);
             if (business instanceof Result.Success) {
@@ -143,15 +144,33 @@ public class AccountActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void getTermsAndCondition(Business business) {
+        accountViewModel.getTermsAndCondition();
+        accountViewModel.getTermsAndConditionData().observe(this, data -> {
+            if (data instanceof Result.Success) {
+                new MaterialAlertDialogBuilder(this)
+                        // Add customization options here
+                        .setTitle("Terms and Condition")
+                        .setMessage((String) ((Result.Success) data).getData())
+                        .setPositiveButton("Accept", (dialog, which) -> {
+                            Intent intent = new Intent(AccountActivity.this, MerchantActivity.class);
+                            intent.putExtra("BUSINESS", business);
+                            startActivity(intent);
+                        })
+                        .show();
+            }
+            loadingProgressBar.setVisibility(View.GONE);
+        });
+
+    }
+
     private void saveStore(Business business) {
         loadingProgressBar.setVisibility(View.VISIBLE);
         accountViewModel.createNewBusiness(business);
         accountViewModel.getSaveBusinessResult().observe(AccountActivity.this, result -> {
             loadingProgressBar.setVisibility(View.GONE);
             if (result instanceof Result.Success) {
-                Intent intent = new Intent(AccountActivity.this, MerchantActivity.class);
-                intent.putExtra("BUSINESS", (Business) (((Result.Success) result).getData()));
-                startActivity(intent);
+                getTermsAndCondition((Business) ((Result.Success) result).getData());
             } else {
                 Toast.makeText(this, result.toString(), Toast.LENGTH_SHORT);
             }

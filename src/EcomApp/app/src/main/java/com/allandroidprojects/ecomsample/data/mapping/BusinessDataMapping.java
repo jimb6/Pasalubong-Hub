@@ -3,6 +3,7 @@ package com.allandroidprojects.ecomsample.data.mapping;
 import com.allandroidprojects.ecomsample.data.models.Business;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class BusinessDataMapping {
@@ -27,13 +28,21 @@ public class BusinessDataMapping {
     {
         this.business = new Business();
         this.businessData = businessData;
+        this.bindData();
+    }
+
+    public BusinessDataMapping(Business business)
+    {
+        this.business = business;
+        this.businessData = new HashMap<>();
+        this.bindToMap();
     }
 
     public void bindData(){
+
         if (businessData.containsKey(BUSINESS_NAME))
             business.setBusinessName((String) businessData.get(BUSINESS_NAME));
-        else
-            business.setBusinessName(DEFAULT_VALUE);
+        else business.setBusinessName(DEFAULT_VALUE);
 
         if (businessData.containsKey(BUSINESS_ADDRESS))
             business.setBusinessAddress((String) businessData.get(BUSINESS_ADDRESS));
@@ -65,8 +74,23 @@ public class BusinessDataMapping {
 
     }
 
+    public void bindToMap(){
+        businessData.put(BUSINESS_OWNER_ID, business.getOwnerId());
+        businessData.put(BUSINESS_ADDRESS, business.getBusinessAddress());
+        businessData.put(BUSINESS_NAME, business.getBusinessName());
+        businessData.put(BUSINESS_EMAIL, business.getBusinessEmail());
+        businessData.put(BUSINESS_PHOTOS, business.getBusinessPhotos());
+        businessData.put(BUSINESS_LAT, business.getLat());
+        businessData.put(BUSINESS_LNG, business.getLng());
+        businessData.put(BUSINESS_COVER_IMAGE, business.getCoverUri());
+    }
+
     public Business getData(){
         return this.business;
+    }
+
+    public Map<String, Object> getMapData(){
+        return businessData;
     }
 
 

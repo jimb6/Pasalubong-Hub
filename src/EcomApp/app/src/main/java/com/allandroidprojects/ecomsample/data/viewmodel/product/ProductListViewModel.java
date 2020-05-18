@@ -4,22 +4,22 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.Product;
-import com.allandroidprojects.ecomsample.data.remote.product.ProductListRepository;
+import com.allandroidprojects.ecomsample.data.models.Result;
+import com.allandroidprojects.ecomsample.data.repository.ProductRepository;
 
 public class ProductListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
-    private static volatile ProductListRepository repository;
+    private static volatile ProductRepository repository;
     private MutableLiveData<Result<Product>> product;
     private MutableLiveData<Result<Product>> sweets;
     private MutableLiveData<Result<Product>> goods;
     private MutableLiveData<Result<Product>> clothing;
     private MutableLiveData<Result<Product>> books;
 
-    public ProductListViewModel(ProductListRepository repository) {
-        ProductListViewModel.repository = repository;
+    public ProductListViewModel(ProductRepository repository) {
+        this.repository = repository;
     }
 
     public ProductListViewModel() {
@@ -36,6 +36,6 @@ public class ProductListViewModel extends ViewModel {
     }
 
     public void fetchMyProducts(String category) {
-        product = ProductListRepository.getAllProducts(category);
+        product = ProductRepository.show(category);
     }
 }

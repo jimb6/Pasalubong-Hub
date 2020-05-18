@@ -4,18 +4,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.Product;
-import com.allandroidprojects.ecomsample.data.remote.product.ProductListRepository;
+import com.allandroidprojects.ecomsample.data.models.Result;
+import com.allandroidprojects.ecomsample.data.repository.ProductRepository;
 
 public class CartListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
     private MutableLiveData<Result<Product>> product;
-    private static volatile ProductListRepository repository;
+    private static volatile ProductRepository repository;
 
-    public CartListViewModel(ProductListRepository repository){
-        CartListViewModel.repository = repository;
+    public CartListViewModel(ProductRepository repository){
+        this.repository = repository;
     }
 
     public CartListViewModel() {
@@ -36,7 +36,7 @@ public class CartListViewModel extends ViewModel {
 //    }
 
     public void doCartList(String userId){
-        product = ProductListRepository.getAllProductsInCart(userId);
+        product = ProductRepository.show(userId);
     }
 
     public MutableLiveData<Result<Product>> getCartList(){

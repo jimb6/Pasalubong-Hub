@@ -270,6 +270,7 @@ public class AddProductFragment extends Fragment {
             if (p instanceof Result.Success) {
                 showSuccessAlert("Saved!", "New product saved to your store.");
                 Product reference = (Product) ((Result.Success) p).getData();
+                finishFragmentTransaction();
             } else if (p instanceof Result.Error) {
                 showErrorAlert("Error", ((Result.Error) p).getError().getMessage());
             }

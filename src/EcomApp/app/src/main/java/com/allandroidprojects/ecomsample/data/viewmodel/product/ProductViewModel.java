@@ -5,19 +5,19 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.data.models.Business;
+import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.SearchData;
-import com.allandroidprojects.ecomsample.data.models.Product;
-import com.allandroidprojects.ecomsample.data.repository.account.ShopRepository;
+import com.allandroidprojects.ecomsample.data.repository.ProductRepository;
 
 public class ProductViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
     private MutableLiveData<Result<Product>> searchProduct;
     private MutableLiveData<Result<Product>> myProduct;
-    private static volatile ShopRepository repository;
+    private static volatile ProductRepository repository;
 
-    public ProductViewModel(ShopRepository repository){
+    public ProductViewModel(ProductRepository repository){
         ProductViewModel.repository = repository;
     }
 
@@ -30,16 +30,16 @@ public class ProductViewModel extends ViewModel {
         return mText;
     }
 
-    public MutableLiveData<Result<Product>> getMyProuducts(){
+    public MutableLiveData<Result<Product>> getMyProducts(){
         return myProduct;
     }
 
-    public void fetchMyProducts(Business business){
-        myProduct = ShopRepository.findMyProducts(business);
+    public void myProducts(Business business){
+        myProduct = ProductRepository.show(business);
     }
 
     public void searchProducts(SearchData searchData) {
-        searchProduct = ShopRepository.searchProducts(searchData);
+        searchProduct = ProductRepository.show(searchData);
     }
 
     public MutableLiveData<Result<Product>> getSearchProduct() {

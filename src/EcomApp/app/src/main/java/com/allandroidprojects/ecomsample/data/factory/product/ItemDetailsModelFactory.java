@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.allandroidprojects.ecomsample.data.remote.product.ProductListRepository;
+import com.allandroidprojects.ecomsample.data.repository.ProductRepository;
 import com.allandroidprojects.ecomsample.data.viewmodel.product.ItemDetailsViewModel;
 
 public class ItemDetailsModelFactory implements ViewModelProvider.Factory {
@@ -12,7 +12,7 @@ public class ItemDetailsModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(ItemDetailsViewModel.class)){
-            return (T) new ItemDetailsViewModel(ProductListRepository.getInstance());
+            return (T) new ItemDetailsViewModel(ProductRepository.getInstance());
         }else{
             throw new IllegalArgumentException(("Unknown ViewModel class"));
         }

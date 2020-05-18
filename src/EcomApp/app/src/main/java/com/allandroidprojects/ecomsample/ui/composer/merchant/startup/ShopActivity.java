@@ -2,7 +2,6 @@ package com.allandroidprojects.ecomsample.ui.composer.merchant.startup;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -12,15 +11,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.data.factory.account.ShopViewModelFactory;
 import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
-import com.allandroidprojects.ecomsample.data.models.DataResult;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -113,12 +111,12 @@ public class ShopActivity extends AppCompatActivity {
 
 
     private void registerBusinessEvent(){
-        shopViewModel.businessDataChange(myBusiness);
-        shopViewModel.getBusinessDocumentChangesResult().observe(this, docs -> {
-            if (docs instanceof DataResult.Modified){
-                Toast.makeText(ShopActivity.this, ((DataResult.Modified) docs).getData().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        shopViewModel.businessDataChange(myBusiness);
+//        shopViewModel.getBusinessDocumentChangesResult().observe(this, docs -> {
+//            if (docs instanceof DataResult.Modified){
+//                Toast.makeText(ShopActivity.this, ((DataResult.Modified) docs).getData().toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void initializeViewModel(){

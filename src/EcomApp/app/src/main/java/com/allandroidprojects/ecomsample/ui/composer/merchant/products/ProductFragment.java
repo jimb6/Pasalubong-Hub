@@ -73,10 +73,9 @@ public class ProductFragment extends Fragment implements IDataHelper {
         skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.shop_list_item, 4);
         skeleton.showSkeleton();
 
-
         products.add(new Product());
-        viewModel.fetchMyProducts(MerchantActivity.myBusiness);
-        viewModel.getMyProuducts().observe(getViewLifecycleOwner(), p -> {
+        viewModel.myProducts(MerchantActivity.myBusiness);
+        viewModel.getMyProducts().observe(getViewLifecycleOwner(), p -> {
             skeleton.showOriginal();
             initializeCompoinents();
             if (p instanceof Result.Success) {

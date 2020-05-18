@@ -19,11 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
+import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.YoutubeVideo;
 import com.allandroidprojects.ecomsample.util.BaseViewHolder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.pierfrancescosoffritti.youtubeplayer.player.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.youtubeplayer.player.YouTubePlayerView;
 
@@ -38,13 +40,52 @@ public class StartupFragment extends Fragment {
     private StartupViewModel mViewModel;
     private View root;
     private YoutubeRecyclerAdapter mRecyclerAdapter;
+    private BusinessRecyclerViewAdapter businessRecyclerViewAdapter;
+    private List<YoutubeVideo> youtubeVideos = new ArrayList<>();
+    private List<Business> businesses = new ArrayList<>();
+
+    @BindView(R.id.tags)
+    TextInputEditText search;
+    @BindView(R.id.recyclerViewFeed)
+    RecyclerView recyclerViewFeed;
+    @BindView(R.id.rvBusinesses)
+    RecyclerView recyclerViewBusiness;
+
+
 
     public static StartupFragment newInstance() {
         return new StartupFragment();
     }
 
-    @BindView(R.id.recyclerViewFeed)
-    RecyclerView recyclerViewFeed;
+    private void getBusinesses(){
+        mViewModel.getAllBusiness();
+        mViewModel.getAllBusinessResult().observe(getActivity(), result -> {
+            if(result instanceof Result.Success){
+                businesses.add((Business) ((Result.Success) result).getData());
+            }
+            businessRecyclerViewAdapter.notifyDataSetChanged();
+        });
+    }
+
+    private void setupVideoView(){
+        // prepare data for list
+        youtubeVideos = prepareList();
+
+        mRecyclerAdapter = new YoutubeRecyclerAdapter(youtubeVideos);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewFeed.setLayoutManager(mLayoutManager);
+        recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewFeed.setAdapter(mRecyclerAdapter);
+    }
+
+    private void setupBusinessView(){
+        // prepare data for list
+        businessRecyclerViewAdapter = new BusinessRecyclerViewAdapter(businesses);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerViewBusiness.setLayoutManager(mLayoutManager);
+        recyclerViewBusiness.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewBusiness.setAdapter(businessRecyclerViewAdapter);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,14 +93,12 @@ public class StartupFragment extends Fragment {
         root =  inflater.inflate(R.layout.startup_fragment, container, false);
 
         recyclerViewFeed = root.findViewById(R.id.recyclerViewFeed);
+        recyclerViewBusiness = root.findViewById(R.id.rvBusinesses);
+        search = root.findViewById(R.id.tags);
         ButterKnife.bind(getActivity());
-        // prepare data for list
-        List<YoutubeVideo> youtubeVideos = prepareList();
-        mRecyclerAdapter = new YoutubeRecyclerAdapter(youtubeVideos);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewFeed.setLayoutManager(mLayoutManager);
-        recyclerViewFeed.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewFeed.setAdapter(mRecyclerAdapter);
+
+        setupVideoView();
+        setupBusinessView();
 
         return root;
     }
@@ -69,6 +108,7 @@ public class StartupFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(StartupViewModel.class);
         // TODO: Use the ViewModel
+        getBusinesses();
     }
 
     private List<YoutubeVideo> prepareList() {
@@ -196,11 +236,11 @@ public class StartupFragment extends Fragment {
 
 
 
-    public class BusinessRecyclerView extends  RecyclerView.Adapter<BaseViewHolder>{
+    public class BusinessRecyclerViewAdapter extends  RecyclerView.Adapter<BaseViewHolder>{
 
         private List<Business> businesses;
 
-        public BusinessRecyclerView(List<Business> businesses){
+        public BusinessRecyclerViewAdapter(List<Business> businesses){
             this.businesses = businesses;
         }
 
@@ -249,13 +289,15 @@ public class StartupFragment extends Fragment {
             @Override
             public void onBind(int position) {
                 super.onBind(position);
-                final Business business = businesses.get(position);
-                if(business.getBusinessName() != null)
-                    storeName.setText(business.getBusinessName());
-                if (business.getBusinessAddress() != null)
-                    storeAddress.setText(business.getBusinessAddress());
-                if (business.getBusinessPhotos() != null && business.getBusinessPhotos().size() > 0)
-                    storeImage.setImageURI(business.get);
+                if(businesses.size() > 0){
+                    final Business business = businesses.get(position);
+                    if(business.getBusinessName() != null)
+                        storeName.setText(business.getBusinessName());
+                    if (business.getBusinessAddress() != null)
+                        storeAddress.setText(business.getBusinessAddress());
+                    if (business.getBusinessPhotos() != null && business.getBusinessPhotos().size() > 0)
+                        storeImage.setImageURI(business.getCoverUri());
+                }
             }
         }
     }
