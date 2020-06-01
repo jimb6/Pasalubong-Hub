@@ -26,19 +26,19 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
-import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
-import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
-import com.allandroidprojects.ecomsample.util.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
-import com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment;
-import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
 import com.allandroidprojects.ecomsample.ui.common.components.EmptyActivity;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.product.CartListActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment;
 import com.allandroidprojects.ecomsample.ui.composer.user.product.SearchResultActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.product.WishlistActivity;
+import com.allandroidprojects.ecomsample.util.NotificationCountSetClass;
 import com.allandroidprojects.ecomsample.util.ProductCategory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.auth.api.Auth;
@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity
     private LoggedInUser user;
     private FirebaseUser firebaseUser;
     public static boolean isActivityRunning = false;
-
+    private String BASE_URL = "";
+    private String mServerKey = "";
 
     public IDataHelper getInstance() {
         return this;
@@ -166,6 +167,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
+
     private void checkAuthenticationState() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Uri photo = firebaseUser.getPhotoUrl() == null ?
@@ -203,7 +206,7 @@ public class MainActivity extends AppCompatActivity
             Map<String, Object> data = new HashMap<>();
             data.put("messaging_token", token);
 
-            db.collection("USERS").document(user.getUserId()).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            db.collection("users").document(user.getUserId()).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.d("TAG", "TOKEN Saved to the database: " + token);

@@ -60,20 +60,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 	@Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-	//	String notificationBody = "";
-	//	String notificationTitle = "";
-	//	String notificationData = "";
-	//	try{
-	//	   notificationData = remoteMessage.getData().toString();
-	//	   notificationTitle = remoteMessage.getNotification().getTitle();
-	//	   notificationBody = remoteMessage.getNotification().getBody();
-	//	}catch (NullPointerException e){
-	//	   Log.e(TAG, "onMessageReceived: NullPointerException: " + e.getMessage() );
-	//	}
-	//	Log.d(TAG, "onMessageReceived: data: " + notificationData);
-	//	Log.d(TAG, "onMessageReceived: notification body: " + notificationBody);
-	//	Log.d(TAG, "onMessageReceived: notification title: " + notificationTitle);
-
 		//init image loader since this will be the first code that executes if they click a notification
 		initImageLoader();
 
@@ -147,7 +133,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 					@Override
 					public void onCancelled(DatabaseError databaseError) {
-
+						Log.d("MESSAGING SERVICE: ", databaseError.getMessage());
 					}
 				});
 

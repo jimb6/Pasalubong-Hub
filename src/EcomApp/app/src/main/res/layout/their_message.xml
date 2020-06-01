@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="10dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="60dp"
-    android:clipToPadding="false">
+    android:paddingTop="8dp">
 
-    <View
-        android:id="@+id/avatar"
-        android:layout_alignParentLeft="true"
-        android:scaleType="centerInside"
+    <ImageView
+        android:id="@+id/image_message_profile"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:background="@drawable/circle"
-        android:layout_width="34dp"
-        android:layout_height="34dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:id="@+id/name"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/avatar"
-        android:layout_alignTop="@+id/avatar"
+        android:id="@+id/text_message_name"
+        android:text="John Doe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="4dp"
-        android:text="Rose"/>
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp" />
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/message_body"-->
-<!--        android:layout_below="@+id/name"-->
-<!--        android:layout_alignLeft="@+id/name"-->
-<!--        android:background="@drawable/their_message"-->
-<!--        android:paddingVertical="12dp"-->
-<!--        android:paddingHorizontal="16dp"-->
-<!--        android:elevation="2dp"-->
-<!--        android:textSize="18dp"-->
-<!--        android:text="How are you doing? This is a long message that should probably wrap."-->
-<!--        />-->
+    <TextView
+        android:id="@+id/text_message_body"
+        android:text="hi man, how are you?"
+        android:background="@drawable/their_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="240dp"
+        android:padding="8dp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_message_name"
+        app:layout_constraintLeft_toRightOf="@+id/image_message_profile"
+        android:layout_marginLeft="8dp" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/text_message_time"
+        android:text="11:40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        app:layout_constraintLeft_toRightOf="@+id/text_message_body"
+        android:layout_marginLeft="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_message_body" />
+
+</android.support.constraint.ConstraintLayout>

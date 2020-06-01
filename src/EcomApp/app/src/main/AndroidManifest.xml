@@ -127,7 +127,7 @@
 
         <activity android:name=".ui.common.components.EmptyActivity" />
 
-        <service android:name=".data.services.MessagingService">
+        <service android:name=".util.MessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -1,6 +1,8 @@
 package com.allandroidprojects.ecomsample.data.models;
 
 
+import com.google.firebase.auth.FirebaseUser;
+
 public class ChatMessage {
 
     private String message;
@@ -8,6 +10,7 @@ public class ChatMessage {
     private String timestamp;
     private String profile_image;
     private String name;
+    private FirebaseUser user;
 
     public ChatMessage(String message, String user_id, String timestamp, String profile_image, String name) {
         this.message = message;

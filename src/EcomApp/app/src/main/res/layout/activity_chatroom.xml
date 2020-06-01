@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:id="@+id/toolbar"
             android:background="@color/blue3"
             android:elevation="10dp">
 
             <TextView
-                android:id="@+id/text_chatroom_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textColor="@color/White"
-                android:textSize="17sp" />
+                android:textSize="17sp"
+                android:id="@+id/text_chatroom_name"/>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -29,11 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="40dp"
-            android:layout_below="@+id/toolbar">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:layout_below="@+id/toolbar"
+            >
 
             <ListView
                 android:layout_width="match_parent"
@@ -75,7 +75,10 @@
                 android:hint="new message..."
                 android:textColor="@color/Black"
                 android:layout_marginLeft="5dp"/>
+
+
         </RelativeLayout>
+
     </RelativeLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

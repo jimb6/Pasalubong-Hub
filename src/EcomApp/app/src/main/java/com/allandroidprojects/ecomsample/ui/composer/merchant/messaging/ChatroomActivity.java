@@ -16,15 +16,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
-import com.allandroidprojects.ecomsample.util.ChatMessageListAdapter;
-import com.allandroidprojects.ecomsample.interfaces.FCM;
 import com.allandroidprojects.ecomsample.data.models.ChatMessage;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.User;
 import com.allandroidprojects.ecomsample.data.models.fcm.Data;
 import com.allandroidprojects.ecomsample.data.models.fcm.FirebaseCloudMessage;
-import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.interfaces.FCM;
+import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
+import com.allandroidprojects.ecomsample.util.ChatMessageListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,8 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ChatroomActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatroomActivity";
-    //widgets
-    private static final String BASE_URL = "https://fcm.googleapis.com/fcm/";
+
     //firebase
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mMessagesReference;
@@ -68,36 +66,68 @@ public class ChatroomActivity extends AppCompatActivity {
     private ImageView mCheckmark;
 
     //vars
-    private Set<String> mTokens;
     private Chatroom mChatroom;
     private List<ChatMessage> mMessagesList;
-    private String mServerKey;
     private Set<String> mMessageIdSet;
     private ChatMessageListAdapter mAdapter;
     public static boolean isActivityRunning;
-    private Product item;
+    private String BASE_URL = "";
+    private String mServerKey = "";
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
-        mChatroomName = findViewById(R.id.text_chatroom_name);
-        mListView = findViewById(R.id.listView);
-        mMessage = findViewById(R.id.input_message);
-        mCheckmark = findViewById(R.id.checkmark);
-
-        if (getIntent() != null) {
-            if (getIntent().hasExtra("product")) {
-                item = getIntent().getParcelableExtra("product");
-            }
-//            stringImageUri = getIntent().getStringExtra(ProductListFragment.STRING_IMAGE_URI);
-        }
+        mChatroomName = (TextView) findViewById(R.id.text_chatroom_name);
+        mListView = (ListView) findViewById(R.id.listView);
+        mMessage = (EditText) findViewById(R.id.input_message);
+        mCheckmark = (ImageView) findViewById(R.id.checkmark);
+        getSupportActionBar().hide();
+        Log.d(TAG, "onCreate: started.");
 
         setupFirebaseAuth();
-//        getChatroom();
-//        init();
-//        hideSoftKeyboard();
+        getChatroom();
+        init();
+        hideSoftKeyboard();
+    }
+
+
+    private void sendMessageToDepartment(String title, String message){
+        String[] mTokens = new String[]{};
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        FCM fcmAPI = retrofit.create(FCM.class);
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Authorization", "Key=" + mServerKey);
+
+        //send message to all tokens
+        for(String token : mTokens){
+            Data data = new Data();
+            data.setMessage(message);
+            data.setTitle(title);
+            data.setTitle(getString(R.string.data_type_admin_broadcast));
+            FirebaseCloudMessage firebaseCloudMessage = new FirebaseCloudMessage();
+            firebaseCloudMessage.setData(data);
+            firebaseCloudMessage.setTo(token);
+
+            Call<ResponseBody> call = fcmAPI.send(headers, firebaseCloudMessage);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     private void init(){
@@ -140,98 +170,11 @@ public class ChatroomActivity extends AppCompatActivity {
                     //clear the EditText
                     mMessage.setText("");
 
-                    String myMessage = mMessage.getText().toString();
-                    String title = "Pasalubong Hub";
-
-
-                        //send message
-                        sendMessageToDepartment(title, message);
-
-                        mMessage.setText("");
-//                        mTitle.setText("");
-
-
-
-
                     //refresh the messages list? Or is it done by the listener??
-                }else{
-                    Toast.makeText(ChatroomActivity.this, "Fill out the title and message fields", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-    }
-
-    /**
-     * Retrieves the server key for the Firebase server.
-     * This is required to send FCM messages.
-     */
-    private void getServerKey(){
-        Log.d(TAG, "getServerKey: retrieving server key.");
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
-        Query query = reference.child(getString(R.string.dbnode_server))
-                .orderByValue();
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onDataChange: got the server key.");
-                DataSnapshot singleSnapshot = dataSnapshot.getChildren().iterator().next();
-                mServerKey = singleSnapshot.getValue().toString();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-    private void sendMessageToDepartment(String title, String message){
-        Log.d(TAG, "sendMessageToDepartment: sending message to selected departments.");
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        //create the interface
-        FCM fcmAPI = retrofit.create(FCM.class);
-
-        //attach the headers
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("Authorization", "key=" + "AAAAbeRM7Q4:APA91bGyabDgRxpBF8vg0M-dv-XjKVlZWpWmTuak-eOxkWU6dDKAipjK59aNuPkWg54kBENhvnmXILu1uu3x0WZT7DpMVc8MIV2sG3t-jI8vP8u34BRUUWAC-C6RnBco47SZ7XV861Fk");
-
-        //send the message to all the tokens
-        for(String token : mTokens){
-            Log.d(TAG, "sendMessageToDepartment: sending to token: " + token);
-            Data data = new Data();
-            data.setMessage(message);
-            data.setTitle(title);
-            data.setData_type(getString(R.string.data_type_chat_message));
-            FirebaseCloudMessage firebaseCloudMessage = new FirebaseCloudMessage();
-            firebaseCloudMessage.setData(data);
-            firebaseCloudMessage.setTo(token);
-
-            Call<ResponseBody> call = fcmAPI.send(headers, firebaseCloudMessage);
-
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Log.d(TAG, "onResponse: Server Response: "  + response.toString());
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e(TAG, "onFailure: Unable to send the message." + t.getMessage() );
-                    Toast.makeText(ChatroomActivity.this, "error", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
     }
 
     /**
@@ -243,8 +186,10 @@ public class ChatroomActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent.hasExtra(getString(R.string.intent_chatroom))){
             Chatroom chatroom = intent.getParcelableExtra(getString(R.string.intent_chatroom));
+            Log.d(TAG, "getChatroom: chatroom: " + chatroom.toString());
             mChatroom = chatroom;
             mChatroomName.setText(mChatroom.getChatroom_name());
+
             enableChatroomListener();
         }
     }
@@ -300,7 +245,7 @@ public class ChatroomActivity extends AppCompatActivity {
                     }
                 }
                 //query the users node to get the profile images and names
-//                getUserDetails();
+                getUserDetails();
                 mAdapter.notifyDataSetChanged(); //notify the adapter that the dataset has changed
                 mListView.setSelection(mAdapter.getCount() - 1); //scroll to the bottom of the list
                 //initMessagesList();
@@ -316,7 +261,7 @@ public class ChatroomActivity extends AppCompatActivity {
     private void getUserDetails(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         for(int i = 0; i < mMessagesList.size(); i++) {
-           // Log.d(TAG, "onDataChange: searching for userId: " + mMessagesList.get(i).getUser_id());
+            // Log.d(TAG, "onDataChange: searching for userId: " + mMessagesList.get(i).getUser_id());
             final int j = i;
             if(mMessagesList.get(i).getUser_id() != null && mMessagesList.get(i).getProfile_image().equals("")){
                 Query query = reference.child(getString(R.string.dbnode_users))
@@ -340,6 +285,7 @@ public class ChatroomActivity extends AppCompatActivity {
         }
 
     }
+
 
     private void initMessagesList(){
         mAdapter = new ChatMessageListAdapter(ChatroomActivity.this,
@@ -479,7 +425,6 @@ public class ChatroomActivity extends AppCompatActivity {
         isActivityRunning = false;
     }
 }
-
 
 
 

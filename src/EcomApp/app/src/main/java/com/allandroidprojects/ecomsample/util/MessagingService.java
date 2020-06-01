@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.services;
+package com.allandroidprojects.ecomsample.util;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -24,7 +24,6 @@ import com.allandroidprojects.ecomsample.ui.composer.user.authentication.registr
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.SplashActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.WelcomeActivity;
-import com.allandroidprojects.ecomsample.util.UniversalImageLoader;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingActivity;
@@ -74,7 +73,7 @@ public class MessagingService extends FirebaseMessagingService {
         String message = remoteMessage.getData().get(getString(R.string.data_message));
 
         if (isApplicationForeground()) {
-            if (identifydataType.equals(getString(R.string.firebase_data_type_admin_broadcast))) {
+            if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
                 sendBroadcastNotification(title, message);
             } else if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
                 sendChat(title, message, remoteMessage);
@@ -346,7 +345,8 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     private boolean isApplicationForeground() {
-        boolean isActvityRunning = MessagingActivity.isActivityRunning
+
+        return MessagingActivity.isActivityRunning
                 || WelcomeActivity.isActivityRunning
                 || SplashActivity.isActivityRunning
                 || MainActivity.isActivityRunning
@@ -355,8 +355,6 @@ public class MessagingService extends FirebaseMessagingService {
                 || ShopActivity.isActivityRunning
                 || MapsActivity.isActivityRunning
                 || AccountActivity.isActivityRunning;
-
-        return isActvityRunning;
     }
 
     /**

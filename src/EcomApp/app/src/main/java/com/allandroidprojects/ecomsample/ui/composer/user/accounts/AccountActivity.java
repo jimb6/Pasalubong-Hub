@@ -148,7 +148,7 @@ public class AccountActivity extends AppCompatActivity {
         accountViewModel.getTermsAndCondition();
         accountViewModel.getTermsAndConditionData().observe(this, data -> {
             if (data instanceof Result.Success) {
-                new MaterialAlertDialogBuilder(this)
+                new MaterialAlertDialogBuilder(getApplicationContext())
                         // Add customization options here
                         .setTitle("Terms and Condition")
                         .setMessage((String) ((Result.Success) data).getData())

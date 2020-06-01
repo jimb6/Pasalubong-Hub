@@ -1,6 +1,8 @@
 package com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -69,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
     private GoogleMap mMap;
     public static boolean isActivityRunning = false;
     private ShopViewModel shopViewModel;
+    private int REQUEST_CODE_READ_STORAGE = 1;
 
 
     class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
@@ -76,7 +80,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
         // These are both viewgroups containing an ImageView with id "badge" and two TextViews with id
         // "title" and "snippet".
         private final View mWindow;
-
         private final View mContents;
 
         CustomInfoWindowAdapter() {
@@ -128,7 +131,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
         }
     }
 
+    private void askForPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_READ_STORAGE);
+        } else {
 
+        }
+    }
 
 
     private void initializeViewModel() {
@@ -155,6 +164,8 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+        askForPermission();
 
         mapFragment.onResume();
 
@@ -213,30 +224,28 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.style_json));
 
-            if (!success) {
-
+            if (success) {
+                mMap.setOnMarkerClickListener(this);
+                mMap.setOnInfoWindowClickListener(this);
+                mMap.setOnMarkerDragListener(this);
+                mMap.setOnInfoWindowCloseListener(this);
+                mMap.setOnInfoWindowLongClickListener(this);
+//        Removes any previously specified upper and lower zoom bounds.
+                this.mMap.resetMinMaxZoomPreference();
+                this.mMap.setBuildingsEnabled(true);
+                this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                // this.mMapon the map's camera near Sydney, Australia.
+                this.mMap.getUiSettings().setCompassEnabled(true);
+//                this.mMap.setMyLocationEnabled(true);
+                this.mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                this.mMap.getUiSettings().setMapToolbarEnabled(true);
+                this.mMap.getUiSettings().setAllGesturesEnabled(true);
+                this.mMap.getUiSettings().setTiltGesturesEnabled(true);
             }
         } catch (Resources.NotFoundException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnInfoWindowClickListener(this);
-        mMap.setOnMarkerDragListener(this);
-        mMap.setOnInfoWindowCloseListener(this);
-        mMap.setOnInfoWindowLongClickListener(this);
-
-//        Removes any previously specified upper and lower zoom bounds.
-        this.mMap.resetMinMaxZoomPreference();
-        this.mMap.setBuildingsEnabled(true);
-        this.mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        // this.mMapon the map's camera near Sydney, Australia.
-        this.mMap.getUiSettings().setCompassEnabled(true);
-        this.mMap.setMyLocationEnabled(true);
-        this.mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        this.mMap.getUiSettings().setMapToolbarEnabled(true);
-        this.mMap.getUiSettings().setAllGesturesEnabled(true);
-        this.mMap.getUiSettings().setTiltGesturesEnabled(true);
 
         LatLng lcocation = new LatLng(7.223086, 126.151551);
 //        googleMap.moveCamera(CameraUpdateFactory.newLatLng(lcocation));
@@ -370,5 +379,20 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnMyLoca
     @Override
     public void onGlobalLayout() {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "Please allow permission to show map markers for stores.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+
+        }
     }
 }
