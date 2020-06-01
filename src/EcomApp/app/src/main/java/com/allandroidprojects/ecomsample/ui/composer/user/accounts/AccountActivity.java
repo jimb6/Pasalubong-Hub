@@ -56,6 +56,17 @@ public class AccountActivity extends AppCompatActivity {
 
     }
 
+    private void getPendingIntent(){
+        Intent intent = getIntent();
+        if (intent.hasExtra(getString(R.string.intent_order_reference))){
+            String reference = intent.getStringExtra(getString(R.string.intent_order_reference));
+            Intent orderIntent = new Intent(AccountActivity.this, MerchantActivity.class);
+            orderIntent.putExtra(getString(R.string.intent_order_reference), reference);
+            orderIntent.putExtra("BUSINESS", userBusiness);
+            startActivity(orderIntent);
+        }
+    }
+
     private void checkAuthenticationState() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Uri photo = firebaseUser.getPhotoUrl() == null ?
@@ -81,6 +92,7 @@ public class AccountActivity extends AppCompatActivity {
                 shop_view.setText(R.string.has_business_text);
                 hasBusiness = true;
                 userBusiness = (Business) ((Result.Success) business).getData();
+                getPendingIntent();
             } else {
                 shop_view.setText(R.string.no_business_text);
                 hasBusiness = false;

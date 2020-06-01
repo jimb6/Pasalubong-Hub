@@ -1,5 +1,6 @@
 package com.allandroidprojects.ecomsample.ui.composer.merchant.startup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
     private ShopViewModel shopViewModel;
     private DocumentChange documentChange;
     private TextView title;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
         setContentView(R.layout.activity_merchant);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
 //        viewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabs = findViewById(R.id.tabs);
@@ -53,6 +55,16 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
         title = findViewById(R.id.title);
         title.setText("HUB - " + myBusiness.getBusinessName());
 
+        getPendingIntent();
+    }
+
+    private void getPendingIntent(){
+        Intent intent = getIntent();
+        if (intent.hasExtra(getString(R.string.intent_order_reference))){
+            String reference = intent.getStringExtra(getString(R.string.intent_order_reference));
+            if(viewPager != null)
+                viewPager.setCurrentItem(2);
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {

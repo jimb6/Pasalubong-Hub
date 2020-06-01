@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.data.factory.product;
+package com.allandroidprojects.ecomsample.data.factory.account;
 
 import android.content.Context;
 
@@ -9,20 +9,21 @@ import androidx.lifecycle.ViewModelProvider;
 import com.allandroidprojects.ecomsample.data.repository.OrderRepository;
 import com.allandroidprojects.ecomsample.data.viewmodel.product.ItemDetailsViewModel;
 
-public class ItemDetailsModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class ProductOrderFactory extends ViewModelProvider.NewInstanceFactory {
 
     private Context context;
-    public ItemDetailsModelFactory(Context context){
+
+    public ProductOrderFactory(Context context){
         this.context = context;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(ItemDetailsViewModel.class)){
+        if (modelClass.isAssignableFrom(ItemDetailsViewModel.class)) {
             return (T) new ItemDetailsViewModel(OrderRepository.getInstance(context));
-        }else{
-            throw new IllegalArgumentException(("Unknown ViewModel class"));
+        } else {
+            throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }
 }

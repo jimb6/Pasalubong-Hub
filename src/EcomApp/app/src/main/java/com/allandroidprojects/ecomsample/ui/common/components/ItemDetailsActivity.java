@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
+import com.allandroidprojects.ecomsample.data.factory.product.ItemDetailsModelFactory;
 import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.product.ItemDetailsViewModel;
@@ -27,9 +30,16 @@ import com.allandroidprojects.ecomsample.util.RatingType;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import it.sephiroth.android.library.numberpicker.NumberPicker;
 
@@ -46,6 +56,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private SimpleDraweeView mImageView;
     private static ViewPager viewPager;
     private static TabLayout tabLayout;
+    private int quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +130,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
 //        });
     }
 
-    double calculateAverageRatings(ArrayList<Rating> ratings){
+    double calculateAverageRatings(ArrayList<Rating> ratings) {
         double avg = 0;
         for (Rating rate : ratings)
-            avg+= rate.getRating();
+            avg += rate.getRating();
         return avg / (double) ratings.size();
     }
 
@@ -141,13 +152,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
         textRating = findViewById(R.id.text_ratings);
 //        numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
 
-        textBuyNow.setOnClickListener(v ->{
-            Intent intent = new Intent(ItemDetailsActivity.this, BuyProductActivity.class);
-            intent.putExtra("product", item);
-            startActivity(intent);
+        textBuyNow.setOnClickListener(v -> {
+            String title = "Order Confirmation";
+            String body = "Do you want to confirm your order?";
+            showConfirmationAlert(title, body);
         });
 
-        layout_message.setOnClickListener(v ->{
+        layout_message.setOnClickListener(v -> {
             Intent intent = new Intent(ItemDetailsActivity.this, ChatroomActivity.class);
             intent.putExtra("product", item);
             startActivity(intent);
@@ -160,8 +171,47 @@ public class ItemDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void showConfirmationAlert(String title, String body) {
+        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(this, DialogTypes.TYPE_QUESTION)
+                .setTitle(title)
+                .setDescription(body)
+                .setPositiveText("Confirm")
+                .setPositiveListener(lottieAlertDialog -> {
+                    confirmedOrder();
+                    lottieAlertDialog.dismiss();
+                }).setNegativeText("Cancel")
+                .setNegativeListener(lottieAlertDialog -> {
+                    lottieAlertDialog.dismiss();
+                }).build();
+        alertDialog.show();
+    }
+
+
+    private void confirmedOrder() {
+        ProductOrder order = new ProductOrder();
+        order.setProduct(item);
+        order.setQuantity(2);
+        order.setSeller_reference(item.getBusinessOwnerId());
+        order.setUser_reference(FirebaseAuth.getInstance().getUid());
+        order.setDate_ordered(getTimestamp());
+        viewModel.storeOrder(order, this);
+        viewModel.storeOrderResponse().observe(this, result ->{
+            if(result instanceof Result.Success){
+                Toast.makeText(this, "Order has been placed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String getTimestamp(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("Canada/Pacific"));
+        return sdf.format(new Date());
+    }
+
+
     private void initializeViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
+        ItemDetailsModelFactory factory = new ItemDetailsModelFactory(this);
+        viewModel = ViewModelProviders.of(this, factory).get(ItemDetailsViewModel.class);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -182,7 +232,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
         fragment = new RatingsListFragment();
         bundle = new Bundle();
-        bundle.putInt("RATE",RatingType.FIVE.getRatingValue());
+        bundle.putInt("RATE", RatingType.FIVE.getRatingValue());
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, "3(★)");
 

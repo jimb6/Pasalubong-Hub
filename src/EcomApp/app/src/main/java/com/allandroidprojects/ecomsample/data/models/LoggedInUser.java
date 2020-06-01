@@ -16,7 +16,9 @@ public class LoggedInUser implements Parcelable {
     public boolean isNew;
     public boolean isCreated;
     public boolean isAuthenticated;
+    public String security_level;
     public String userStatus;
+
 
     public LoggedInUser(){}
     public LoggedInUser(LoggedInUser user){
@@ -31,6 +33,7 @@ public class LoggedInUser implements Parcelable {
         this.displayName = displayName;
         this.email = email;
         this.photoUrl = photoUrl;
+        this.security_level = "10";
     }
 
 
@@ -43,6 +46,7 @@ public class LoggedInUser implements Parcelable {
         isCreated = in.readByte() != 0;
         isAuthenticated = in.readByte() != 0;
         userStatus = in.readString();
+        security_level = in.readString();
     }
 
     public static final Creator<LoggedInUser> CREATOR = new Creator<LoggedInUser>() {
@@ -73,6 +77,14 @@ public class LoggedInUser implements Parcelable {
         return displayName;
     }
 
+    public String getSecurity_level() {
+        return security_level;
+    }
+
+    public void setSecurity_level(String security_level) {
+        this.security_level = security_level;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -89,6 +101,7 @@ public class LoggedInUser implements Parcelable {
         dest.writeByte((byte) (isCreated ? 1 : 0));
         dest.writeByte((byte) (isAuthenticated ? 1 : 0));
         dest.writeString(userStatus);
+        dest.writeString(security_level);
     }
 
 }

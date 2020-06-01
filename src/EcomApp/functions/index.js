@@ -23,99 +23,166 @@ const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
 const collectionIndexName = ALGOLIA_INDEX_NAME;
 const collectionIndex = algoliaClient.initIndex(collectionIndexName);
 
-// Create a HTTP request cloud function.
-exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
+// // Create a HTTP request cloud function.
+// exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
 
-	// This array will contain all records to be indexed in Algolia.
-	// A record does not need to necessarily contain all properties of the Firestore document,
-	// only the relevant ones. 
-	const algoliaRecords = [];
+//     // This array will contain all records to be indexed in Algolia.
+//     // A record does not need to necessarily contain all properties of the Firestore document,
+//     // only the relevant ones. 
+//     const algoliaRecords = [];
 
-	// Retrieve all documents from the COLLECTION collection.
-	const querySnapshot = await db.collection('products').get();
+//     // Retrieve all documents from the COLLECTION collection.
+//     const querySnapshot = await db.collection('products').get();
 
-	querySnapshot.docs.forEach(doc => {
-		const document = doc.data();
-        // Essentially, you want your records to contain any information that facilitates search, 
-        // display, filtering, or relevance. Otherwise, you can leave it out.
-        const record = {
-            objectID: doc.id,
-            businessOwnerId: document.businessOwnerId,
-            productname: document.productname,
-			productDescription: document.productDescription,
-            imageUrls: document.imageUrls,
-            condition: document.condition,
-            isNew: document.isNew,
-            price: document.price,
-            productCategory: document.productCategory,
-            stock: document.stock,
-            wholeSeller: document.wholeSeller
-        };
+//     querySnapshot.docs.forEach(doc => {
+//         const document = doc.data();
+//         // Essentially, you want your records to contain any information that facilitates search, 
+//         // display, filtering, or relevance. Otherwise, you can leave it out.
+//         const record = {
+//             objectID: doc.id,
+//             businessOwnerId: document.businessOwnerId,
+//             productname: document.productname,
+//             productDescription: document.productDescription,
+//             imageUrls: document.imageUrls,
+//             condition: document.condition,
+//             isNew: document.isNew,
+//             price: document.price,
+//             productCategory: document.productCategory,
+//             stock: document.stock,
+//             wholeSeller: document.wholeSeller
+//         };
 
-        algoliaRecords.push(record);
+//         algoliaRecords.push(record);
+//     });
+
+//     // After all records are created, we save them to 
+//     collectionIndex.saveObjects(algoliaRecords, (_error, content) => {
+//         res.status(200).send("COLLECTION was indexed to Algolia successfully.");
+//     });
+
+// });
+
+// exports.collectionOnCreate = functions.firestore.document('products/{uid}').onCreate(async (snapshot, context) => {
+//     await saveDocumentInAlgolia(snapshot);
+// });
+
+// exports.collectionOnUpdate = functions.firestore.document('products/{uid}').onUpdate(async (change, context) => {
+//     await updateDocumentInAlgolia(change);
+// });
+
+// exports.collectionOnDelete = functions.firestore.document('products/{uid}').onDelete(async (snapshot, context) => {
+//     await deleteDocumentFromAlgolia(snapshot);
+// });
+
+
+
+
+// async function saveDocumentInAlgolia(snapshot) {
+//     if (snapshot.exists) {
+//         const record = snapshot.data();
+//         if (record) { // Removes the possibility of snapshot.data() being undefined.
+//             if (record.isIncomplete === false) { // We only index products that are complete.
+//                 record.objectID = snapshot.id;
+
+//                 // In this example, we are including all properties of the Firestore document 
+//                 // in the Algolia record, but do remember to evaluate if they are all necessary.
+//                 // More on that in Part 2, Step 2 above.
+
+//                 await collectionIndex.saveObject(record); // Adds or replaces a specific object.
+//             }
+//         }
+//     }
+// }
+
+// async function updateDocumentInAlgolia(change) {
+//     const docBeforeChange = change.before.data()
+//     const docAfterChange = change.after.data()
+//     if (docBeforeChange && docAfterChange) {
+//         if (docAfterChange.isIncomplete && !docBeforeChange.isIncomplete) {
+//             // If the doc was COMPLETE and is now INCOMPLETE, it was 
+//             // previously indexed in algolia and must now be removed.
+//             await deleteDocumentFromAlgolia(change.after);
+//         } else if (docAfterChange.isIncomplete === false) {
+//             await saveDocumentInAlgolia(change.after);
+//         }
+//     }
+// }
+
+// async function deleteDocumentFromAlgolia(snapshot) {
+//     if (snapshot.exists) {
+//         const objectID = snapshot.id;
+//         await collectionIndex.deleteObject(objectID);
+//     }
+// }
+
+
+
+exports.sendOrderNotification = functions.firestore.document('products/{productId}/orders/{orderId}')
+    .onWrite(event => {
+
+        console.log("System: starting");
+        console.log("event: ", event);
+        console.log("event.after: ", event.after);
+        console.log("event.after.data: ", event.after.data());
+        console.log("ProductID: ", event.after.ref.parent.parent.id);
+        console.log("orderId:", event.after.id);
+
+        const productId = event.after.ref.parent.parent.id;
+        console.log("productId: ",event.after.id);
+        const orderId = event.after.id;
+        console.log("orderId: ", orderId);
+
+
+        return admin.firestore().collection("products")
+        .doc(productId).collection("orders")
+        .doc(orderId).get()
+        .then(queryResult => {
+
+            console.log("queryResult: ", queryResult);
+
+            const customer = queryResult.data().user_reference;
+            console.log("customer ID: ", customer);
+            const seller = queryResult.data().seller_reference;
+            console.log("seller ID: ", seller);
+
+            const orderedBy = admin.firestore().collection("users").doc(customer).get();
+            console.log("orderedBy: ", orderedBy);
+            const shopOwner = admin.firestore().collection("users").doc(seller).get();
+            console.log("shopOwner: ", shopOwner);
+
+            return Promise.all([orderedBy, shopOwner])
+            .then(result => {
+                // const fromUserName = result[0].data().email;
+                // const toUserName = result[1].data().email;
+                console.log("result", result);
+                const tokenId = result[1].data().messaging_token;
+                console.log("tokenId:", tokenId);
+                const notificationContent = {
+                    data: {
+                        data_type: "data_type_order_product_broadcast",
+                        title: "New order in your shop.",
+                        message: "Order reference: " + orderId,
+                        order_refernce: orderId,
+                    }
+                };
+
+                return admin.messaging().sendToDevice(tokenId, notificationContent)
+                .then(result => {
+                    console.log("Notification sent!");
+                    return null;
+                }).catch(function (error) {
+                    console.log("Error sending message:", error);
+                    return null;
+                });
+            }).catch(function (error) {
+                console.log("Error sending message:", error);
+                return null;
+            });
+        }).catch(function (error) {
+            console.log("Error sending message:", error);
+            return null;
+        });
     });
-	
-	// After all records are created, we save them to 
-	collectionIndex.saveObjects(algoliaRecords, (_error, content) => {
-        res.status(200).send("COLLECTION was indexed to Algolia successfully.");
-    });
-	
-});
-
-exports.collectionOnCreate = functions.firestore.document('products/{uid}').onCreate(async (snapshot, context) => {
-    await saveDocumentInAlgolia(snapshot);
-});
-
-exports.collectionOnUpdate = functions.firestore.document('products/{uid}').onUpdate(async (change, context) => {
-    await updateDocumentInAlgolia(change);
-});
-
-exports.collectionOnDelete = functions.firestore.document('products/{uid}').onDelete(async (snapshot, context) => {
-    await deleteDocumentFromAlgolia(snapshot);
-});
-
-
-
-
-async function saveDocumentInAlgolia(snapshot) {
-    if (snapshot.exists) {
-        const record = snapshot.data();
-        if (record) { // Removes the possibility of snapshot.data() being undefined.
-            if (record.isIncomplete === false) { // We only index products that are complete.
-                record.objectID = snapshot.id;
-                
-                // In this example, we are including all properties of the Firestore document 
-                // in the Algolia record, but do remember to evaluate if they are all necessary.
-                // More on that in Part 2, Step 2 above.
-                
-                await collectionIndex.saveObject(record); // Adds or replaces a specific object.
-            }
-        }
-    }
-}
-
-async function updateDocumentInAlgolia(change) {
-    const docBeforeChange = change.before.data()
-    const docAfterChange = change.after.data()
-    if (docBeforeChange && docAfterChange) {
-        if (docAfterChange.isIncomplete && !docBeforeChange.isIncomplete) {
-            // If the doc was COMPLETE and is now INCOMPLETE, it was 
-            // previously indexed in algolia and must now be removed.
-            await deleteDocumentFromAlgolia(change.after);
-        } else if (docAfterChange.isIncomplete === false) {
-            await saveDocumentInAlgolia(change.after);
-        }
-    }
-}
-
-async function deleteDocumentFromAlgolia(snapshot) {
-    if (snapshot.exists) {
-        const objectID = snapshot.id;
-        await collectionIndex.deleteObject(objectID);
-    }
-}
-
-
 
 exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatroom_messages/{chatmessageId}')
     .onWrite((snap, context) => {
@@ -206,3 +273,7 @@ exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatr
             console.log("Error sending message:", error);
         });
     });
+
+
+
+

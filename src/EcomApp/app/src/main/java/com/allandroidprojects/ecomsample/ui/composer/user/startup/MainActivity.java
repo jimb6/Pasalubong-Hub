@@ -56,6 +56,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -167,8 +169,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     private void checkAuthenticationState() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Uri photo = firebaseUser.getPhotoUrl() == null ?
@@ -190,7 +190,13 @@ public class MainActivity extends AppCompatActivity
             Intent chatroomIntent = new Intent(MainActivity.this, ChatroomActivity.class);
             chatroomIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
             startActivity(chatroomIntent);
+        } else if (intent.hasExtra(getString(R.string.intent_order_reference))) {
+            String reference = intent.getStringExtra(getString(R.string.intent_order_reference));
+            Intent orderIntent = new Intent(MainActivity.this, AccountActivity.class);
+            orderIntent.putExtra(getString(R.string.intent_order_reference), reference);
+            startActivity(orderIntent);
         }
+
     }
 
     private void initFCMToken() {
@@ -203,20 +209,32 @@ public class MainActivity extends AppCompatActivity
         // TODO: Implement this method to send token to your app server.
         try {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            Map<String, Object> data = new HashMap<>();
-            data.put("messaging_token", token);
+            DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
 
-            db.collection("users").document(user.getUserId()).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.d("TAG", "TOKEN Saved to the database: " + token);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e("TAG", "FAILED TO SAVE TOKEN:  " + e.getMessage());
-                }
-            });
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                Log.d("MAIN ACTIVITY", "sendRegistrationToServer: sending token to server: Firebase Database" + token);
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                reference.child(getString(R.string.dbnode_users))
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(getString(R.string.field_messaging_token))
+                        .setValue(token);
+
+                Log.d("MAIN ACTIVITY", "sendRegistrationToServer: sending token to server: Firestore " + token);
+                Map<String, Object> data = new HashMap<>();
+                data.put("messaging_token", token);
+
+                db.collection("users").document(user.getUserId()).update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "TOKEN Saved to the database: " + token);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("TAG", "FAILED TO SAVE TOKEN:  " + e.getMessage());
+                    }
+                });
+            }
         } catch (Exception e) {
             Log.e("TAG", "FAILED TO SAVE TOKEN:  " + e.getMessage());
         }
@@ -363,7 +381,7 @@ public class MainActivity extends AppCompatActivity
         bundle = new Bundle();
         bundle.putString("type", ProductCategory.DECORATION.getValue());
         fragment.setArguments(bundle);
-        adapter.addFragment(fragment,  ProductCategory.DECORATION.getValue());
+        adapter.addFragment(fragment, ProductCategory.DECORATION.getValue());
 
         fragment = new ProductListFragment(this);
         bundle = new Bundle();

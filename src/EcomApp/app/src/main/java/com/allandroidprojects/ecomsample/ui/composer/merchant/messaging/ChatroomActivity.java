@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.ChatMessage;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
-import com.allandroidprojects.ecomsample.data.models.User;
 import com.allandroidprojects.ecomsample.data.models.fcm.Data;
 import com.allandroidprojects.ecomsample.data.models.fcm.FirebaseCloudMessage;
 import com.allandroidprojects.ecomsample.interfaces.FCM;
@@ -71,8 +70,8 @@ public class ChatroomActivity extends AppCompatActivity {
     private Set<String> mMessageIdSet;
     private ChatMessageListAdapter mAdapter;
     public static boolean isActivityRunning;
-    private String BASE_URL = "";
-    private String mServerKey = "";
+    private String BASE_URL = "https://fcm.googleapis.com/fcm/";
+    private String mServerKey = "AAAAbeRM7Q4:APA91bGyabDgRxpBF8vg0M-dv-XjKVlZWpWmTuak-eOxkWU6dDKAipjK59aNuPkWg54kBENhvnmXILu1uu3x0WZT7DpMVc8MIV2sG3t-jI8vP8u34BRUUWAC-C6RnBco47SZ7XV861Fk";
 
 
     @Override
@@ -259,30 +258,34 @@ public class ChatroomActivity extends AppCompatActivity {
     }
 
     private void getUserDetails(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        for(int i = 0; i < mMessagesList.size(); i++) {
-            // Log.d(TAG, "onDataChange: searching for userId: " + mMessagesList.get(i).getUser_id());
-            final int j = i;
-            if(mMessagesList.get(i).getUser_id() != null && mMessagesList.get(i).getProfile_image().equals("")){
-                Query query = reference.child(getString(R.string.dbnode_users))
-                        .orderByKey()
-                        .equalTo(mMessagesList.get(i).getUser_id());
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        DataSnapshot singleSnapshot = dataSnapshot.getChildren().iterator().next();
-                        mMessagesList.get(j).setProfile_image(singleSnapshot.getValue(User.class).getProfile_image());
-                        mMessagesList.get(j).setName(singleSnapshot.getValue(User.class).getName());
-                        mAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        }
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+//        for(int i = 0; i < mMessagesList.size(); i++) {
+//            // Log.d(TAG, "onDataChange: searching for userId: " + mMessagesList.get(i).getUser_id());
+//            final int j = i;
+//            if(mMessagesList.get(i).getUser_id() != null && mMessagesList.get(i).getProfile_image().equals("")){
+//                Query query = reference.child(getString(R.string.dbnode_users))
+//                        .orderByKey()
+//                        .equalTo(mMessagesList.get(i).getUser_id());
+//                query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        try {
+//                            DataSnapshot singleSnapshot = dataSnapshot.getChildren().iterator().next();
+//                            mMessagesList.get(j).setProfile_image(singleSnapshot.getValue(User.class).getProfile_image());
+//                            mMessagesList.get(j).setName(singleSnapshot.getValue(User.class).getName());
+//                            mAdapter.notifyDataSetChanged();
+//                        }catch (Exception e){
+//                            Log.d("CHATROOM ACTIVITY ", e.getMessage());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//        }
 
     }
 

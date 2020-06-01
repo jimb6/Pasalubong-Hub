@@ -73,10 +73,12 @@ public class MessagingService extends FirebaseMessagingService {
         String message = remoteMessage.getData().get(getString(R.string.data_message));
 
         if (isApplicationForeground()) {
-            if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
+            if (identifydataType.equals(getString(R.string.firebase_data_type_admin_broadcast))) {
                 sendBroadcastNotification(title, message);
             } else if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
                 sendChat(title, message, remoteMessage);
+            } else if (identifydataType.equals(getString(R.string.firebase_data_type_order_product_broadcast))){
+                sendOrder(remoteMessage);
             }
 
         }
@@ -86,6 +88,8 @@ public class MessagingService extends FirebaseMessagingService {
                 sendBroadcastNotification(title, message);
             } else if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
                 sendChat(title, message, remoteMessage);
+            } else if (identifydataType.equals(getString(R.string.firebase_data_type_order_product_broadcast))){
+                sendOrder(remoteMessage);
             }
         }
 
@@ -115,10 +119,10 @@ public class MessagingService extends FirebaseMessagingService {
 //
 //            if (/* Check if data needs to be processed by long running job */ true) {
 //                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-//                scheduleJob();
+                scheduleJob();
 //            } else {
 //                // Handle message within 10 seconds
-//                handleNow();
+                handleNow();
 //            }
 //
 //        }
@@ -174,11 +178,87 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void sendOrder(RemoteMessage remoteMessage){
+        String title = remoteMessage.getData().get(getString(R.string.data_title));
+        String message = remoteMessage.getData().get(getString(R.string.data_message));
+        String orderReference = remoteMessage.getData().get("order_refernce");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_name));
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(getString(R.string.intent_order_reference), orderReference);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setSmallIcon(R.drawable.iconpas)
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.iconpas))
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setColor(getColor(R.color.accent))
+                .setAutoCancel(true);
+
+        builder.setContentIntent(notifyPendingIntent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // === Removed some obsoletes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = "PasalubongHub247";
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+            builder.setChannelId(channelId);
+        }
+
+        notificationManager.notify(0, builder.build());
+//        notificationManager.notify(BROADCAST_NOTIFICATION_ID, builder.build());
+    }
+
     @Override
     public void onNewToken(@NonNull String s) {
 //        super.onNewToken(s);
         Log.d(TAG, "Refreshed token: " + s);
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void sendNewProductOrderedNotification(String title, String message, Chatroom chatroom){
+        int notificationId = buildNotificationId();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_name));
+
+        Intent pendingIntent = new Intent(this, LoginActivity.class);
+        pendingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        pendingIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, pendingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setSmallIcon(R.drawable.iconpas)
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.iconpas))
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSubText(message)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText("new message in " + chatroom.getChatroom_name()).setSummaryText(message))
+                .setNumber(mNumMessagePending)
+                .setColor(getColor(R.color.accent))
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(true);
+
+        builder.setContentIntent(notifyPendingIntent);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // === Removed some obsoletes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = "PasalubongHub247";
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+            builder.setChannelId(channelId);
+        }
+
+        notificationManager.notify(0, builder.build());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

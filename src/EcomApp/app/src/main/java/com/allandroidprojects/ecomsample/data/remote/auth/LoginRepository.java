@@ -13,6 +13,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,6 +31,7 @@ public class LoginRepository {
 
     private static volatile LoginRepository instance;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseDatabase databaseRef = FirebaseDatabase.getInstance();
     private LoginDataSource dataSource;
 
     private FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
@@ -92,11 +95,12 @@ public class LoginRepository {
 
         Map<String, Object> authData = new HashMap<>();
         authData.put("displayName", authenticatedUser.getDisplayName());
-        authData.put("isAuthenticated", authenticatedUser.getEmail());
+        authData.put("email", authenticatedUser.getEmail());
         authData.put("isCreated", authenticatedUser.isAuthenticated);
         authData.put("isNew", authenticatedUser.isNew);
         authData.put("photoUrl", String.valueOf(authenticatedUser.getPhotoUrl()));
         authData.put("userId", authenticatedUser.getUserId());
+        authData.put("security_level", "10");
         authData.put("userStatus", authenticatedUser.userStatus);
 
         uidRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -111,6 +115,7 @@ public class LoginRepository {
                                 public void onComplete(@NonNull Task<Void> userCreationTask) {
                                     if (userCreationTask.isSuccessful()) {
                                         authenticatedUser.isCreated = true;
+                                        createuserInFirebaseIfNotExists(authenticatedUser);
                                         newUserMutableLiveData.setValue(authenticatedUser);
                                     } else {
                                         System.err.println(userCreationTask.getException().getMessage());
@@ -129,6 +134,12 @@ public class LoginRepository {
 
         });
         return newUserMutableLiveData;
+    }
+
+    public void createuserInFirebaseIfNotExists(final LoggedInUser authenticatedUser){
+        final MutableLiveData<LoggedInUser> newUserMutableLiveData = new MutableLiveData<>();
+        final DatabaseReference mDatabase = databaseRef.getReference();
+        mDatabase.child("users").child(authenticatedUser.getUserId()).setValue(user);
     }
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted

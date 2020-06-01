@@ -3,7 +3,6 @@ package com.allandroidprojects.ecomsample.data.repository;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.allandroidprojects.ecomsample.data.mapping.ProductDataMapping;
@@ -19,10 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -65,17 +61,14 @@ public class ProductRepository {
 //    This shows product base on product
     public static MutableLiveData<Result<Product>> show(Product productID){
         final MutableLiveData<Result<Product>> productMutableLiveData = new MutableLiveData<>();
-        ref.document(productID.getProductReference()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (documentSnapshot != null) {
-                    ProductDataMapping mapping = new ProductDataMapping(documentSnapshot.getData());
-                    productMutableLiveData.setValue(new Result.Success<Product>(mapping.getData()));
-                } else {
-                    productMutableLiveData.setValue(new Result.Error(e));
-                }
-
+        ref.document(productID.getProductReference()).addSnapshotListener((documentSnapshot, e) -> {
+            if (documentSnapshot != null) {
+                ProductDataMapping mapping = new ProductDataMapping(documentSnapshot.getData());
+                productMutableLiveData.setValue(new Result.Success<Product>(mapping.getData()));
+            } else {
+                productMutableLiveData.setValue(new Result.Error(e));
             }
+
         });
         return productMutableLiveData;
     }
