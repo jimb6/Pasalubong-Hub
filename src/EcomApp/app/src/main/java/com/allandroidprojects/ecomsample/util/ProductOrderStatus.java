@@ -2,7 +2,7 @@ package com.allandroidprojects.ecomsample.util;
 
 public enum ProductOrderStatus {
     PENDING("Pending"), ACCEPTED("Confirmed"), CANCELLED("Cancelled"),
-    HISTORY("History"), DELETE("Deleted");
+    HISTORY("History"), DELETE("Deleted"), TO_REVIEW("Review");
 
     private String description;
 

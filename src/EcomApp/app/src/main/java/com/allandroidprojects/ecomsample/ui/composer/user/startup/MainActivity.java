@@ -29,6 +29,7 @@ import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
+import com.allandroidprojects.ecomsample.ui.composer.user.ordermanagement.BuyProductActivity;
 import com.allandroidprojects.ecomsample.ui.common.components.EmptyActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
@@ -413,7 +414,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.map) {
             startActivity(new Intent(MainActivity.this, MapsActivity.class));
         } else if (id == R.id.my_orders) {
-            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
+            startActivity(new Intent(MainActivity.this, BuyProductActivity.class));
         } else if (id == R.id.my_wishlist) {
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
         } else if (id == R.id.my_cart) {

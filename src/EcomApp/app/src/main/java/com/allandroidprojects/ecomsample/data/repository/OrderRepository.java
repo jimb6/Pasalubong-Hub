@@ -169,4 +169,40 @@ public class OrderRepository {
         });
         return resultMutableLiveData;
     }
+
+    public MutableLiveData<Result<ProductOrder>> getUserOrder(String userId) {
+        final MutableLiveData<Result<ProductOrder>> resultMutableLiveData = new MutableLiveData<Result<ProductOrder>>();
+        db.collectionGroup("orders").get().addOnCompleteListener(tasks -> {
+            if (tasks.isSuccessful()) {
+                QuerySnapshot snapshots = tasks.getResult();
+                for (QueryDocumentSnapshot snapshot : Objects.requireNonNull(tasks.getResult())) {
+                    Map<String, Object> data = snapshot.getData();
+                    String status = String.valueOf(data.get("status"));
+                    String userReference = String.valueOf(data.get("user_reference"));
+                    if (userReference.equals(userId)) {
+                        String date_ordered = String.valueOf(data.get("date_ordered"));
+                        int quantity = Integer.parseInt(String.valueOf(data.get("quantity")));
+                        String seller_reference = String.valueOf(data.get("seller_reference"));
+                        String user_reference = String.valueOf(data.get("user_reference"));
+                        String customerEmail = String.valueOf(data.get("customerEmail"));
+                        ProductDataMapping productDataMapping = new ProductDataMapping((HashMap<String, Object>) data.get("product"));
+
+                        ProductOrder order = new ProductOrder();
+                        order.setId(snapshot.getString("id"));
+                        order.setUser_reference(user_reference);
+                        order.setDate_ordered(date_ordered);
+                        order.setSeller_reference(seller_reference);
+                        order.setQuantity(quantity);
+                        order.setStatus(status.toUpperCase());
+                        order.setProduct(productDataMapping.getData());
+                        order.setCustomerEmail(customerEmail);
+
+                        resultMutableLiveData.setValue(new Result.Success<>(order));
+                    }
+                }
+                resultMutableLiveData.setValue(new Result.Error(new Exception("No more data.")));
+            }
+        });
+        return resultMutableLiveData;
+    }
 }

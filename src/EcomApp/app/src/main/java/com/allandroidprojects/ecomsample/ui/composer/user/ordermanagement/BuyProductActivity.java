@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components;
+package com.allandroidprojects.ecomsample.ui.composer.user.ordermanagement;
 
 import android.os.Bundle;
 
@@ -17,5 +17,8 @@ public class BuyProductActivity extends AppCompatActivity {
                     .replace(R.id.container, BuyProductFragment.newInstance())
                     .commitNow();
         }
+
+
+
     }
 }

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement;
+package com.allandroidprojects.ecomsample.ui.composer.user.ordermanagement;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -6,8 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.factory.product.OrderListViewModelFactory;
 import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.Result;
@@ -27,14 +24,15 @@ import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.faltenreich.skeletonlayout.Skeleton;
 import com.faltenreich.skeletonlayout.SkeletonLayoutUtils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.labters.lottiealertdialoglibrary.DialogTypes;
 import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 
 import java.util.ArrayList;
 
-public class OrderListFragment extends Fragment {
+public class BuyProductFragment extends Fragment {
 
-    private OrderListViewModel mViewModel;
+    private BuyProductViewModel mViewModel;
     private View root;
     private RecyclerView.Adapter adapter;
     private RecyclerView recyclerView;
@@ -42,10 +40,13 @@ public class OrderListFragment extends Fragment {
     private ArrayList<ProductOrder> orders = new ArrayList<>();
     private String orderStatus;
     private String merchantId;
+    public static BuyProductFragment newInstance() {
+        return new BuyProductFragment();
+    }
 
-
-    public static OrderListFragment newInstance() {
-        return new OrderListFragment();
+    private void setupViewModel(){
+        BuyProductViewModelFactory factory = new BuyProductViewModelFactory(getContext());
+        mViewModel = ViewModelProviders.of(this, factory).get(BuyProductViewModel.class);
     }
 
     private void refreshData() {
@@ -54,8 +55,8 @@ public class OrderListFragment extends Fragment {
         skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.shop_list_item, 4);
         skeleton.showSkeleton();
 
-        mViewModel.getMerchantOrders(merchantId, orderStatus);
-        mViewModel.getMerchantOrdersResult().observe(getViewLifecycleOwner(), p -> {
+        mViewModel.getUserOrders(merchantId);
+        mViewModel.getUserOrdersResult().observe(getViewLifecycleOwner(), p -> {
             skeleton.showOriginal();
             setupRecyclerView();
             if (p instanceof Result.Success) {
@@ -66,17 +67,13 @@ public class OrderListFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        recyclerView = root.findViewById(R.id.recyclerview);
+        recyclerView = root.findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new SimpleStringRecyclerViewAdapter(recyclerView, orders);
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupViewModel(){
-        OrderListViewModelFactory factory = new OrderListViewModelFactory(getContext());
-        mViewModel = ViewModelProviders.of(this, factory).get(OrderListViewModel.class);
-    }
 
     protected void updateOrderedProduct(String reference, ProductOrderStatus status){
         mViewModel.updateOrderdStatus(reference, status.get());
@@ -106,10 +103,11 @@ public class OrderListFragment extends Fragment {
         alertDialog.show();
     }
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.order_list_fragment, container, false);
+        root = inflater.inflate(R.layout.buy_product_fragment, container, false);
 
         setupViewModel();
         final SwipeRefreshLayout pullToRefresh = root.findViewById(R.id.pullToRefresh);
@@ -118,17 +116,7 @@ public class OrderListFragment extends Fragment {
             pullToRefresh.setRefreshing(false);
         });
 
-        Bundle bundle = getArguments();
-//        if (!bundle.containsKey("type")){
-//            return root;
-//        }
-//
-//        if (!bundle.containsKey("businessID")){
-//            return root;
-//        }
-
-        orderStatus = bundle.getString("type");
-        merchantId = bundle.getString("businessID");
+        merchantId = FirebaseAuth.getInstance().getUid();
 
         setupRecyclerView();
         // or apply a new SkeletonLayout to a RecyclerView (showing 5 items)
@@ -145,6 +133,8 @@ public class OrderListFragment extends Fragment {
     }
 
 
+
+
     public class SimpleStringRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
 
@@ -154,23 +144,19 @@ public class OrderListFragment extends Fragment {
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final SimpleDraweeView mImageView;
-            public final LinearLayout mLayoutItem;
-            public final TextView tvName, tvDescription, tvPrice, orderDate, customerEmail;
-            public final Button cancel, confirm, info;
+            public final TextView tvProductName, tvProductDescription,
+                    tvProductPrice, tvDateOrdered, tvCancel, tvStatus;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mImageView = view.findViewById(R.id.productImage);
-                mLayoutItem = view.findViewById(R.id.layout_item);
-                tvName = view.findViewById(R.id.product_name);
-                tvDescription = view.findViewById(R.id.product_description);
-                tvPrice = view.findViewById(R.id.total_price);
-                orderDate = view.findViewById(R.id.date_ordered);
-                customerEmail = view.findViewById(R.id.customer_email);
-                cancel = view.findViewById(R.id.order_cancel);
-                confirm = view.findViewById(R.id.order_confirm);
-                info = view.findViewById(R.id.order_info);
+                mImageView = view.findViewById(R.id.image);
+                tvProductName = view.findViewById(R.id.tvProductName);
+                tvProductDescription = view.findViewById(R.id.tvProductDescription);
+                tvProductPrice = view.findViewById(R.id.tvProductPrice);
+                tvDateOrdered = view.findViewById(R.id.tvDateOrdered);
+                tvCancel = view.findViewById(R.id.tvCancel);
+                tvStatus = view.findViewById(R.id.tvStatus);
             }
         }
 
@@ -181,7 +167,7 @@ public class OrderListFragment extends Fragment {
 
         @Override
         public SimpleStringRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_order_item, parent, false);
             return new SimpleStringRecyclerViewAdapter.ViewHolder(view);
         }
 
@@ -201,34 +187,36 @@ public class OrderListFragment extends Fragment {
             ProductOrder item = mValues.get(position);
             final Uri uri = Uri.parse(item.getProduct().getImageUrls().get(0));
             holder.mImageView.setImageURI(uri);
-            holder.tvName.setText(item.getProduct().getProductname());
-            holder.tvDescription.setText(item.getProduct().getProductDescription());
-            holder.tvPrice.setText(String.valueOf(item.getProduct().getPrice()) + " x " + item.getQuantity());
-            holder.customerEmail.setText(item.getCustomerEmail());
-            holder.orderDate.setText(item.getDate_ordered());
-
-            holder.cancel.setOnClickListener(v -> {
-                Log.d("ORDER ITEM: ", "Canceled!" );
-                updateOrderedProduct(item.getId(), ProductOrderStatus.CANCELLED);
-            });
-
-            if (item.getStatus().equals(ProductOrderStatus.CANCELLED.get())){
-                holder.cancel.setVisibility(View.GONE);
-                holder.confirm.setText("DELETE ORDER");
-                holder.confirm.setOnClickListener(v -> {
-                    Log.d("ORDER ITEM: ", "Confirmed!" );
-                    updateOrderedProduct(item.getId(), ProductOrderStatus.DELETE);
+            holder.tvProductName.setText(item.getProduct().getProductname());
+            holder.tvProductDescription.setText(item.getProduct().getProductDescription());
+            holder.tvProductPrice.setText(String.valueOf(item.getProduct().getPrice()) + " x " + item.getQuantity());
+            holder.tvDateOrdered.setText(item.getDate_ordered());
+            holder.tvStatus.setText(item.getStatus());
+            if (item.getStatus().equals(ProductOrderStatus.TO_REVIEW.get())){
+                holder.tvStatus.setOnClickListener(v -> {
+                    Log.d("ORDER ITEM: ", "TO REVIEW!" );
+                    //To REVIEW
                 });
-            } else {
-                holder.confirm.setOnClickListener(v -> {
+                holder.tvCancel.setVisibility(View.GONE);
+            }else if (item.getStatus().equals(ProductOrderStatus.ACCEPTED.get())){
+                holder.tvStatus.setText("Ready to pickup");
+                holder.tvCancel.setText("Request Cancel");
+                holder.tvCancel.setOnClickListener(v -> {
                     Log.d("ORDER ITEM: ", "Confirmed!" );
-                    updateOrderedProduct(item.getId(), ProductOrderStatus.ACCEPTED);
+                    //Request Cancel
+                });
+            }else if (item.getStatus().equals(ProductOrderStatus.PENDING.get())){
+                holder.tvCancel.setOnClickListener(v -> {
+                    Log.d("ORDER ITEM: ", "PENDING!" );
+                    //Request Cancel
+                });
+            } else if(item.getStatus().equals(ProductOrderStatus.CANCELLED.get())){
+                holder.tvCancel.setText("Delete Order");
+                holder.tvCancel.setOnClickListener(v -> {
+                    Log.d("ORDER ITEM: ", "CANCELLED!" );
+                    //Request Cancel
                 });
             }
-            holder.info.setOnClickListener(v -> {
-                Log.d("ORDER ITEM: ", "Info" );
-            });
-
         }
 
         @Override

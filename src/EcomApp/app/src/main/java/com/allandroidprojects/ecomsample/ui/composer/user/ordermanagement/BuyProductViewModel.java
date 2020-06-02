@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement;
+package com.allandroidprojects.ecomsample.ui.composer.user.ordermanagement;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,21 +7,27 @@ import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.repository.OrderRepository;
 
-public class OrderListViewModel extends ViewModel {
+public class BuyProductViewModel extends ViewModel {
+    // TODO: Implement the ViewModel
+
     // TODO: Implement the ViewModel
     private static volatile OrderRepository repository;
     private MutableLiveData<Result<ProductOrder>> order;
     private MutableLiveData<Result<String>> updateStatus;
 
-    public OrderListViewModel(OrderRepository repository){
+    public BuyProductViewModel(OrderRepository repository){
         this.repository = repository;
     }
 
 
-
-    public void getMerchantOrders(String merchantId, String category){
-        order = repository.getMerchantOrderByCategory(merchantId, category);
+    public void getUserOrders(String userId){
+        order = repository.getUserOrder(userId);
     }
+
+    public MutableLiveData<Result<ProductOrder>> getUserOrdersResult(){
+        return order;
+    }
+
 
     public MutableLiveData<Result<ProductOrder>> getMerchantOrdersResult(){
         return order;
@@ -34,5 +40,4 @@ public class OrderListViewModel extends ViewModel {
     public MutableLiveData<Result<ProductOrder>> getUpdateResponse(){
         return order;
     }
-
 }

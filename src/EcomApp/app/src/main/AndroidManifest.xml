@@ -35,7 +35,7 @@
             android:name=".ui.composer.merchant.startup.MerchantActivity"
             android:label="@string/title_activity_merchant"
             android:theme="@style/BadgeTheme.NoActionBar" />
-        <activity android:name=".ui.common.components.BuyProductActivity" />
+        <activity android:name=".ui.composer.user.ordermanagement.BuyProductActivity" />
         <activity
             android:name=".ui.composer.merchant.products.AddProductActivity"
             android:label="@string/title_activity_add_product"
