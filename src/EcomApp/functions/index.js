@@ -131,6 +131,13 @@ exports.sendOrderNotification = functions.firestore.document('products/{productI
         console.log("productId: ",event.after.id);
         const orderId = event.after.id;
         console.log("orderId: ", orderId);
+        const customerEmail = event.after.id.customerEmail;
+        console.log("Customer email:", customerEmail)
+//        const dateOrdered = event.after.id.date_ordered;
+//        console.log("Date of ordered: ", dateOrdered);
+//        const productBrand = event.after.id.product.brand;
+//        console.log("productBrand: ", productBrand);
+//        console.log("product")
 
 
         return admin.firestore().collection("products")
@@ -150,30 +157,47 @@ exports.sendOrderNotification = functions.firestore.document('products/{productI
             const shopOwner = admin.firestore().collection("users").doc(seller).get();
             console.log("shopOwner: ", shopOwner);
 
+            let tokens = [];
+
             return Promise.all([orderedBy, shopOwner])
-            .then(result => {
+            .then(results => {
                 // const fromUserName = result[0].data().email;
                 // const toUserName = result[1].data().email;
-                console.log("result", result);
-                const tokenId = result[1].data().messaging_token;
-                console.log("tokenId:", tokenId);
-                const notificationContent = {
-                    data: {
-                        data_type: "data_type_order_product_broadcast",
-                        title: "New order in your shop.",
-                        message: "Order reference: " + orderId,
-                        order_refernce: orderId,
-                    }
-                };
+                console.log("result", results);
+                const customerTokenId = results[0].data().messaging_token;
+                const sellerTokenId = results[1].data().messaging_token;
+                console.log("Customer TokenID: ", customerTokenId);
+                console.log("Seller tokenId:", sellerTokenId);
 
-                return admin.messaging().sendToDevice(tokenId, notificationContent)
-                .then(result => {
-                    console.log("Notification sent!");
-                    return null;
-                }).catch(function (error) {
-                    console.log("Error sending message:", error);
-                    return null;
-                });
+                var i;
+                for(i = 0; i < results.length; i++){
+                    const notificationContent = {
+                    data: {
+                            data_type: "data_type_order_product_broadcast",
+                            title: "New order in your shop.",
+                            message: "Order reference: " + orderId,
+                            customer_reference: customer,
+                            seller_reference: seller,
+                            order_refernce: orderId,
+                        }
+                     };
+
+                     var tokenId;
+                     if(i === 0){
+                        tokenId = customerTokenId;
+                     }else{
+                        tokenId = sellerTokenId;
+                     }
+                     admin.messaging().sendToDevice(tokenId, notificationContent)
+                        .then(result => {
+                            console.log("Notification sent! ", tokenId);
+                            return null;
+                            }).catch(function (error) {
+                                console.log("Error sending message:", error);
+                                return null;
+                            });
+                }
+                return null;
             }).catch(function (error) {
                 console.log("Error sending message:", error);
                 return null;
@@ -245,7 +269,7 @@ exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatr
 
                             data: {
                                 data_type: "data_type_chat_message",
-                                title: "Tabian Consulting",
+                                title: "Pasalubong Hub",
                                 message: message,
                                 chatroom_id: chatroomId
                             }

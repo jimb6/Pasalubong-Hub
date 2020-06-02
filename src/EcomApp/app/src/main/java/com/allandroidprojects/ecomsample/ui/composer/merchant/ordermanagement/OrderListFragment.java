@@ -2,29 +2,33 @@ package com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.data.factory.product.OrderListViewModelFactory;
+import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Rating;
-import com.allandroidprojects.ecomsample.ui.composer.user.product.ProductListFragment;
+import com.allandroidprojects.ecomsample.data.models.Result;
+import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.faltenreich.skeletonlayout.Skeleton;
 import com.faltenreich.skeletonlayout.SkeletonLayoutUtils;
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 
 import java.util.ArrayList;
 
@@ -35,7 +39,9 @@ public class OrderListFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView recyclerView;
     private Skeleton skeleton;
-    private ArrayList<Product> orders = new ArrayList<>();
+    private ArrayList<ProductOrder> orders = new ArrayList<>();
+    private String orderStatus;
+    private String merchantId;
 
 
     public static OrderListFragment newInstance() {
@@ -48,86 +54,134 @@ public class OrderListFragment extends Fragment {
         skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.shop_list_item, 4);
         skeleton.showSkeleton();
 
-//        mViewModel.fetchMyProducts(category);
-//        mViewModel.getMyProuducts(category).observe(getViewLifecycleOwner(), p -> {
-//            skeleton.showOriginal();
-//            setupRecyclerView();
-//            if (p instanceof Result.Success) {
-//                products.add((Product) ((Result.Success) p).getData());
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
+        mViewModel.getMerchantOrders(merchantId, orderStatus);
+        mViewModel.getMerchantOrdersResult().observe(getViewLifecycleOwner(), p -> {
+            skeleton.showOriginal();
+            setupRecyclerView();
+            if (p instanceof Result.Success) {
+                orders.add((ProductOrder) ((Result.Success) p).getData());
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void setupRecyclerView() {
         recyclerView = root.findViewById(R.id.recyclerview);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProductListFragment.SimpleStringRecyclerViewAdapter(recyclerView, orders);
+        adapter = new SimpleStringRecyclerViewAdapter(recyclerView, orders);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void setupViewModel(){
+        OrderListViewModelFactory factory = new OrderListViewModelFactory(getContext());
+        mViewModel = ViewModelProviders.of(this, factory).get(OrderListViewModel.class);
+    }
+
+    protected void updateOrderedProduct(String reference, ProductOrderStatus status){
+        mViewModel.updateOrderdStatus(reference, status.get());
+        mViewModel.getUpdateResponse().observe(this, result ->{
+            String title = "Order Update", message = "No Message";
+            int type;
+            if (result instanceof Result.Success){
+                ProductOrder order = (ProductOrder) ((Result.Success) result).getData();
+                message = "Order Successfully updated:\nReference: " + order;
+                type = DialogTypes.TYPE_SUCCESS;
+            }else{
+                message = "Unable to update product.";
+                type = DialogTypes.TYPE_ERROR;
+            }
+            showStatusDialog(title, message, type);
+        });
+    }
+
+    private void showStatusDialog(String title, String message, int type){
+        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(getContext(), type)
+                .setTitle(title)
+                .setDescription(message)
+                .setPositiveText("Close")
+                .setPositiveListener(lottieAlertDialog -> {
+                    lottieAlertDialog.dismiss();
+                }).build();
+        alertDialog.show();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.order_list_fragment, container, false);
+
+        setupViewModel();
         final SwipeRefreshLayout pullToRefresh = root.findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(() -> {
-//            refreshData();
+            refreshData();
             pullToRefresh.setRefreshing(false);
         });
+
+        Bundle bundle = getArguments();
+//        if (!bundle.containsKey("type")){
+//            return root;
+//        }
+//
+//        if (!bundle.containsKey("businessID")){
+//            return root;
+//        }
+
+        orderStatus = bundle.getString("type");
+        merchantId = bundle.getString("businessID");
 
         setupRecyclerView();
         // or apply a new SkeletonLayout to a RecyclerView (showing 5 items)
         skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.list_item, 4);
-
+        refreshData();
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(OrderListViewModel.class);
+
         // TODO: Use the ViewModel
     }
 
 
-    public static class SimpleStringRecyclerViewAdapter
+    public class SimpleStringRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
 
-        private ArrayList<Product> mValues;
+        private ArrayList<ProductOrder> mValues;
         private RecyclerView mRecyclerView;
 
-        public static class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final SimpleDraweeView mImageView;
             public final LinearLayout mLayoutItem;
-            public final ImageView mImageViewWishlist;
-            public final TextView tvName, tvDescription, tvPrice, totalSales;
-            public final RatingBar ratingbar;
+            public final TextView tvName, tvDescription, tvPrice, orderDate, customerEmail;
+            public final Button cancel, confirm, info;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mImageView = view.findViewById(R.id.image1);
+                mImageView = view.findViewById(R.id.productImage);
                 mLayoutItem = view.findViewById(R.id.layout_item);
                 tvName = view.findViewById(R.id.product_name);
                 tvDescription = view.findViewById(R.id.product_description);
-                tvPrice = view.findViewById(R.id.product_price);
-                mImageViewWishlist = view.findViewById(R.id.ic_wishlist);
-                totalSales = view.findViewById(R.id.totalSales);
-                ratingbar = view.findViewById(R.id.ratingBar);
+                tvPrice = view.findViewById(R.id.total_price);
+                orderDate = view.findViewById(R.id.date_ordered);
+                customerEmail = view.findViewById(R.id.customer_email);
+                cancel = view.findViewById(R.id.order_cancel);
+                confirm = view.findViewById(R.id.order_confirm);
+                info = view.findViewById(R.id.order_info);
             }
         }
 
-        public SimpleStringRecyclerViewAdapter(RecyclerView recyclerView, ArrayList<Product> items) {
+        public SimpleStringRecyclerViewAdapter(RecyclerView recyclerView, ArrayList<ProductOrder> items) {
             mValues = items;
             mRecyclerView = recyclerView;
         }
 
         @Override
         public SimpleStringRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_list_item, parent, false);
             return new SimpleStringRecyclerViewAdapter.ViewHolder(view);
         }
 
@@ -144,15 +198,35 @@ public class OrderListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final SimpleStringRecyclerViewAdapter.ViewHolder holder, final int position) {
-            Product item = mValues.get(position);
-            final Uri uri = Uri.parse(item.getImageUrls().get(0));
+            ProductOrder item = mValues.get(position);
+            final Uri uri = Uri.parse(item.getProduct().getImageUrls().get(0));
             holder.mImageView.setImageURI(uri);
-            holder.tvName.setText(item.getProductname());
-            holder.tvDescription.setText(item.getProductDescription());
-            holder.tvPrice.setText(String.valueOf(item.getPrice()));
-            holder.ratingbar.setRating((float) calculateAverageRatings(item.getRatings()));
-            holder.totalSales.setText(String.valueOf(item.getTotalSales()));
-            holder.mLayoutItem.setOnClickListener(v -> {
+            holder.tvName.setText(item.getProduct().getProductname());
+            holder.tvDescription.setText(item.getProduct().getProductDescription());
+            holder.tvPrice.setText(String.valueOf(item.getProduct().getPrice()) + " x " + item.getQuantity());
+            holder.customerEmail.setText(item.getCustomerEmail());
+            holder.orderDate.setText(item.getDate_ordered());
+
+            holder.cancel.setOnClickListener(v -> {
+                Log.d("ORDER ITEM: ", "Canceled!" );
+                updateOrderedProduct(item.getId(), ProductOrderStatus.CANCELLED);
+            });
+
+            if (item.getStatus().equals(ProductOrderStatus.CANCELLED.get())){
+                holder.cancel.setVisibility(View.GONE);
+                holder.confirm.setText("DELETE ORDER");
+                holder.confirm.setOnClickListener(v -> {
+                    Log.d("ORDER ITEM: ", "Confirmed!" );
+                    updateOrderedProduct(item.getId(), ProductOrderStatus.DELETE);
+                });
+            } else {
+                holder.confirm.setOnClickListener(v -> {
+                    Log.d("ORDER ITEM: ", "Confirmed!" );
+                    updateOrderedProduct(item.getId(), ProductOrderStatus.ACCEPTED);
+                });
+            }
+            holder.info.setOnClickListener(v -> {
+                Log.d("ORDER ITEM: ", "Info" );
             });
         }
 

@@ -3,17 +3,16 @@ package com.allandroidprojects.ecomsample.data.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
-
 public class ProductOrder implements Parcelable {
 
     private String id;
     private Product product;
+    private String customerEmail;
     private String user_reference;
     private String seller_reference;
     private String date_ordered;
     private int quantity;
-    private ProductOrderStatus status;
+    private String status;
 
     public ProductOrder(){}
 
@@ -21,10 +20,12 @@ public class ProductOrder implements Parcelable {
     protected ProductOrder(Parcel in) {
         id = in.readString();
         product = in.readParcelable(Product.class.getClassLoader());
+        customerEmail = in.readString();
         user_reference = in.readString();
         seller_reference = in.readString();
         date_ordered = in.readString();
         quantity = in.readInt();
+        status = in.readString();
     }
 
     public static final Creator<ProductOrder> CREATOR = new Creator<ProductOrder>() {
@@ -45,6 +46,14 @@ public class ProductOrder implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
     public Product getProduct() {
@@ -87,11 +96,11 @@ public class ProductOrder implements Parcelable {
         this.quantity = quantity;
     }
 
-    public ProductOrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(ProductOrderStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -103,6 +112,7 @@ public class ProductOrder implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(customerEmail);
         dest.writeParcelable(product, flags);
         dest.writeString(user_reference);
         dest.writeString(seller_reference);

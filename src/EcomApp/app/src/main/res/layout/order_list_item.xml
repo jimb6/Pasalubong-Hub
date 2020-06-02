@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <com.facebook.drawee.view.SimpleDraweeView xmlns:fresco="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/image1"
+            android:id="@+id/productImage"
             android:layout_width="match_parent"
             android:layout_height="200.0dp"
             fresco:placeholderImage="@color/stay_color" />
@@ -27,8 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="4dp"
-            android:weightSum="2">
+            android:padding="4dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -52,7 +51,7 @@
                     android:textSize="10dp" />
 
                 <TextView
-                    android:id="@+id/product_price"
+                    android:id="@+id/total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="₱ 0.00"
@@ -65,36 +64,77 @@
                     android:orientation="horizontal"
                     android:padding="5dp">
 
-                    <RatingBar
-                        android:id="@+id/ratingBar"
+                    <TextView
+                        android:id="@+id/customer_email"
                         android:layout_width="wrap_content"
-                        style="?android:attr/ratingBarStyleSmall"
                         android:layout_height="wrap_content"
-                        android:numStars = "5"
-                        android:rating   = "0"/>
+                        android:text="Customer Email"
+                        android:textColor="#4CAF50"
+                        android:textSize="12dp" />
 
                     <TextView
-                        android:id="@+id/totalSales"
+                        android:id="@+id/date_ordered"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAlignment="textEnd"
-                        android:text="total sales"
+                        android:text="Date Ordered"
                         android:textColor="#4CAF50"
                         android:textSize="12dp" />
 
                 </LinearLayout>
 
 
+
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/ic_wishlist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.3"
-                android:src="@drawable/ic_favorite_border_black_18dp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/gen_black"
+            android:elevation="30dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/order_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/gen_white"
+                android:gravity="center"
+                android:text="Cancel Order"
+                android:textColor="@color/bg_screen1"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/order_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/bg_screen1"
+                android:gravity="center"
+                android:text="Confirm Order"
+                android:textColor="@color/dirty_white"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/order_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/bg_screen1"
+                android:gravity="center"
+                android:text="View Info"
+                android:textColor="@color/dirty_white"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

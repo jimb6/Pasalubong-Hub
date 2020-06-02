@@ -14,7 +14,7 @@ tools:context=".ui.composer.merchant.ordermanagement.OrderListFragment">>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/shop_list_item"
+        tools:listitem="@layout/order_list_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layoutAnimation="@anim/recyclerview_animation" />

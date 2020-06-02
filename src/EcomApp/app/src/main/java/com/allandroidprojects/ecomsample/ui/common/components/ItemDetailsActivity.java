@@ -26,6 +26,7 @@ import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.Chatroom
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.MerchantProfileActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.product.CartListActivity;
 import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;
+import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
 import com.allandroidprojects.ecomsample.util.RatingType;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.snackbar.Snackbar;
@@ -194,6 +195,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
         order.setSeller_reference(item.getBusinessOwnerId());
         order.setUser_reference(FirebaseAuth.getInstance().getUid());
         order.setDate_ordered(getTimestamp());
+        order.setStatus(ProductOrderStatus.PENDING.get());
+        order.setCustomerEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         viewModel.storeOrder(order, this);
         viewModel.storeOrderResponse().observe(this, result ->{
             if(result instanceof Result.Success){

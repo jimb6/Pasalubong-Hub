@@ -18,14 +18,13 @@ import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.AccountViewModel;
+import com.allandroidprojects.ecomsample.ui.common.components.termsandcondition.TermsConditionActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 
 public class AccountActivity extends AppCompatActivity {
 
@@ -39,6 +38,7 @@ public class AccountActivity extends AppCompatActivity {
     private Business userBusiness;
     private FirebaseUser firebaseUser;
     public static boolean isActivityRunning = false;
+
 
     //        private GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
     @Override
@@ -133,21 +133,19 @@ public class AccountActivity extends AppCompatActivity {
             if (hasBusiness) {
                 goToStore();
             } else {
-                Business business = new Business();
-                business.setBusinessName(firebaseUser.getDisplayName());
-                business.setBusinessAddress("");
-                business.setOwnerId(firebaseUser.getUid());
-                business.setBusinessEmail(firebaseUser.getEmail());
-                ArrayList<String> photos = new ArrayList<>();
-                photos.add(String.valueOf(firebaseUser.getPhotoUrl()));
-                business.setBusinessPhotos(photos);
-                saveStore(business);
+                goToTermsAndCons();
             }
         });
     }
 
     private LoggedInUser getUserFromIntent() {
         return (LoggedInUser) getIntent().getSerializableExtra("USER");
+    }
+
+    private void goToTermsAndCons(){
+        Intent intent = new Intent(AccountActivity.this, TermsConditionActivity.class);
+        intent.putExtra("BUSINESS", userBusiness);
+        startActivity(intent);
     }
 
     private void goToStore() {

@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.util.ProductCategory;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
 import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
 import com.google.android.material.tabs.TabLayout;
 
@@ -27,6 +27,7 @@ public class OrderManagement extends Fragment {
     private View root;
     static ViewPager viewPager;
     static TabLayout tabLayout;
+    MerchantActivity activity;
 
     public static OrderManagement newInstance() {
         return new OrderManagement();
@@ -38,13 +39,8 @@ public class OrderManagement extends Fragment {
 
         OrderListFragment fragment = new OrderListFragment();
         bundle = new Bundle();
-        bundle.putString("type", ProductCategory.SWEETS.getValue());
-        fragment.setArguments(bundle);
-        adapter.addFragment(fragment, ProductCategory.SWEETS.getValue());
-
-        fragment = new OrderListFragment();
-        bundle = new Bundle();
         bundle.putString("type", ProductOrderStatus.PENDING.get());
+        bundle.putString("businessID", activity.myBusiness.getOwnerId());
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, ProductOrderStatus.PENDING.get());
 
