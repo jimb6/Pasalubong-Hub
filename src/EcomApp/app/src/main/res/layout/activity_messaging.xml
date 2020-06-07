@@ -1,48 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:clipToPadding="false"
-android:focusableInTouchMode="true"
-    tools:context=".ui.composer.merchant.messaging.MessagingActivity">
-
-<ListView
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/messages_view"
-    android:layout_weight="2"
-    android:divider="#fff"
-    android:layout_height="wrap_content"
-    />
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:focusableInTouchMode="true"
+    tools:context=".ui.common.components.messaging.MessagingActivity">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#fff"
-    android:orientation="horizontal">
-
-    <EditText
-        android:id="@+id/text_message"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:ems="10"
-        android:hint="Write a message"
-        android:inputType="text"
-        android:paddingHorizontal="10dp"
-        android:text="" />
+        android:theme="@style/BadgeTheme.AppBarOverlay">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="?actionBarSize"
+            android:padding="@dimen/appbar_padding"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
 
 
-    <ImageButton
-        android:id="@+id/button_send"
-        android:layout_width="wrap_content"
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:padding="20dp"
-        android:layout_marginHorizontal="10dp"
-        android:background="@drawable/ic_send_black_24dp"
-        />
-</LinearLayout>
+        android:layout_gravity="top"
+        android:visibility="gone"
+        app:tabMode="scrollable" />
 </LinearLayout>

@@ -20,10 +20,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/BadgeTheme">
+        <activity android:name=".ui.composer.merchant.ordermanagement.OrderInfoActivity"></activity>
         <activity
             android:name=".ui.common.components.termsandcondition.TermsConditionActivity"
             android:label="@string/title_activity_terms_condition"
-            android:theme="@style/BadgeTheme.NoActionBar"></activity>
+            android:theme="@style/BadgeTheme.NoActionBar" />
         <activity
             android:name=".ui.composer.user.merchant.MerchantProfileActivity"
             android:label="@string/title_activity_merchant_profile"
@@ -55,8 +56,8 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".ui.composer.merchant.messaging.MessagingActivity" />
-        <activity android:name=".ui.composer.merchant.messaging.ChatroomActivity" />
+        <activity android:name=".ui.common.components.messaging.MessagingActivity" />
+        <activity android:name=".ui.common.components.messaging.ChatroomActivity" />
         <activity
             android:name=".ui.composer.merchant.startup.ShopActivity"
             android:label="@string/title_activity_shop" />
@@ -114,6 +115,7 @@
         <activity
             android:name=".ui.composer.user.product.CartListActivity"
             android:label="@string/my_cart" />
+
         <activity android:name=".ui.composer.user.product.SearchResultActivity">
 
             <!-- to identify this activity as "searchable.xml" -->
@@ -127,6 +129,7 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
         <activity android:name=".ui.common.components.EmptyActivity" />
 
         <service android:name=".util.MessagingService">
@@ -135,6 +138,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

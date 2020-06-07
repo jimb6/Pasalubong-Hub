@@ -23,102 +23,140 @@ const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
 const collectionIndexName = ALGOLIA_INDEX_NAME;
 const collectionIndex = algoliaClient.initIndex(collectionIndexName);
 
-// // Create a HTTP request cloud function.
-// exports.sendCollectionToAlgolia = functions.https.onRequest(async (req, res) => {
 
-//     // This array will contain all records to be indexed in Algolia.
-//     // A record does not need to necessarily contain all properties of the Firestore document,
-//     // only the relevant ones. 
-//     const algoliaRecords = [];
+exports.newOrderePlaced = functions.firestore.document('products/{productId}/orders/{orderId}')
+    .onCreate((event, context) => {
 
-//     // Retrieve all documents from the COLLECTION collection.
-//     const querySnapshot = await db.collection('products').get();
-
-//     querySnapshot.docs.forEach(doc => {
-//         const document = doc.data();
-//         // Essentially, you want your records to contain any information that facilitates search, 
-//         // display, filtering, or relevance. Otherwise, you can leave it out.
-//         const record = {
-//             objectID: doc.id,
-//             businessOwnerId: document.businessOwnerId,
-//             productname: document.productname,
-//             productDescription: document.productDescription,
-//             imageUrls: document.imageUrls,
-//             condition: document.condition,
-//             isNew: document.isNew,
-//             price: document.price,
-//             productCategory: document.productCategory,
-//             stock: document.stock,
-//             wholeSeller: document.wholeSeller
-//         };
-
-//         algoliaRecords.push(record);
-//     });
-
-//     // After all records are created, we save them to 
-//     collectionIndex.saveObjects(algoliaRecords, (_error, content) => {
-//         res.status(200).send("COLLECTION was indexed to Algolia successfully.");
-//     });
-
-// });
-
-// exports.collectionOnCreate = functions.firestore.document('products/{uid}').onCreate(async (snapshot, context) => {
-//     await saveDocumentInAlgolia(snapshot);
-// });
-
-// exports.collectionOnUpdate = functions.firestore.document('products/{uid}').onUpdate(async (change, context) => {
-//     await updateDocumentInAlgolia(change);
-// });
-
-// exports.collectionOnDelete = functions.firestore.document('products/{uid}').onDelete(async (snapshot, context) => {
-//     await deleteDocumentFromAlgolia(snapshot);
-// });
+        const productRef = context.params.productId;
+        console.log("Product ID", context.params.productId);
+        const orderRef = context.params.orderedId;
+        console.log("Order ID", context.params.orderedId);
 
 
+        let data = {
+            id: productRef
+        };
+
+        let setDoc = db.collection('products').doc(productRef).collection('orders').doc(orderRef).update(data)
+            .then(function () {
+                console.log("Document successfully updated!");
+                return null;
+            })
+            .catch(function (error) {
+                console.error("Error writing document: ", error);
+                return null;
+            });
+    });
+
+exports.newProductUploaded = functions.firestore.document('products/{productId}')
+    .onCreate((event, context) => {
+        const productRef = context.params.productId;
+        console.log("Product ID", context.params.productId);
 
 
-// async function saveDocumentInAlgolia(snapshot) {
-//     if (snapshot.exists) {
-//         const record = snapshot.data();
-//         if (record) { // Removes the possibility of snapshot.data() being undefined.
-//             if (record.isIncomplete === false) { // We only index products that are complete.
-//                 record.objectID = snapshot.id;
+        let data = {
+            productReference: productRef
+        };
 
-//                 // In this example, we are including all properties of the Firestore document 
-//                 // in the Algolia record, but do remember to evaluate if they are all necessary.
-//                 // More on that in Part 2, Step 2 above.
+        // Add a new document in collection "cities" with ID 'LA'
+        return db.collection('products').doc(productRef).update(data)
+            .then(function () {
+                console.log("Document successfully updated!");
+                return null;
+            })
+            .catch(function (error) {
+                console.error("Error writing document: ", error);
+                return null;
+            });
+    });
 
-//                 await collectionIndex.saveObject(record); // Adds or replaces a specific object.
-//             }
-//         }
-//     }
-// }
+exports.productOnDelete = functions.firestore.document('products/{productId}/orders/{orderId}')
+    .onDelete((event, context) => {
 
-// async function updateDocumentInAlgolia(change) {
-//     const docBeforeChange = change.before.data()
-//     const docAfterChange = change.after.data()
-//     if (docBeforeChange && docAfterChange) {
-//         if (docAfterChange.isIncomplete && !docBeforeChange.isIncomplete) {
-//             // If the doc was COMPLETE and is now INCOMPLETE, it was 
-//             // previously indexed in algolia and must now be removed.
-//             await deleteDocumentFromAlgolia(change.after);
-//         } else if (docAfterChange.isIncomplete === false) {
-//             await saveDocumentInAlgolia(change.after);
-//         }
-//     }
-// }
-
-// async function deleteDocumentFromAlgolia(snapshot) {
-//     if (snapshot.exists) {
-//         const objectID = snapshot.id;
-//         await collectionIndex.deleteObject(objectID);
-//     }
-// }
+    });
 
 
+exports.sendOrderNotificationCreate = functions.firestore.document('products/{productId}/orders/{orderId}')
+    .onCreate((event, context) => {
 
-exports.sendOrderNotification = functions.firestore.document('products/{productId}/orders/{orderId}')
-    .onWrite(event => {
+        console.log("System: starting ");
+        console.log("System: Create");
+        console.log("event: ", event);
+
+        const productId = context.params.productId;
+        console.log("productId: ", productId);
+        const orderId = context.params.orderId;
+        console.log("orderId: ", orderId);
+        const customerEmail = event.id.customerEmail;
+        console.log("Customer email:", customerEmail)
+
+        return admin.firestore().collection("products")
+            .doc(productId).collection("orders")
+            .doc(orderId).get()
+            .then(queryResult => {
+
+                console.log("queryResult: ", queryResult);
+
+                const customer = queryResult.data().user_reference;
+                console.log("customer ID: ", customer);
+                const seller = queryResult.data().seller_reference;
+                console.log("seller ID: ", seller);
+
+                const orderedBy = admin.firestore().collection("users").doc(customer).get();
+                console.log("orderedBy: ", orderedBy);
+                const shopOwner = admin.firestore().collection("users").doc(seller).get();
+                console.log("shopOwner: ", shopOwner);
+
+                let tokens = [];
+
+                return Promise.all([orderedBy, shopOwner])
+                    .then(results => {
+                        // const fromUserName = result[0].data().email;
+                        // const toUserName = result[1].data().email;
+                        console.log("result", results);
+                        const customerTokenId = results[0].data().messaging_token;
+                        const sellerTokenId = results[1].data().messaging_token;
+                        console.log("Customer TokenID: ", customerTokenId);
+                        console.log("Seller tokenId:", sellerTokenId);
+
+                        let tokens = [customerTokenId, sellerTokenId];
+
+                        for (i = 0; i < tokens.length; i++) {
+                            const notificationContent = {
+                                data: {
+                                    data_type: "data_type_order_product_broadcast",
+                                    title: "New order in your shop.",
+                                    message: "Order reference: " + orderId,
+                                    customer_reference: customer,
+                                    seller_reference: seller,
+                                    order_refernce: orderId,
+                                    transactionType: "Create",
+                                }
+                            };
+
+
+                            admin.messaging().sendToDevice(tokens[i], notificationContent)
+                                .then(result => {
+                                    console.log("Notification sent! ", tokens[i]);
+                                    return null;
+                                }).catch(function (error) {
+                                    console.log("Error sending message:", error);
+                                    return null;
+                                });
+                        }
+                        return null;
+                    }).catch(function (error) {
+                        console.log("Error sending message:", error);
+                        return null;
+                    });
+            }).catch(function (error) {
+                console.log("Error sending message:", error);
+                return null;
+            });
+    });
+
+exports.sendOrderNotificationUpdate = functions.firestore.document('products/{productId}/orders/{orderId}')
+    .onUpdate(event => {
 
         console.log("System: starting");
         console.log("event: ", event);
@@ -128,85 +166,108 @@ exports.sendOrderNotification = functions.firestore.document('products/{productI
         console.log("orderId:", event.after.id);
 
         const productId = event.after.ref.parent.parent.id;
-        console.log("productId: ",event.after.id);
+        console.log("productId: ", event.after.id);
         const orderId = event.after.id;
         console.log("orderId: ", orderId);
         const customerEmail = event.after.id.customerEmail;
         console.log("Customer email:", customerEmail)
-//        const dateOrdered = event.after.id.date_ordered;
-//        console.log("Date of ordered: ", dateOrdered);
-//        const productBrand = event.after.id.product.brand;
-//        console.log("productBrand: ", productBrand);
-//        console.log("product")
+        //        const dateOrdered = event.after.id.date_ordered;
+        //        console.log("Date of ordered: ", dateOrdered);
+        //        const productBrand = event.after.id.product.brand;
+        //        console.log("productBrand: ", productBrand);
+        //        console.log("product")
 
 
         return admin.firestore().collection("products")
-        .doc(productId).collection("orders")
-        .doc(orderId).get()
-        .then(queryResult => {
+            .doc(productId).collection("orders")
+            .doc(orderId).get()
+            .then(queryResult => {
 
-            console.log("queryResult: ", queryResult);
+                console.log("queryResult: ", queryResult);
 
-            const customer = queryResult.data().user_reference;
-            console.log("customer ID: ", customer);
-            const seller = queryResult.data().seller_reference;
-            console.log("seller ID: ", seller);
+                const customer = queryResult.data().user_reference;
+                console.log("customer ID: ", customer);
+                const seller = queryResult.data().seller_reference;
+                console.log("seller ID: ", seller);
 
-            const orderedBy = admin.firestore().collection("users").doc(customer).get();
-            console.log("orderedBy: ", orderedBy);
-            const shopOwner = admin.firestore().collection("users").doc(seller).get();
-            console.log("shopOwner: ", shopOwner);
+                const orderedBy = admin.firestore().collection("users").doc(customer).get();
+                console.log("orderedBy: ", orderedBy);
+                const shopOwner = admin.firestore().collection("users").doc(seller).get();
+                console.log("shopOwner: ", shopOwner);
 
-            let tokens = [];
+                let tokens = [];
 
-            return Promise.all([orderedBy, shopOwner])
-            .then(results => {
-                // const fromUserName = result[0].data().email;
-                // const toUserName = result[1].data().email;
-                console.log("result", results);
-                const customerTokenId = results[0].data().messaging_token;
-                const sellerTokenId = results[1].data().messaging_token;
-                console.log("Customer TokenID: ", customerTokenId);
-                console.log("Seller tokenId:", sellerTokenId);
+                return Promise.all([orderedBy, shopOwner])
+                    .then(results => {
+                        // const fromUserName = result[0].data().email;
+                        // const toUserName = result[1].data().email;
+                        console.log("result", results);
+                        const customerTokenId = results[0].data().messaging_token;
+                        const sellerTokenId = results[1].data().messaging_token;
+                        console.log("Customer TokenID: ", customerTokenId);
+                        console.log("Seller tokenId:", sellerTokenId);
 
-                var i;
-                for(i = 0; i < results.length; i++){
-                    const notificationContent = {
-                    data: {
-                            data_type: "data_type_order_product_broadcast",
-                            title: "New order in your shop.",
-                            message: "Order reference: " + orderId,
-                            customer_reference: customer,
-                            seller_reference: seller,
-                            order_refernce: orderId,
+                        var i;
+                        for (i = 0; i < results.length; i++) {
+                            const notificationContent = {
+                                data: {
+                                    data_type: "data_type_order_product_broadcast",
+                                    title: "New order in your shop.",
+                                    message: "Order reference: " + orderId,
+                                    customer_reference: customer,
+                                    seller_reference: seller,
+                                    order_refernce: orderId,
+                                    transactionType: "Update",
+                                }
+                            };
+
+                            var tokenId;
+                            if (i === 0) {
+                                tokenId = customerTokenId;
+                            } else {
+                                tokenId = sellerTokenId;
+                            }
+                            admin.messaging().sendToDevice(tokenId, notificationContent)
+                                .then(result => {
+                                    console.log("Notification sent! ", tokenId);
+                                    return null;
+                                }).catch(function (error) {
+                                    console.log("Error sending message:", error);
+                                    return null;
+                                });
                         }
-                     };
-
-                     var tokenId;
-                     if(i === 0){
-                        tokenId = customerTokenId;
-                     }else{
-                        tokenId = sellerTokenId;
-                     }
-                     admin.messaging().sendToDevice(tokenId, notificationContent)
-                        .then(result => {
-                            console.log("Notification sent! ", tokenId);
-                            return null;
-                            }).catch(function (error) {
-                                console.log("Error sending message:", error);
-                                return null;
-                            });
-                }
-                return null;
+                        return null;
+                    }).catch(function (error) {
+                        console.log("Error sending message:", error);
+                        return null;
+                    });
             }).catch(function (error) {
                 console.log("Error sending message:", error);
                 return null;
             });
-        }).catch(function (error) {
-            console.log("Error sending message:", error);
-            return null;
-        });
     });
+
+exports.creatingInbox = functions.firestore.document('chatrooms/{roomId}')
+    .onCreate((event, context) => {
+
+        console.log("Start event", "Creating new inbox");
+        const newValue = snap.data();
+        const businessId = newValue.business_id;
+        const creatorId = newValue.creator_id;
+
+        let Businessdata = {
+            id: businessId,
+        }
+
+        return null;
+
+    });
+
+    exports.newMessageStored = functions.firestore.document('chatrooms/{roomId}/messages/{messageId}')
+    .onCreate((event, context) => {
+
+    });
+
 
 exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatroom_messages/{chatmessageId}')
     .onWrite((snap, context) => {
@@ -297,6 +358,8 @@ exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatr
             console.log("Error sending message:", error);
         });
     });
+
+    
 
 
 

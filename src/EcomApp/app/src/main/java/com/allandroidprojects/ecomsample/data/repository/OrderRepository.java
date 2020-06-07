@@ -59,19 +59,10 @@ public class OrderRepository {
                         if (quantity > order.getQuantity()) {
                             // Get a new write batch
                             WriteBatch batch = db.batch();
-
                             //Add New Order
                             DocumentReference nycRef = ref.document(order.getProduct().getProductReference())
                                     .collection("orders").document();
                             batch.set(nycRef, order);
-
-                            DocumentReference id = ref.document(order.getProduct().getProductReference())
-                                    .collection("orders").document(nycRef.getId());
-                            batch.update(id, "id", nycRef.getId());
-
-                            // Update the population of 'SF'
-                            DocumentReference sfRef = ref.document(order.getProduct().getProductReference());
-                            batch.update(sfRef, "stock", quantity - order.getQuantity());
 
                             // Commit the batch
                             batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -97,7 +88,7 @@ public class OrderRepository {
                 }
 
             } else {
-                resultMutableLiveData.setValue(new Result.Error(new Exception("Unable to process your order.")));
+                resultMutableLiveData.setValue(new Result.Error(task.getException()));
                 Toast.makeText(context, "Unable to process your order.", Toast.LENGTH_SHORT).show();
             }
 
@@ -128,7 +119,7 @@ public class OrderRepository {
                         order.setDate_ordered(date_ordered);
                         order.setSeller_reference(seller_reference);
                         order.setQuantity(quantity);
-                        order.setStatus(status.toUpperCase());
+                        order.setStatus(status);
                         order.setProduct(productDataMapping.getData());
                         order.setCustomerEmail(customerEmail);
 
@@ -193,7 +184,7 @@ public class OrderRepository {
                         order.setDate_ordered(date_ordered);
                         order.setSeller_reference(seller_reference);
                         order.setQuantity(quantity);
-                        order.setStatus(status.toUpperCase());
+                        order.setStatus(status);
                         order.setProduct(productDataMapping.getData());
                         order.setCustomerEmail(customerEmail);
 

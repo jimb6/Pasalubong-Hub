@@ -396,4 +396,8 @@
 
     </string>
     <string name="title_activity_terms_condition">TermsConditionActivity</string>
+    <string name="message_with_product_item">message_with_product_item</string>
+    <string name="message_without_product_item">message_without_product_item</string>
+    <string name="customer_id">customer_id</string>
+    <string name="seller_id">seller_id</string>
 </resources>

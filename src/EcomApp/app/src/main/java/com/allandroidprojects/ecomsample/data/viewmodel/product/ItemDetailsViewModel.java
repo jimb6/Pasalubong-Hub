@@ -1,8 +1,5 @@
 package com.allandroidprojects.ecomsample.data.viewmodel.product;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -36,12 +33,9 @@ public class ItemDetailsViewModel extends ViewModel {
     public void saveToCartList(Product product){
     }
 
-    public void storeOrder(ProductOrder order, Context context){
+    public void storeOrder(ProductOrder order){
       if (repository != null){
         productOrder = repository.store(order);
-      }
-      else{
-          Toast.makeText(context, "Unable to process order.", Toast.LENGTH_SHORT).show();
       }
     }
 

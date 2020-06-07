@@ -16,11 +16,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.facebook.drawee.view.SimpleDraweeView xmlns:fresco="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/productImage"
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200.0dp"
-            fresco:placeholderImage="@color/stay_color" />
+            android:layout_height="match_parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/productImage"
+                android:layout_width="match_parent"
+                android:layout_height="200.0dp"
+                fresco:placeholderImage="@color/stay_color" />
+
+            <include
+                android:id="@+id/loadingView"
+                layout="@layout/hub_custom_loading"
+                android:layout_width="match_parent"
+                android:layout_height="200.0dp"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_item_desc"
@@ -76,13 +90,12 @@
                         android:id="@+id/date_ordered"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="textEnd"
                         android:text="Date Ordered"
+                        android:textAlignment="textEnd"
                         android:textColor="#4CAF50"
                         android:textSize="12dp" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>

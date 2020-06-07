@@ -22,18 +22,15 @@ import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.product.ItemDetailsViewModel;
-import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.ui.common.widget.BottomSheetFragment;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.MerchantProfileActivity;
-import com.allandroidprojects.ecomsample.ui.composer.user.product.CartListActivity;
 import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;
 import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
 import com.allandroidprojects.ecomsample.util.RatingType;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.labters.lottiealertdialoglibrary.DialogTypes;
-import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,12 +54,13 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private SimpleDraweeView mImageView;
     private static ViewPager viewPager;
     private static TabLayout tabLayout;
-    private int quantity;
+    private BottomSheetFragment bottomSheetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_details);
+
         initializeViewModel();
         initializeComponents();
 
@@ -99,36 +97,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
             }
         });
 
-        textViewAddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewModel.saveToCartList(item);
-                viewModel.getCart().observe(ItemDetailsActivity.this, result -> {
-                    if (result instanceof Result.Success) {
-//                        Toast.makeText(ItemDetailsActivity.this, "Product Added to Cart Successfully!", Toast.LENGTH_SHORT).show();
-                        Snackbar.make(layout_actions, R.string.item_add_to_cart_success, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.go_to_cart, v -> startActivity(new Intent(ItemDetailsActivity.this, CartListActivity.class)));
-                    } else
-                        Snackbar.make(layout_actions, R.string.item_add_to_cart_error, Snackbar.LENGTH_LONG);
-                });
-//                ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
-//                imageUrlUtils.addCartListImageUri(stringImageUri);
-//                Toast.makeText(ItemDetailsActivity.this,"Item added to cart.",Toast.LENGTH_SHORT).show();
-//                MainActivity.notificationCountCart++;
-//                NotificationCountSetClass.setNotifyCount(MainActivity.notificationCountCart);
-            }
-        });
-//        textViewBuyNow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
-//                imageUrlUtils.addCartListImageUri(stringImageUri);
-//                MainActivity.notificationCountCart++;
-//                NotificationCountSetClass.setNotifyCount(MainActivity.notificationCountCart);
-//                startActivity(new Intent(ItemDetailsActivity.this, CartListActivity.class));
-//
-//            }
-//        });
+
+
     }
 
     double calculateAverageRatings(ArrayList<Rating> ratings) {
@@ -139,6 +109,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+
         mImageView = findViewById(R.id.image1);
         textViewAddToCart = findViewById(R.id.tvAddToCart);
         textProductName = findViewById(R.id.tvProductName);
@@ -151,17 +122,19 @@ public class ItemDetailsActivity extends AppCompatActivity {
         layout_store = findViewById(R.id.layout_store);
         layout_actions = findViewById(R.id.layout_actions);
         textRating = findViewById(R.id.text_ratings);
-//        numberPicker = (NumberPicker) findViewById(R.id.numberPicker);
+
 
         textBuyNow.setOnClickListener(v -> {
             String title = "Order Confirmation";
             String body = "Do you want to confirm your order?";
-            showConfirmationAlert(title, body);
+//            showConfirmationAlert(title, body);
+            showBottomSheetDialogFragment();
         });
 
         layout_message.setOnClickListener(v -> {
             Intent intent = new Intent(ItemDetailsActivity.this, ChatroomActivity.class);
-            intent.putExtra("product", item);
+            intent.putExtra(getString(R.string.message_with_product_item), item);
+            intent.putExtra(getString(R.string.seller_id), item.getBusinessOwnerId());
             startActivity(intent);
         });
 
@@ -170,34 +143,36 @@ public class ItemDetailsActivity extends AppCompatActivity {
             intent.putExtra("OWNERID", item.getBusinessOwnerId());
             startActivity(intent);
         });
-    }
 
-    private void showConfirmationAlert(String title, String body) {
-        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(this, DialogTypes.TYPE_QUESTION)
-                .setTitle(title)
-                .setDescription(body)
-                .setPositiveText("Confirm")
-                .setPositiveListener(lottieAlertDialog -> {
-                    confirmedOrder();
-                    lottieAlertDialog.dismiss();
-                }).setNegativeText("Cancel")
-                .setNegativeListener(lottieAlertDialog -> {
-                    lottieAlertDialog.dismiss();
-                }).build();
-        alertDialog.show();
+        textViewAddToCart.setOnClickListener(v -> {
+            showBottomSheetDialogFragment();
+        });
     }
 
 
-    private void confirmedOrder() {
+    public void showBottomSheetDialogFragment() {
+        bottomSheetFragment = new BottomSheetFragment(this);
+        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+    }
+
+
+    public void confirmedOrder(int quantity) {
+        bottomSheetFragment.dismiss();
+        if (quantity > item.getStock()){
+            Toast.makeText(this, "Invalid quantity!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+//
         ProductOrder order = new ProductOrder();
         order.setProduct(item);
-        order.setQuantity(2);
+        order.setQuantity(quantity);
         order.setSeller_reference(item.getBusinessOwnerId());
         order.setUser_reference(FirebaseAuth.getInstance().getUid());
         order.setDate_ordered(getTimestamp());
         order.setStatus(ProductOrderStatus.PENDING.get());
         order.setCustomerEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        viewModel.storeOrder(order, this);
+//
+        viewModel.storeOrder(order);
         viewModel.storeOrderResponse().observe(this, result ->{
             if(result instanceof Result.Success){
                 Toast.makeText(this, "Order has been placed!", Toast.LENGTH_SHORT).show();

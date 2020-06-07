@@ -24,9 +24,9 @@ import com.allandroidprojects.ecomsample.ui.composer.user.authentication.registr
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.SplashActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.WelcomeActivity;
-import com.allandroidprojects.ecomsample.data.models.Chatroom;
-import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
-import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -77,7 +77,7 @@ public class MessagingService extends FirebaseMessagingService {
                 sendBroadcastNotification(title, message);
             } else if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
                 sendChat(title, message, remoteMessage);
-            } else if (identifydataType.equals(getString(R.string.firebase_data_type_order_product_broadcast))){
+            } else if (identifydataType.equals(getString(R.string.firebase_data_type_order_product_broadcast))) {
                 sendOrder(remoteMessage);
             }
 
@@ -88,62 +88,20 @@ public class MessagingService extends FirebaseMessagingService {
                 sendBroadcastNotification(title, message);
             } else if (identifydataType.equals(getString(R.string.firebase_data_type_chat_broadcast))) {
                 sendChat(title, message, remoteMessage);
-            } else if (identifydataType.equals(getString(R.string.firebase_data_type_order_product_broadcast))){
+            } else if (identifydataType.equals(getString(R.string.firebase_data_type_order_product_broadcast))) {
                 sendOrder(remoteMessage);
             }
         }
-
-//        String notifBody = "";
-//        String notifTitle = "";
-//        String notifData = "";
-//
-//        try {
-//            notifBody = remoteMessage.getNotification().getBody();
-//            notifTitle = remoteMessage.getNotification().getTitle();
-//            notifData = remoteMessage.getData().toString();
-//
-//        }catch (NullPointerException e){
-//
-//            Log.e(TAG, "onMessageReceive - NullPointerException " + e.getMessage());
-//        }
-//
-//        Log.d(TAG, "onMessageReceiveData: " + notifData);
-//        Log.d(TAG, "onMessageReceiveTitle: " + notifTitle);
-//        Log.d(TAG, "onMessageReceiveBody: " +notifBody);
-//
-//        sendNotification(notifBody);
-
-//        Log.d(TAG, "From: " + remoteMessage.getFrom());
-//        if (remoteMessage.getData().size() > 0) {
-//            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-//
-//            if (/* Check if data needs to be processed by long running job */ true) {
-//                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                scheduleJob();
-//            } else {
-//                // Handle message within 10 seconds
-                handleNow();
-//            }
-//
-//        }
-
-        // Check if message contains a notification payload.
-//        if (remoteMessage.getNotification() != null) {
-//            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-//        }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 
-    private void sendChat(String title, String message, RemoteMessage remoteMessage){
+    private void sendChat(String title, String message, RemoteMessage remoteMessage) {
         String chatroomId = remoteMessage.getData().get(getString(R.string.chat_room_id));
-        Query query= firebaseDatabase.getReference().child(getString(R.string.chat_room_collection)).orderByKey().equalTo(chatroomId);
+        Query query = firebaseDatabase.getReference().child(getString(R.string.chat_room_collection)).orderByKey().equalTo(chatroomId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getChildren().iterator().hasNext()){
+                if (dataSnapshot.getChildren().iterator().hasNext()) {
                     DataSnapshot snapshot = dataSnapshot.getChildren().iterator().next();
 
                     Chatroom chatroom = new Chatroom();
@@ -158,9 +116,9 @@ public class MessagingService extends FirebaseMessagingService {
 
                     int numMessageSeen = Integer.parseInt(snapshot
                             .child(getString(R.string.field_chat_room_users))
-                    .child(userId)
-                    .child(getString(R.string.field_chat_room_last_seen_message))
-                    .getValue().toString());
+                            .child(userId)
+                            .child(getString(R.string.field_chat_room_last_seen_message))
+                            .getValue().toString());
 
                     int numMessage = (int) snapshot.child(getString(R.string.field_chat_room_messages)).child(userId).getChildrenCount();
 
@@ -179,16 +137,19 @@ public class MessagingService extends FirebaseMessagingService {
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void sendOrder(RemoteMessage remoteMessage){
+    private void sendOrder(RemoteMessage remoteMessage) {
         String title = remoteMessage.getData().get(getString(R.string.data_title));
         String message = remoteMessage.getData().get(getString(R.string.data_message));
         String orderReference = remoteMessage.getData().get("order_refernce");
+        String customer_reference = remoteMessage.getData().get("customer_reference");
+        String seller_reference = remoteMessage.getData().get("seller_reference");
+        String transactionType = remoteMessage.getData().get("transactionType");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_name));
-
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(getString(R.string.intent_order_reference), orderReference);
+        intent.putExtra(getString(R.string.intent_order_reference), transactionType);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setSmallIcon(R.drawable.iconpas)
                 .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.iconpas))
@@ -201,8 +162,7 @@ public class MessagingService extends FirebaseMessagingService {
         builder.setContentIntent(notifyPendingIntent);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // === Removed some obsoletes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "PasalubongHub247";
             NotificationChannel channel = new NotificationChannel(
                     channelId,
@@ -212,7 +172,18 @@ public class MessagingService extends FirebaseMessagingService {
             builder.setChannelId(channelId);
         }
 
-        notificationManager.notify(0, builder.build());
+        if (transactionType.equals("Update") && FirebaseAuth.getInstance().getUid().equals(customer_reference)) {
+            title = "Order Update";
+            message = "You have new update in your order.";
+            notificationManager.notify(0, builder.build());
+        }
+
+        if(transactionType.equals("Create") && FirebaseAuth.getInstance().getUid().equals(seller_reference)) {
+            title = "New Order";
+            message = "You have new order in your store.";
+            notificationManager.notify(0, builder.build());
+        }
+
 //        notificationManager.notify(BROADCAST_NOTIFICATION_ID, builder.build());
     }
 
@@ -224,7 +195,7 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void sendNewProductOrderedNotification(String title, String message, Chatroom chatroom){
+    private void sendNewProductOrderedNotification(String title, String message, Chatroom chatroom) {
         int notificationId = buildNotificationId();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_name));
 
@@ -247,8 +218,7 @@ public class MessagingService extends FirebaseMessagingService {
         builder.setContentIntent(notifyPendingIntent);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // === Removed some obsoletes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "PasalubongHub247";
             NotificationChannel channel = new NotificationChannel(
                     channelId,
@@ -262,7 +232,7 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void sendChatMessageNotification(String title, String message, Chatroom chatroom){
+    private void sendChatMessageNotification(String title, String message, Chatroom chatroom) {
         int notificationId = buildNotificationId();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.default_notification_channel_name));
 
@@ -285,8 +255,7 @@ public class MessagingService extends FirebaseMessagingService {
         builder.setContentIntent(notifyPendingIntent);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // === Removed some obsoletes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "PasalubongHub247";
             NotificationChannel channel = new NotificationChannel(
                     channelId,
@@ -318,8 +287,7 @@ public class MessagingService extends FirebaseMessagingService {
         builder.setContentIntent(notifyPendingIntent);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // === Removed some obsoletes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "PasalubongHub247";
             NotificationChannel channel = new NotificationChannel(
                     channelId,
@@ -440,7 +408,7 @@ public class MessagingService extends FirebaseMessagingService {
     /**
      * init universal image loader
      */
-    private void initImageLoader(){
+    private void initImageLoader() {
         UniversalImageLoader imageLoader = new UniversalImageLoader(this);
         ImageLoader.getInstance().init(imageLoader.getConfig());
     }

@@ -26,12 +26,13 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.models.Chatroom;
+import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.ordermanagement.BuyProductActivity;
 import com.allandroidprojects.ecomsample.ui.common.components.EmptyActivity;
-import com.allandroidprojects.ecomsample.ui.composer.merchant.messaging.ChatroomActivity;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
         int[] iconsSubmenu = {
                 R.string.fa_archive_solid,
-                R.string.fa_shopping_cart_solid,
+                R.string.fa_comments_solid,
                 R.string.fa_heart_solid,
                 R.string.fa_cog_solid,
                 R.string.fa_sign_out_alt_solid,
@@ -192,10 +193,15 @@ public class MainActivity extends AppCompatActivity
             chatroomIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
             startActivity(chatroomIntent);
         } else if (intent.hasExtra(getString(R.string.intent_order_reference))) {
-            String reference = intent.getStringExtra(getString(R.string.intent_order_reference));
-            Intent orderIntent = new Intent(MainActivity.this, AccountActivity.class);
-            orderIntent.putExtra(getString(R.string.intent_order_reference), reference);
-            startActivity(orderIntent);
+            if (intent.getStringExtra(getString(R.string.intent_order_reference)).equals("Update")){
+                startActivity(new Intent(MainActivity.this, BuyProductActivity.class));
+            }else{
+                String reference = intent.getStringExtra(getString(R.string.intent_order_reference));
+                Intent orderIntent = new Intent(MainActivity.this, AccountActivity.class);
+                orderIntent.putExtra(getString(R.string.intent_order_reference), reference);
+                startActivity(orderIntent);
+            }
+
         }
 
     }
@@ -417,8 +423,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, BuyProductActivity.class));
         } else if (id == R.id.my_wishlist) {
             startActivity(new Intent(MainActivity.this, WishlistActivity.class));
-        } else if (id == R.id.my_cart) {
-            startActivity(new Intent(MainActivity.this, CartListActivity.class));
+        } else if (id == R.id.messages) {
+            startActivity(new Intent(MainActivity.this, MessagingActivity.class));
 //        } else if (id == R.id.my_rewards) {
 //            startActivity(new Intent(MainActivity.this, EmptyActivity.class));
         } else if (id == R.id.my_account) {

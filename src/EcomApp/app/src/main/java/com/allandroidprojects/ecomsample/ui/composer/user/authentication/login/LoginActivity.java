@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.registration.RegistrationActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
-import com.allandroidprojects.ecomsample.data.models.Chatroom;
+import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

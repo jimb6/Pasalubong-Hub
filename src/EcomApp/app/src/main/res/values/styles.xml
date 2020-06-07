@@ -135,7 +135,7 @@
         <item name="android:queryHint">@string/projects_search_hint</item>
     </style>
 
-    <style name="BadgeTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight">
+    <style name="BadgeTheme.NoActionBar" parent="Theme.MaterialComponents.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

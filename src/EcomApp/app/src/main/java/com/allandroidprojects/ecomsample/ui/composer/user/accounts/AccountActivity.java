@@ -21,6 +21,7 @@ import com.allandroidprojects.ecomsample.data.viewmodel.account.AccountViewModel
 import com.allandroidprojects.ecomsample.ui.common.components.termsandcondition.TermsConditionActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +31,7 @@ public class AccountActivity extends AppCompatActivity {
 
     private TextView account_home_button, profile_name, profile_email,
             profile_mobile, profile_address, profile_name_header, profile_email_header, shop_view;
+    private SimpleDraweeView profile;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private LoggedInUser user;
     private AccountViewModel accountViewModel;
@@ -117,6 +119,7 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+        profile = findViewById(R.id.userProfile);
         loadingProgressBar = findViewById(R.id.progressBar2);
         account_home_button = findViewById(R.id.account_home_button);
         account_home_button.setOnClickListener(v -> {

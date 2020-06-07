@@ -69,6 +69,10 @@ public class ProductListFragment extends Fragment {
         this.dataListener = dataHelper;
     }
 
+    public ProductListFragment() {
+
+    }
+
     private void refreshData(){
 
         products = new ArrayList<>();
@@ -204,7 +208,6 @@ public class ProductListFragment extends Fragment {
                 intent.putExtra("product", item);
                 intent.putExtra(STRING_IMAGE_POSITION, 0);
                 mActivity.startActivity(intent);
-
             });
         }
 

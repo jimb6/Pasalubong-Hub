@@ -1,5 +1,6 @@
 package com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -78,7 +79,29 @@ public class OrderListFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this, factory).get(OrderListViewModel.class);
     }
 
-    protected void updateOrderedProduct(String reference, ProductOrderStatus status){
+    protected void updateOrderedProduct(String reference, ProductOrderStatus status, View loadingView){
+        String title = "CONFIRMATION", message = "YOU WANT TO " + status.get().toUpperCase() + " ORDER?";
+        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(getContext(), DialogTypes.TYPE_QUESTION)
+                .setTitle(title)
+                .setDescription(message)
+                .setPositiveText("Okay")
+                .setPositiveListener(lottieAlertDialog -> {
+                    update(reference, status);
+                    lottieAlertDialog.dismiss();
+                }).setNegativeText("Cancel").setNegativeListener(lottieAlertDialog -> {
+                    lottieAlertDialog.dismiss();
+                    loadingView.setVisibility(View.GONE);
+                }).build();
+        alertDialog.show();
+    }
+
+    protected void showProductInfo(ProductOrder item){
+        Intent intent = new Intent(getActivity(), OrderInfoActivity.class);
+        intent.putExtra("ORDER", item);
+        startActivity(intent);
+    }
+
+    private void update(String reference, ProductOrderStatus status){
         mViewModel.updateOrderdStatus(reference, status.get());
         mViewModel.getUpdateResponse().observe(this, result ->{
             String title = "Order Update", message = "No Message";
@@ -87,10 +110,12 @@ public class OrderListFragment extends Fragment {
                 ProductOrder order = (ProductOrder) ((Result.Success) result).getData();
                 message = "Order Successfully updated:\nReference: " + order;
                 type = DialogTypes.TYPE_SUCCESS;
+
             }else{
                 message = "Unable to update product.";
                 type = DialogTypes.TYPE_ERROR;
             }
+            refreshData();
             showStatusDialog(title, message, type);
         });
     }
@@ -132,7 +157,7 @@ public class OrderListFragment extends Fragment {
 
         setupRecyclerView();
         // or apply a new SkeletonLayout to a RecyclerView (showing 5 items)
-        skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.list_item, 4);
+        skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.order_list_item, 4);
         refreshData();
         return root;
     }
@@ -157,6 +182,7 @@ public class OrderListFragment extends Fragment {
             public final LinearLayout mLayoutItem;
             public final TextView tvName, tvDescription, tvPrice, orderDate, customerEmail;
             public final Button cancel, confirm, info;
+            public final View loadingView;
 
             public ViewHolder(View view) {
                 super(view);
@@ -171,6 +197,7 @@ public class OrderListFragment extends Fragment {
                 cancel = view.findViewById(R.id.order_cancel);
                 confirm = view.findViewById(R.id.order_confirm);
                 info = view.findViewById(R.id.order_info);
+                loadingView = view.findViewById(R.id.loadingView);
             }
         }
 
@@ -206,23 +233,37 @@ public class OrderListFragment extends Fragment {
             holder.tvPrice.setText(String.valueOf(item.getProduct().getPrice()) + " x " + item.getQuantity());
             holder.customerEmail.setText(item.getCustomerEmail());
             holder.orderDate.setText(item.getDate_ordered());
+            holder.info.setOnClickListener(v -> {
+                showProductInfo(item);
+            });
 
             holder.cancel.setOnClickListener(v -> {
                 Log.d("ORDER ITEM: ", "Canceled!" );
-                updateOrderedProduct(item.getId(), ProductOrderStatus.CANCELLED);
+                holder.loadingView.setVisibility(View.VISIBLE);
+                updateOrderedProduct(item.getId(), ProductOrderStatus.CANCELLED, holder.loadingView);
             });
 
             if (item.getStatus().equals(ProductOrderStatus.CANCELLED.get())){
                 holder.cancel.setVisibility(View.GONE);
                 holder.confirm.setText("DELETE ORDER");
                 holder.confirm.setOnClickListener(v -> {
+                    holder.loadingView.setVisibility(View.VISIBLE);
                     Log.d("ORDER ITEM: ", "Confirmed!" );
-                    updateOrderedProduct(item.getId(), ProductOrderStatus.DELETE);
+                    updateOrderedProduct(item.getId(), ProductOrderStatus.DELETE, holder.loadingView);
                 });
-            } else {
-                holder.confirm.setOnClickListener(v -> {
+            } else if (item.getStatus().equals(ProductOrderStatus.ACCEPTED.get())) {
+                holder.confirm.setText("MOVE TO SALES");
+                holder.cancel.setVisibility(View.GONE);
+                holder.confirm.setOnClickListener(v ->{
+                    holder.loadingView.setVisibility(View.VISIBLE);
                     Log.d("ORDER ITEM: ", "Confirmed!" );
-                    updateOrderedProduct(item.getId(), ProductOrderStatus.ACCEPTED);
+                    updateOrderedProduct(item.getId(), ProductOrderStatus.TO_REVIEW, holder.loadingView);
+                });
+            }else {
+                holder.confirm.setOnClickListener(v -> {
+                    holder.loadingView.setVisibility(View.VISIBLE);
+                    Log.d("ORDER ITEM: ", "Confirmed!" );
+                    updateOrderedProduct(item.getId(), ProductOrderStatus.ACCEPTED, holder.loadingView);
                 });
             }
             holder.info.setOnClickListener(v -> {

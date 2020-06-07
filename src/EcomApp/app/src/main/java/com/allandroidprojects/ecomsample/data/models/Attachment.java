@@ -22,7 +22,6 @@ public class Attachment {
     }
 
     public Attachment() {
-
     }
 
 

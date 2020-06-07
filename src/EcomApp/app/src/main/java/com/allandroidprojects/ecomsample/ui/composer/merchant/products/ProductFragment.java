@@ -173,6 +173,9 @@ public class ProductFragment extends Fragment implements IDataHelper {
                 holder.productPrice.setText(String.valueOf(item.getPrice()));
                 holder.ratingbar.setRating((float) calculateAverageRatings(item.getRatings()));
                 holder.totalSales.setText(String.valueOf(item.getTotalSales()));
+                if (item.getStock() <= 0){
+                    holder.productTag.setVisibility(View.VISIBLE);
+                }
                 holder.mLayoutItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -224,6 +227,7 @@ public class ProductFragment extends Fragment implements IDataHelper {
             public final View addProductItem;
             public final TextView totalSales;
             public final RatingBar ratingbar;
+            public final Button productTag;
 
             public ViewHolder(View view) {
                 super(view);
@@ -239,6 +243,7 @@ public class ProductFragment extends Fragment implements IDataHelper {
                 addProductItem = view.findViewById(R.id.add_product_item);
                 totalSales = view.findViewById(R.id.totalSales);
                 ratingbar = view.findViewById(R.id.ratingBar);
+                productTag = view.findViewById(R.id.product_tag);
             }
         }
 

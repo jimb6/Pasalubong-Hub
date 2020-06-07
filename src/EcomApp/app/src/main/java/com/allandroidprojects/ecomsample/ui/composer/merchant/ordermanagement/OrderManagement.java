@@ -47,18 +47,21 @@ public class OrderManagement extends Fragment {
         fragment = new OrderListFragment();
         bundle = new Bundle();
         bundle.putString("type", ProductOrderStatus.ACCEPTED.get());
+        bundle.putString("businessID", activity.myBusiness.getOwnerId());
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, ProductOrderStatus.ACCEPTED.get());
 
         fragment = new OrderListFragment();
         bundle = new Bundle();
         bundle.putString("type", ProductOrderStatus.CANCELLED.get());
+        bundle.putString("businessID", activity.myBusiness.getOwnerId());
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, ProductOrderStatus.CANCELLED.get());
 
         fragment = new OrderListFragment();
         bundle = new Bundle();
-        bundle.putString("type", ProductOrderStatus.HISTORY.get());
+        bundle.putString("type", ProductOrderStatus.TO_REVIEW.get());
+        bundle.putString("businessID", activity.myBusiness.getOwnerId());
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, ProductOrderStatus.HISTORY.get());
 
