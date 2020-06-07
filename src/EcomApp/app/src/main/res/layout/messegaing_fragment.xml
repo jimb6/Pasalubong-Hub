@@ -1,13 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.common.components.messaging.MessagingFragment">
+    android:layout_height="match_parent">
 
-    <TextView
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</FrameLayout>
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/dirty_white"
+        app:layout_constraintBottom_toTopOf="@+id/productBottomSheet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <RelativeLayout
+            android:id="@+id/messagesLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/dirty_white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#CCFFFFFF"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/beforeMessages"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp" />
+
+                <TextView
+                    android:id="@+id/loadingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loading messages"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/pullToRefresh"
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/productBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/productImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            fresco:srcCompat="@drawable/ic_dashboard_black_24dp" />
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/productImage"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@+id/productName"
+            app:layout_constraintStart_toStartOf="@+id/productName"
+            app:layout_constraintTop_toBottomOf="@+id/productName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/linearLayout3"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/gen_white"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent">-->
+
+    <!--        <EditText-->
+    <!--            android:id="@+id/input_message"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="2"-->
+    <!--            android:ems="10"-->
+    <!--            android:hint="Write a message"-->
+    <!--            android:inputType="text"-->
+    <!--            android:paddingHorizontal="10dp"-->
+    <!--            android:text="" />-->
+
+    <!--        <ImageButton-->
+    <!--            android:id="@+id/send"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center"-->
+    <!--            android:layout_marginHorizontal="10dp"-->
+    <!--            android:background="@drawable/ic_send_black_24dp"-->
+    <!--            android:padding="20dp"-->
+    <!--            android:scaleType="fitCenter" />-->
+    <!--    </LinearLayout>-->
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="#dfdfdf"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:minHeight="48dp"
+        android:background="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <EditText
+            android:id="@+id/input_message"
+            android:hint="Enter message"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:maxLines="6"/>
+
+        <ImageButton
+            android:id="@+id/send"
+            android:src="@drawable/ic_send_black_24dp"
+            android:text="SEND"
+            android:textSize="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:layout_gravity="bottom" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

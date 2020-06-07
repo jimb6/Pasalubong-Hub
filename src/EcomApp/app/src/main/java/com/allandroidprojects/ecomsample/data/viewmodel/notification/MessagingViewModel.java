@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
 
 public class MessagingViewModel extends ViewModel {
 
     private MessagingRepository messagingRepository;
     private MutableLiveData<Result<String>> serverKey;
-    private MutableLiveData<Result<Chatroom>> messageInbox;
+    private MutableLiveData<Result<Inbox>> messageInbox;
 
     public MessagingViewModel(MessagingRepository repository){
         this.messagingRepository = repository;
@@ -30,7 +31,7 @@ public class MessagingViewModel extends ViewModel {
         messageInbox = messagingRepository.getMyInbox(userId);
     }
 
-    public MutableLiveData<Result<Chatroom>> inboxResult(){
+    public MutableLiveData<Result<Inbox>> inboxResult(){
         return messageInbox;
     }
 }

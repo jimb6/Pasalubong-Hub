@@ -32,6 +32,7 @@ import com.allandroidprojects.ecomsample.data.models.Message;
 import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.adapter.ChatInboxAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -192,15 +193,15 @@ public class ChatroomActivity extends AppCompatActivity {
     }
 
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void getSellerInfo(String businessID) {
         mViewmodel.getBusinessDetails(businessID);
         mViewmodel.getBusinessDetailsResult().observe(this, result -> {
-            if(result instanceof Result.Success){
+            if (result instanceof Result.Success) {
                 business = (Business) ((Result.Success) result).getData();
                 userInfoLoading.setVisibility(View.GONE);
                 sellerLogo.setImageURI(business.getCoverUri());
@@ -212,7 +213,7 @@ public class ChatroomActivity extends AppCompatActivity {
     private void getUserInfo(String userId) {
         mViewmodel.getUserInfo(userId);
         mViewmodel.getUserInfoResult().observe(this, result -> {
-            if(result instanceof Result.Success){
+            if (result instanceof Result.Success) {
                 user = (LoggedInUser) ((Result.Success) result).getData();
             }
         });
@@ -224,11 +225,11 @@ public class ChatroomActivity extends AppCompatActivity {
 
         mViewmodel.getMessages(customerId, sellerId);
         mViewmodel.getMessagesResult().observe(this, result -> {
-            if(result instanceof Result.Success){
+            if (result instanceof Result.Success) {
                 messages.add((Message) ((Result.Success) result).getData());
                 adapter.notifyDataSetChanged();
                 conversationExists = true;
-            }else{
+            } else {
                 conversationExists = false;
             }
             messagesLoading.setVisibility(View.GONE);
@@ -251,48 +252,48 @@ public class ChatroomActivity extends AppCompatActivity {
     }
 
     private void attachRecyclerViewAdapter() {
-        adapter = new SimpleStringRecyclerViewAdapter(recyclerView, messages);
-        // Scroll to bottom on new messages
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                layoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
-            }
-        });
-
-        recyclerView.setAdapter(adapter);
+//        adapter = new ChatInboxAdapter(this, recyclerView, messages);
+//        // Scroll to bottom on new messages
+//        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onItemRangeInserted(int positionStart, int itemCount) {
+//                layoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
+//            }
+//        });
+//
+//        recyclerView.setAdapter(adapter);
     }
 
     private void sendMessage(String sender, String receiver, Message message) {
-        mViewmodel.sendMessage(sender, receiver, message);
-        mViewmodel.sendMessageResult().observe(this, result ->{
-            if(result instanceof Result.Success){
-                mMessage.setText("");
-                messageSuccess(message);
-            }else{
-                messageError(message);
-            }
-        });
+//        mViewmodel.sendMessage(sender, receiver, message);
+//        mViewmodel.sendMessageResult().observe(this, result -> {
+//            if (result instanceof Result.Success) {
+//                mMessage.setText("");
+////                messageSuccess(message);
+//            } else {
+////                messageError(message);
+//            }
+//        });
     }
 
-    private void sendNewMessage(String sender, Business receiver, Message message){
+    private void sendNewMessage(String sender, Business receiver, Message message) {
 
-        mViewmodel.sendNewMessage(sender, receiver, message);
-        mViewmodel.sendNewMessageResult().observe(this, result ->{
-            if(result instanceof Result.Success){
-                mMessage.setText("");
-                messageSuccess(message);
-            }else{
-                messageError(message);
-            }
-        });
+//        mViewmodel.sendNewMessage(sender, receiver, message);
+//        mViewmodel.sendNewMessageResult().observe(this, result -> {
+//            if (result instanceof Result.Success) {
+//                mMessage.setText("");
+////                messageSuccess(message);
+//            } else {
+////                messageError(message);
+//            }
+//        });
     }
 
     private void setMessage() {
         if (!mMessage.getText().toString().trim().equals("")) {
             Message message;
             if (product != null)
-                message  = new Message(mMessage.getText().toString(), String.valueOf(Timestamp.now()), true, product);
+                message = new Message(mMessage.getText().toString(), String.valueOf(Timestamp.now()), true, product);
             else
                 message = new Message(mMessage.getText().toString(), String.valueOf(Timestamp.now()), true);
 
@@ -301,26 +302,14 @@ public class ChatroomActivity extends AppCompatActivity {
             messages.add(message);
             adapter.notifyDataSetChanged();
 
-            if(!conversationExists){
+            if (!conversationExists) {
                 sendNewMessage(user.getUserId(), business, message);
-            }else{
+            } else {
                 sendMessage(user.getUserId(), business.getOwnerId(), message);
             }
         }
     }
 
-    private void messageSuccess(Message message){
-        View  view = layoutManager.findViewByPosition(message.getPosition());
-        SimpleDraweeView badge = view.findViewById(R.id.image_message_profile);
-        badge.setVisibility(View.VISIBLE);
-    }
-
-    private void messageError(Message message){
-        View  view = layoutManager.findViewByPosition(message.getPosition());
-        SimpleDraweeView badge = view.findViewById(R.id.image_message_profile);
-        badge.setImageDrawable(getResources().getDrawable(R.drawable.icon_close));
-        badge.setVisibility(View.VISIBLE);
-    }
 
 
     private void hideSoftKeyboard() {
@@ -359,170 +348,6 @@ public class ChatroomActivity extends AppCompatActivity {
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
-    }
-
-
-    enum ChatSenderType {
-        SELLER(0), CUSTOMER(1), PRODUC_ITEM(2);
-
-        private int data;
-
-        ChatSenderType(int data) {
-            this.data = data;
-        }
-
-        int getData() {
-            return data;
-        }
-    }
-
-
-    public class SimpleStringRecyclerViewAdapter
-            extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private ArrayList<Message> mValues;
-        private RecyclerView mRecyclerView;
-
-        public class SenderViewHolder extends RecyclerView.ViewHolder {
-            private final SimpleDraweeView mImageView;
-            private final EmojiTextView message;
-            private final TextView date;
-
-            public SenderViewHolder(View view) {
-                super(view);
-                mImageView = view.findViewById(R.id.image_message_profile);
-                message = view.findViewById(R.id.text_message_body);
-                date = view.findViewById(R.id.text_message_time);
-            }
-        }
-
-
-        public class ReceiverViewHolder extends RecyclerView.ViewHolder {
-            private final SimpleDraweeView mImageView;
-            private final EmojiTextView message;
-            private final TextView date;
-
-            public ReceiverViewHolder(View view) {
-                super(view);
-                mImageView = view.findViewById(R.id.image_message_profile);
-                message = view.findViewById(R.id.text_message_body);
-                date = view.findViewById(R.id.text_message_time);
-            }
-        }
-
-        public class ProductViewHolder extends RecyclerView.ViewHolder {
-            private final SimpleDraweeView productImage;
-            private final TextView productName, productDescription, productMessage, date;
-
-            public ProductViewHolder(View view) {
-                super(view);
-                productImage = view.findViewById(R.id.productImage);
-                productName = view.findViewById(R.id.productName);
-                productDescription = view.findViewById(R.id.productDescription);
-                productMessage = view.findViewById(R.id.text_message_body);
-                date = view.findViewById(R.id.text_message_time);
-            }
-        }
-
-        public SimpleStringRecyclerViewAdapter(RecyclerView recyclerView, ArrayList<Message> items) {
-            mValues = items;
-            mRecyclerView = recyclerView;
-        }
-
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view;
-            if (viewType == ChatSenderType.CUSTOMER.getData()) {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.their_message, parent, false);
-                return new SenderViewHolder(view);
-            } else if (viewType == ChatSenderType.SELLER.getData()) {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_message, parent, false);
-                return new ReceiverViewHolder(view);
-            } else {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_message, parent, false);
-                return new ProductViewHolder(view);
-            }
-        }
-
-        @Override
-        public void onViewRecycled(RecyclerView.ViewHolder holder) {
-            if (holder instanceof SenderViewHolder) {
-                if (((SenderViewHolder) holder).mImageView.getController() != null) {
-                    ((SenderViewHolder) holder).mImageView.getController().onDetach();
-                }
-                if (((SenderViewHolder) holder).mImageView.getTopLevelDrawable() != null) {
-                    ((SenderViewHolder) holder).mImageView.getTopLevelDrawable().setCallback(null);
-//                ((BitmapDrawable) holder.mImageView.getTopLevelDrawable()).getBitmap().recycle();
-                }
-            } else if (holder instanceof ReceiverViewHolder) {
-                if (((ReceiverViewHolder) holder).mImageView.getController() != null) {
-                    ((ReceiverViewHolder) holder).mImageView.getController().onDetach();
-                }
-                if (((ReceiverViewHolder) holder).mImageView.getTopLevelDrawable() != null) {
-                    ((ReceiverViewHolder) holder).mImageView.getTopLevelDrawable().setCallback(null);
-//                ((BitmapDrawable) holder.mImageView.getTopLevelDrawable()).getBitmap().recycle();
-                }
-            } else if (holder instanceof ProductViewHolder) {
-
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-            Message item = mValues.get(position);
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-
-            if (getItemViewType(position) == ChatSenderType.CUSTOMER.getData()) {
-                ((SenderViewHolder) holder).message.setText(item.getText());
-                ((SenderViewHolder) holder).date.setText(item.getTimestamp());
-                ((SenderViewHolder) holder).message.setOnClickListener(v -> {
-                    if (((SenderViewHolder) holder).date.getVisibility() == View.GONE)
-                        ((SenderViewHolder) holder).date.setVisibility(View.VISIBLE);
-                    else
-                        ((SenderViewHolder) holder).date.setVisibility(View.GONE);
-                });
-            } else if (getItemViewType(position) == ChatSenderType.SELLER.getData()) {
-                ((ReceiverViewHolder) holder).message.setText(item.getText());
-                ((ReceiverViewHolder) holder).date.setText(item.getTimestamp());
-                ((ReceiverViewHolder) holder).message.setOnClickListener(v -> {
-                    if (((ReceiverViewHolder) holder).date.getVisibility() == View.GONE)
-                        ((ReceiverViewHolder) holder).date.setVisibility(View.VISIBLE);
-                    else
-                        ((ReceiverViewHolder) holder).date.setVisibility(View.GONE);
-                });
-            } else {
-                ((ProductViewHolder) holder).productName.setText(item.getProduct().getProductname());
-                ((ProductViewHolder) holder).productDescription.setText(String.valueOf(item.getProduct().getPrice()));
-                ((ProductViewHolder) holder).productImage.setImageURI(Uri.parse(item.getProduct().getImageUrls().get(0)));
-                ((ProductViewHolder) holder).productMessage.setText(item.getText());
-                ((ProductViewHolder) holder).date.setText(item.getTimestamp());
-                ((ProductViewHolder) holder).productImage.setOnClickListener(v -> {
-
-                });
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if ((mValues.get(position).getProduct() != null)) {
-                return ChatSenderType.PRODUC_ITEM.getData();
-            }
-            if (mValues.get(position).isBelongsToCurrentUser()) {
-                return ChatSenderType.CUSTOMER.getData();
-            } else {
-                return ChatSenderType.SELLER.getData();
-            }
-        }
-
-        private void showBadge(int position){
-
-        }
     }
 }
 

@@ -5,21 +5,15 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dirty_white"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/default_gradient_background"
     android:scrollbars="none"
     tools:context=".ui.composer.user.authentication.login.LoginActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:padding="30dp"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +29,8 @@
                 android:id="@+id/imageView3"
                 android:layout_width="match_parent"
                 android:layout_height="138dp"
+                android:elevation="10dp"
+                android:adjustViewBounds="true"
                 app:srcCompat="@drawable/iconpas" />
 
             <!--  Name Label -->
@@ -44,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="PASALUBONG HUB"
-                android:textColor="@color/common_google_signin_btn_text_light_focused"
+                android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -52,10 +48,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+
                 android:layout_marginBottom="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
+                    android:background="@drawable/round_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
@@ -72,6 +70,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
+                    android:background="@drawable/round_edit_text"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
                     android:inputType="textPassword" />
@@ -92,10 +91,9 @@
                     android:layout_marginTop="25dp"
                     android:layout_marginEnd="48dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/dot_dark_screen1"
-                    android:enabled="false"
                     android:text="@string/action_sign_in"
-                    android:textColor="@color/cardview_light_background" />
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:textColor="@color/white" />
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/google_sign_in_button"
@@ -115,7 +113,7 @@
                 android:gravity="center"
                 android:text="@string/registration_text"
                 android:textAlignment="center"
-                android:textColor="@color/dot_dark_screen1" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/email_verification_login"
@@ -125,13 +123,15 @@
                 android:layout_marginBottom="25dp"
                 android:gravity="center"
                 android:text="@string/resend_email_verification"
-                android:textColor="@color/dot_dark_screen1" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
     </ScrollView>
 
     <include
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
         android:id="@+id/hubProgressBar"
         layout="@layout/pasalubong_hub_dialog"
         android:visibility="gone" />

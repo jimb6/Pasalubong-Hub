@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.allandroidprojects.ecomsample.data.repository.BusinessRepository;
+import com.allandroidprojects.ecomsample.data.repository.ProductRepository;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.StartupViewModel;
 
 public class StartupViewModelFactory implements ViewModelProvider.Factory {
@@ -12,7 +13,7 @@ public class StartupViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if(modelClass.isAssignableFrom(StartupViewModelFactory.class)){
-            return (T) new StartupViewModel(BusinessRepository.getInstance());
+            return (T) new StartupViewModel(ProductRepository.getInstance());
         }else{
             throw new IllegalArgumentException(("Unknown ViewModel class"));
         }

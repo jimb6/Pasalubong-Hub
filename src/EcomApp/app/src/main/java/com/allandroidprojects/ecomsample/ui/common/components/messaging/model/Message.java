@@ -4,6 +4,7 @@ import com.allandroidprojects.ecomsample.data.models.Product;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Message/*and this one is for custom content type (in this case - voice message)*/ {
 
@@ -12,10 +13,10 @@ public class Message/*and this one is for custom content type (in this case - vo
     private Date createdAt;
     private User user;
 
-    List<User> users;
-    private Product product;
-    private Image image;
-    private Voice voice;
+    Map<String, Object> users;
+    private Map<String, Object> product;
+    private Map<String, Object> image;
+    private Map<String, Object> voice;
 
     public Message(String id, User user, String text) {
         this(id, user, text, new Date());
@@ -65,31 +66,31 @@ public class Message/*and this one is for custom content type (in this case - vo
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Map<String, Object> users) {
         this.users = users;
     }
 
-    public Product getProduct() {
+    public Map<String, Object> getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(Map<String, Object> product) {
         this.product = product;
     }
 
-    public Image getImage() {
+    public Map<String, Object> getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(Map<String, Object> image) {
         this.image = image;
     }
 
-    public Voice getVoice() {
+    public Map<String, Object> getVoice() {
         return voice;
     }
 
-    public void setVoice(Voice voice) {
+    public void setVoice(Map<String, Object> voice) {
         this.voice = voice;
     }
 

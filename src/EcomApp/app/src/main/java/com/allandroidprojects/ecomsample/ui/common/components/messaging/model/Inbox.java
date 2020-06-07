@@ -1,15 +1,28 @@
 package com.allandroidprojects.ecomsample.ui.common.components.messaging.model;
 
 import java.util.List;
+import java.util.Map;
 
 public class Inbox {
 
+    private String chatroomId;
     private String creatorId;
     private String createdAt;
     private String updatedAt;
-    private List<String> tokens;
-    private List<User> users;
-    private List<Message> messages;
+    private String chatroomname;
+    private String inboxImage;
+    private String lastmessage;
+    private Map<String, Object> tokens;
+    private Map<String, Object> users;
+    private Map<String, Object> messages;
+
+    public String getChatroomId() {
+        return chatroomId;
+    }
+
+    public void setChatroomId(String chatroomId) {
+        this.chatroomId = chatroomId;
+    }
 
     public String getCreatorId() {
         return creatorId;
@@ -35,27 +48,51 @@ public class Inbox {
         this.updatedAt = updatedAt;
     }
 
-    public List<String> getTokens() {
+    public Map<String, Object> getTokens() {
         return tokens;
     }
 
-    public void setTokens(List<String> tokens) {
+    public void setTokens(Map<String, Object>  tokens) {
         this.tokens = tokens;
     }
 
-    public List<User> getUsers() {
+    public Map<String, Object> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Map<String, Object> users) {
         this.users = users;
     }
 
-    public List<Message> getMessages() {
+    public Map<String, Object> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
+    public void setMessages(Map<String, Object> messages) {
         this.messages = messages;
+    }
+
+    public String getChatroomname() {
+        return chatroomname;
+    }
+
+    public void setChatroomname(String chatroomname) {
+        this.chatroomname = chatroomname;
+    }
+
+    public String getInboxImage() {
+        return inboxImage;
+    }
+
+    public void setInboxImage(String inboxImage) {
+        this.inboxImage = inboxImage;
+    }
+
+    public String getLastmessage() {
+        return lastmessage;
+    }
+
+    public void setLastmessage(String lastmessage) {
+        this.lastmessage = lastmessage;
     }
 }

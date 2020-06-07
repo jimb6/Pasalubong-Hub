@@ -400,4 +400,5 @@
     <string name="message_without_product_item">message_without_product_item</string>
     <string name="customer_id">customer_id</string>
     <string name="seller_id">seller_id</string>
+    <string name="search_conversation">Search conversation</string>
 </resources>

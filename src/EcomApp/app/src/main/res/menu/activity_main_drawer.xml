@@ -33,7 +33,7 @@
                 android:title="@string/my_orders" />
             <item
                 android:id="@+id/messages"
-                android:title="@string/my_cart" />
+                android:title="@string/messages" />
             <item
                 android:id="@+id/my_wishlist"
                 android:title="@string/my_wishlist" />

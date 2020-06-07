@@ -13,6 +13,8 @@ import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.fcm.ChatroomUsers;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.Map;
 
 public class ChatInboxAdapter
         extends RecyclerView.Adapter<ChatInboxAdapter.ViewHolder> {
-    private ArrayList<Chatroom> mValues;
+    private ArrayList<Inbox> mValues;
     private RecyclerView mRecyclerView;
     private Context context;
 
@@ -38,7 +40,7 @@ public class ChatInboxAdapter
         }
     }
 
-    public ChatInboxAdapter(Context context, RecyclerView recyclerView, ArrayList<Chatroom> items) {
+    public ChatInboxAdapter(Context context, RecyclerView recyclerView, ArrayList<Inbox> items) {
         this.context = context;
         this.mValues = items;
         this.mRecyclerView = recyclerView;
@@ -63,13 +65,12 @@ public class ChatInboxAdapter
 
     @Override
     public void onBindViewHolder(final ChatInboxAdapter.ViewHolder holder, final int position) {
-        Chatroom item = mValues.get(position);
-        holder.name.setText(item.getChatroom_name());
-        Map<String, ChatroomUsers> users = item.getUsers();
-        holder.message.setText(users.get(item.getBusinessId()).getLastUnseenMessage());
-        holder.mImageView.setImageURI(Uri.parse(users.get(item.getBusinessId()).getUserProfileImage()));
+        Inbox item = mValues.get(position);
+        holder.name.setText(item.getChatroomname());
+        holder.message.setText(item.getLastmessage());
+        holder.mImageView.setImageURI(Uri.parse(item.getInboxImage()));
         holder.mView.setOnClickListener(v ->{
-
+            ((MessagingActivity) context).goToMessaging(item);
         });
     }
 

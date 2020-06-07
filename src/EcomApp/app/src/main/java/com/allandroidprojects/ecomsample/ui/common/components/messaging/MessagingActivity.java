@@ -12,6 +12,7 @@ import com.allandroidprojects.ecomsample.data.factory.notification.MessagingMode
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox.ChatInboxFragment;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
 import com.allandroidprojects.ecomsample.util.MessageAdapter;
 
@@ -30,6 +31,7 @@ public class MessagingActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private ListView messagesView;
     private String TAG = "Firebase Messaging Service-";
+    public static Inbox inbox;
 
 
     private void initializeViewModel() {
@@ -50,9 +52,9 @@ public class MessagingActivity extends AppCompatActivity {
         adapter.addFragment(inboxFragment, "Inbox");
 
         MessagingFragment messagesFragment = new MessagingFragment();
-        adapter.addFragment(inboxFragment, "Messages");
+        adapter.addFragment(messagesFragment, "Messages");
 
-        viewPager.setAdapter(adapter);
+        pager.setAdapter(adapter);
     }
 
     public ViewPager getViewPager(){
@@ -61,6 +63,11 @@ public class MessagingActivity extends AppCompatActivity {
             setupViewPager();
         }
         return viewPager;
+    }
+
+    public void goToMessaging(Inbox item){
+        inbox = item;
+        getViewPager().setCurrentItem(1);
     }
 
     @Override

@@ -2,12 +2,35 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dirty_white"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:hint="@string/search_conversation"
+        app:boxStrokeColor="?attr/colorOnSurface"
+        app:shapeAppearance="?attr/shapeAppearanceSmallComponent"
+        app:startIconDrawable="@drawable/ic_search_white_24dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_edit_text"
+            android:padding="10dp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pullToRefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/inboxRecyclerView"

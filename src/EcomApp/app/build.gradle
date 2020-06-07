@@ -134,5 +134,8 @@ dependencies {
 //    Carousel
     implementation 'com.synnapps:carouselview:0.1.5'
 
+//    Multi Snap recyclerview
+//    implementation 'com.github.takusemba:multisnaprecyclerview:2.0.1'
+
 
 }

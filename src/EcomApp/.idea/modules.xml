@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/EcomApp.iml" filepath="$PROJECT_DIR$/EcomApp.iml" group="EcomApp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/EcomApp-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/EcomApp-app.iml" group="EcomApp/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="EcomApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/src-EcomApp.iml" filepath="$PROJECT_DIR$/.idea/modules/src-EcomApp.iml" group="EcomApp" />
     </modules>
   </component>
 </project>

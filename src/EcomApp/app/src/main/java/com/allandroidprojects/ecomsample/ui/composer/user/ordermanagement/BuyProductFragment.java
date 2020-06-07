@@ -120,7 +120,7 @@ public class BuyProductFragment extends Fragment {
 
         setupRecyclerView();
         // or apply a new SkeletonLayout to a RecyclerView (showing 5 items)
-        skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.list_item, 4);
+        skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.list_item_large, 4);
         refreshData();
         return root;
     }
