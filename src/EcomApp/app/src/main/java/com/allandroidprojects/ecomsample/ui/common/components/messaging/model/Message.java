@@ -62,7 +62,7 @@ public class Message/*and this one is for custom content type (in this case - vo
         this.user = user;
     }
 
-    public List<User> getUsers() {
+    public Map<String, Object> getUsers() {
         return users;
     }
 

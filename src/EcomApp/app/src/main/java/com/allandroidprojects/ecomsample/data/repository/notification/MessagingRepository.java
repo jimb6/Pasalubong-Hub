@@ -114,12 +114,13 @@ public class MessagingRepository {
     public MutableLiveData<Result<Inbox>> getMyInbox(String userId) {
         final MutableLiveData<Result<Inbox>> resultMutableLiveData = new MutableLiveData<Result<Inbox>>();
         Query myTopPostsQuery = databaseReference.child("user_conversation").child(userId);
-        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
+        myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     Map<String, Object> data = (Map<String, Object>) dataSnapshot.getValue();
                     if (data.containsKey("chatroom_id")){
+//                        Map<String, Object> data2 = data.
                         String chatroom_id = (String) data.get("chatroom_id");
                         databaseReference.child("chatrooms").child(chatroom_id).addValueEventListener(new ValueEventListener() {
                             @Override
