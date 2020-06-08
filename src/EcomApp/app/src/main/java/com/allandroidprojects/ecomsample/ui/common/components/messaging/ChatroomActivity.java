@@ -186,9 +186,6 @@ public class ChatroomActivity extends AppCompatActivity {
         setupIntentExtra();
 
         setupRecyclerView();
-        getUserInfo(customerId);
-        getSellerInfo(sellerId);
-        getMessages(customerId, sellerId);
         hideSoftKeyboard();
     }
 
@@ -196,44 +193,6 @@ public class ChatroomActivity extends AppCompatActivity {
     private void hideKeyboard() {
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
-    private void getSellerInfo(String businessID) {
-        mViewmodel.getBusinessDetails(businessID);
-        mViewmodel.getBusinessDetailsResult().observe(this, result -> {
-            if (result instanceof Result.Success) {
-                business = (Business) ((Result.Success) result).getData();
-                userInfoLoading.setVisibility(View.GONE);
-                sellerLogo.setImageURI(business.getCoverUri());
-                sellerName.setText(business.getBusinessName());
-            }
-        });
-    }
-
-    private void getUserInfo(String userId) {
-        mViewmodel.getUserInfo(userId);
-        mViewmodel.getUserInfoResult().observe(this, result -> {
-            if (result instanceof Result.Success) {
-                user = (LoggedInUser) ((Result.Success) result).getData();
-            }
-        });
-    }
-
-    private void getMessages(String customerId, String sellerId) {
-        if (customerId == null || sellerId == null || customerId.equals("") || sellerId.equals(""))
-            return;
-
-        mViewmodel.getMessages(customerId, sellerId);
-        mViewmodel.getMessagesResult().observe(this, result -> {
-            if (result instanceof Result.Success) {
-                messages.add((Message) ((Result.Success) result).getData());
-                adapter.notifyDataSetChanged();
-                conversationExists = true;
-            } else {
-                conversationExists = false;
-            }
-            messagesLoading.setVisibility(View.GONE);
-        });
     }
 
     private void setupRecyclerView() {

@@ -1,9 +1,11 @@
 package com.allandroidprojects.ecomsample.data.repository.notification;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.allandroidprojects.ecomsample.data.models.Business;
@@ -23,6 +25,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -105,9 +112,29 @@ public class MessagingRepository {
         return resultMutableLiveData;
     }
 
-    public MutableLiveData<Result<Message>> getMessage(String userId, String sellerId) {
+    public MutableLiveData<Result<Message>> getInboxMessages(String inboxID) {
         final MutableLiveData<Result<Message>> messageMutableLiveData = new MutableLiveData<Result<Message>>();
+        databaseReference.child("messages").child(inboxID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, Object> data = (Map<String, Object>) dataSnapshot.getValue();
+                Iterator<Map.Entry<String,Object>> parent = data.entrySet().iterator();
+                while (parent.hasNext()){
+                    Map<String, Object> values = (Map<String, Object>) parent.next().getValue();
+                    String id = (String) values.get("id");
+                    String text = (String) values.get("text");
+                    String createdAt = (String) values.get("createdAt");
 
+                    Message message = new Message(id, text, null);
+                    messageMutableLiveData.setValue(new Result.Success<>(message));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                messageMutableLiveData.setValue(new Result.Error(databaseError.toException()));
+            }
+        });
         return messageMutableLiveData;
     }
 
@@ -115,14 +142,15 @@ public class MessagingRepository {
         final MutableLiveData<Result<Inbox>> resultMutableLiveData = new MutableLiveData<Result<Inbox>>();
         Query myTopPostsQuery = databaseReference.child("user_conversation").child(userId);
         myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     Map<String, Object> data = (Map<String, Object>) dataSnapshot.getValue();
-                    if (data.containsKey("chatroom_id")){
-//                        Map<String, Object> data2 = data.
-                        String chatroom_id = (String) data.get("chatroom_id");
-                        databaseReference.child("chatrooms").child(chatroom_id).addValueEventListener(new ValueEventListener() {
+                    Iterator<Map.Entry<String,Object>> parent = data.entrySet().iterator();
+                    while (parent.hasNext()){
+                        String value = (String) parent.next().getValue();
+                        databaseReference.child("chatrooms").child(value).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 Inbox inbox = dataSnapshot.getValue(Inbox.class);
@@ -135,8 +163,10 @@ public class MessagingRepository {
                             }
                         });
                     }
+                }else{
+                    resultMutableLiveData.setValue(new Result.Error(new Exception(new Exception("No Data"))));
                 }
-                resultMutableLiveData.setValue(new Result.Error(new Exception(new Exception("No Data"))));
+
             }
 
             @Override

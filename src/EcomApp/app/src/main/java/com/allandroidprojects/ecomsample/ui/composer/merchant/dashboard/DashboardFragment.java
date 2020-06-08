@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.DashboardViewModel;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingFragment;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages.MessagingFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.account.ShopInfoFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.notifications.NotificationsFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement.OrderManagement;

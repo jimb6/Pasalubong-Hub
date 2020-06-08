@@ -12,7 +12,7 @@ import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingFragment;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages.MessagingFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.account.ShopInfoFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.dashboard.DashboardFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;

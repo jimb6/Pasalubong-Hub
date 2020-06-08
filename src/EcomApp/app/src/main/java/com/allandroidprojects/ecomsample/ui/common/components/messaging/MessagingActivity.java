@@ -12,6 +12,7 @@ import com.allandroidprojects.ecomsample.data.factory.notification.MessagingMode
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox.ChatInboxFragment;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages.MessagingFragment;
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
 import com.allandroidprojects.ecomsample.util.MessageAdapter;
@@ -23,6 +24,7 @@ public class MessagingActivity extends AppCompatActivity {
     private MessagingViewModel messagingViewModel;
     public static boolean isActivityRunning = false;
     private String userId;
+    private Inbox currentInbox;
 
     private ViewPager viewPager;
 
@@ -32,6 +34,9 @@ public class MessagingActivity extends AppCompatActivity {
     private ListView messagesView;
     private String TAG = "Firebase Messaging Service-";
     public static Inbox inbox;
+
+    private MessagingFragment messagesFragment;
+    private ChatInboxFragment inboxFragment;
 
 
     private void initializeViewModel() {
@@ -48,10 +53,10 @@ public class MessagingActivity extends AppCompatActivity {
     private void setupFragments(ViewPager pager){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
-        ChatInboxFragment inboxFragment = new ChatInboxFragment();
+        inboxFragment = new ChatInboxFragment();
         adapter.addFragment(inboxFragment, "Inbox");
 
-        MessagingFragment messagesFragment = new MessagingFragment();
+        messagesFragment = new MessagingFragment();
         adapter.addFragment(messagesFragment, "Messages");
 
         pager.setAdapter(adapter);
@@ -65,9 +70,18 @@ public class MessagingActivity extends AppCompatActivity {
         return viewPager;
     }
 
+    public Inbox getCurrentInbox(){
+        return this.inbox;
+    }
+
     public void goToMessaging(Inbox item){
-        inbox = item;
+        this.inbox = item;
+        messagesFragment.setCurrentInbox(inbox);
         getViewPager().setCurrentItem(1);
+    }
+
+    public void goToInbox(){
+        getViewPager().setCurrentItem(0);
     }
 
     @Override

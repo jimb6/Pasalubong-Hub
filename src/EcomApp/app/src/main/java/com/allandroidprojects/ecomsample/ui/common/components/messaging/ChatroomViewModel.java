@@ -41,28 +41,4 @@ public class ChatroomViewModel extends ViewModel {
     }
 
 
-
-    public void getUserInfo(String userId){
-        user = repository.getUserDetails(userId);
-    }
-
-    public MutableLiveData<Result<LoggedInUser>> getUserInfoResult(){
-        return user;
-    }
-
-    public void getBusinessDetails(String businessId){
-        business = repository.getBusinessDetails(businessId);
-    }
-
-    public MutableLiveData<Result<Business>> getBusinessDetailsResult(){
-        return business;
-    }
-
-    public void getMessages(String userId, String businessId){
-        messages = repository.getMessage(userId, businessId);
-    }
-
-    public MutableLiveData<Result<Message>> getMessagesResult(){
-        return this.messages;
-    }
 }
