@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -162,8 +163,12 @@ public class ProductFragment extends Fragment implements IDataHelper {
             if (item.getProductname() == null) {
                 holder.addProductItem.setVisibility(View.VISIBLE);
                 holder.addProductItem.setOnClickListener(c -> {
-                    Intent intent = new Intent(merchantActivity, AddProductActivity.class);
-                    merchantActivity.startActivity(intent);
+                    if (!merchantActivity.isBusinessValid()){
+                        Toast.makeText(merchantActivity, "Please complete your business info to add products.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Intent intent = new Intent(merchantActivity, AddProductActivity.class);
+                        merchantActivity.startActivity(intent);
+                    }
                 });
             } else {
                 final Uri uri = Uri.parse(item.getImageUrls().get(0));

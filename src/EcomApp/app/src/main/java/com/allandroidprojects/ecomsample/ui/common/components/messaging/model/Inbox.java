@@ -1,6 +1,5 @@
 package com.allandroidprojects.ecomsample.ui.common.components.messaging.model;
 
-import java.util.List;
 import java.util.Map;
 
 public class Inbox {
@@ -12,6 +11,7 @@ public class Inbox {
     private String chatroomname;
     private String inboxImage;
     private String lastmessage;
+    private String businessId;
     private Map<String, Object> tokens;
     private Map<String, Object> users;
     private Map<String, Object> messages;
@@ -94,5 +94,13 @@ public class Inbox {
 
     public void setLastmessage(String lastmessage) {
         this.lastmessage = lastmessage;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 }

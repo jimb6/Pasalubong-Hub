@@ -64,7 +64,7 @@
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/list_item_large"
+                tools:listitem="@layout/list_item_medium"
                 tools:itemCount="1"/>
 
             </LinearLayout>

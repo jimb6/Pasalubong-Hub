@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.factory.notification.MessagingModelFactory;
+import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox.ChatInboxFragment;
@@ -16,6 +17,8 @@ import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
 import com.allandroidprojects.ecomsample.util.MessageAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,7 @@ public class MessagingActivity extends AppCompatActivity {
     public static boolean isActivityRunning = false;
     private String userId;
     private Inbox currentInbox;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private ViewPager viewPager;
 
@@ -52,11 +56,18 @@ public class MessagingActivity extends AppCompatActivity {
 
     private void setupFragments(ViewPager pager){
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        Bundle bundle = new Bundle();
 
         inboxFragment = new ChatInboxFragment();
         adapter.addFragment(inboxFragment, "Inbox");
 
         messagesFragment = new MessagingFragment();
+        if (getIntent().hasExtra(getString(R.string.message_with_product_item))){
+            Product product = getIntent().getParcelableExtra(getString(R.string.message_with_product_item));
+            bundle.putParcelable(getString(R.string.message_with_product_item), product);
+            bundle.putString("CONVERSATION_ID", createConversationId(product));
+        }
+        messagesFragment.setArguments(bundle);
         adapter.addFragment(messagesFragment, "Messages");
 
         pager.setAdapter(adapter);
@@ -74,10 +85,19 @@ public class MessagingActivity extends AppCompatActivity {
         return this.inbox;
     }
 
-    public void goToMessaging(Inbox item){
-        this.inbox = item;
+    public void goToMessaging(Inbox inbox){
         messagesFragment.setCurrentInbox(inbox);
         getViewPager().setCurrentItem(1);
+    }
+
+    public void goToMessagingWithProduct(Product product){
+        String conversationId = createConversationId(product);
+        messagesFragment.setCurrentInboxWithProduct(conversationId, product);
+        getViewPager().setCurrentItem(1);
+    }
+
+    private String createConversationId(Product product){
+        return user.getUid() + "_" + product.getBusinessOwnerId();
     }
 
     public void goToInbox(){
@@ -90,6 +110,10 @@ public class MessagingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messaging);
         initializeViewModel();
         setupViewPager();
+
+        if (getIntent().hasExtra(getString(R.string.message_with_product_item))){
+            getViewPager().setCurrentItem(1);
+        }
 
     }
 

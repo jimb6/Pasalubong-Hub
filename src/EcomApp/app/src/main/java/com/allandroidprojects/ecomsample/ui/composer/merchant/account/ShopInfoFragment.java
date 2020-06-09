@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +26,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
@@ -36,7 +36,10 @@ import com.allandroidprojects.ecomsample.ui.composer.merchant.products.AddProduc
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.labters.lottiealertdialoglibrary.DialogTypes;
+import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
 
 import java.util.ArrayList;
 
@@ -49,6 +52,7 @@ public class ShopInfoFragment extends Fragment {
     private MerchantActivity activity;
     private ShopInfoViewModel mViewModel;
     private View root;
+    private ImageButton coverImageSelection;
     private Business myBusiness;
 
     private TextInputEditText businessName, businessAddress, businessEmail;
@@ -60,9 +64,9 @@ public class ShopInfoFragment extends Fragment {
     private RecyclerView.LayoutManager menuRecylerViewLayoutManager;
     private RecyclerView menuRecyclerView;
     private RecyclerView.Adapter menuAdapter;
-
     private ArrayList<String> images = new ArrayList<>();
     private ArrayList<ShopMenuOption> menus = new ArrayList<>();
+    private BottomSheetLayout bottomSheet;
 
     private int REQUEST_CODE_READ_STORAGE = 1;
 
@@ -77,6 +81,18 @@ public class ShopInfoFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    private void setupBusinessInfo() {
+        myBusiness = activity.myBusiness;
+
+        businessName.setText(myBusiness.getBusinessName());
+        businessAddress.setText(myBusiness.getBusinessAddress());
+        businessEmail.setText(myBusiness.getBusinessEmail());
+        for(String url:myBusiness.getBusinessPhotos()){
+            images.add(url);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -84,44 +100,26 @@ public class ShopInfoFragment extends Fragment {
         this.myBusiness = ShopActivity.myBusiness;
         initComponents();
         initPreferences();
+        setupBusinessInfo();
         return root;
     }
 
     private void initComponents() {
+        coverImageSelection = root.findViewById(R.id.cover_image_selection);
+        bottomSheet = (BottomSheetLayout) root.findViewById(R.id.bottomsheet);
         businessName = root.findViewById(R.id.shop_name);
         businessAddress = root.findViewById(R.id.shop_address);
         businessEmail = root.findViewById(R.id.shop_email);
 
-        upload = root.findViewById(R.id.btnChoose);
-        upload.setOnClickListener(v -> {
-            // Display the file chooser dialog
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                askForPermission();
-            } else {
-                showChooser();
-            }
-        });
-
         recyclerView = root.findViewById(R.id.uploadedImage);
-        recylerViewLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false);
-
+        recylerViewLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(recylerViewLayoutManager);
         adapter = new ShopImagesRecyclerViewAdapter(recyclerView, images);
         recyclerView.setAdapter(adapter);
 
+        coverImageSelection.setOnClickListener(v -> {
 
-        menus.add(new ShopMenuOption("Add New Product", R.string.fa_box_solid));
-        menus.add(new ShopMenuOption("View Shop Rating", R.string.fa_star_solid));
-        menus.add(new ShopMenuOption("My Income", R.string.fa_money_bill_solid));
-        menus.add(new ShopMenuOption("My Performance", R.string.fa_chart_area_solid));
-        menus.add(new ShopMenuOption("Help Center", R.string.fa_question_circle_solid));
-
-        menuRecyclerView = root.findViewById(R.id.rv_shop_menu);
-        menuRecylerViewLayoutManager = new LinearLayoutManager(activity);
-
-        menuRecyclerView.setLayoutManager(menuRecylerViewLayoutManager);
-        menuAdapter = new ShopMenuRecyclerViewAdapter(menuRecyclerView, getContext(), menus);
-        menuRecyclerView.setAdapter(menuAdapter);
+        });
     }
 
     private void initPreferences() {
@@ -154,6 +152,33 @@ public class ShopInfoFragment extends Fragment {
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_CODE_READ_STORAGE);
         }
+    }
+
+    public void showAlertSaveState(String title, String body){
+        LottieAlertDialog alertDialog = new LottieAlertDialog.Builder(getActivity(), DialogTypes.TYPE_QUESTION)
+                .setTitle(title)
+                .setDescription(body)
+                .setPositiveText("Update")
+                .setPositiveListener(lottieAlertDialog -> {
+                    saveState();
+                }).setNegativeText("Cancel")
+                .setNegativeListener(lottieAlertDialog -> {})
+                .build();
+        alertDialog.show();
+    }
+
+
+    private boolean stateChanegd(){
+        if (myBusiness.getBusinessEmail().equals(String.valueOf(businessEmail.getText())) ||
+           myBusiness.getBusinessAddress().equals(String.valueOf(businessAddress.getText())) ||
+           myBusiness.getBusinessName().equals(String.valueOf(businessName.getText()))){
+            return false;
+        }
+        return true;
+    }
+
+    private void saveState(){
+        mViewModel.saveState(myBusiness);
     }
 
     @Override
@@ -247,6 +272,16 @@ public class ShopInfoFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(stateChanegd()){
+            String title = "Business Info Update";
+            String message = "Some changes in your business info. Do you want to update it?";
+            showAlertSaveState(title, message);
+        }
+    }
 
     public class ShopImagesRecyclerViewAdapter
             extends RecyclerView.Adapter<ShopImagesRecyclerViewAdapter.ViewHolder> {
@@ -360,5 +395,6 @@ public class ShopInfoFragment extends Fragment {
             }
         }
     }
+
 
 }

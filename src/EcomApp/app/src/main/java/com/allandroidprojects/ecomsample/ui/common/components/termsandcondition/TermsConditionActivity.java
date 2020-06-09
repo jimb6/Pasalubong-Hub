@@ -47,6 +47,7 @@ public class TermsConditionActivity extends AppCompatActivity {
         ArrayList<String> photos = new ArrayList<>();
         photos.add(String.valueOf(firebaseUser.getPhotoUrl()));
         business.setBusinessPhotos(photos);
+        business.setCoverUri(photos.get(0));
         saveStore(business);
     }
 

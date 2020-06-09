@@ -12,7 +12,6 @@ import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages.MessagingFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.account.ShopInfoFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.dashboard.DashboardFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
@@ -62,6 +61,21 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
         getPendingIntent();
     }
 
+    public boolean isBusinessValid(){
+        if (myBusiness.getBusinessName() != null || myBusiness.getBusinessName().equals("")){
+            return false;
+        }
+
+        if (myBusiness.getBusinessAddress() != null || myBusiness.getBusinessName().equals("")){
+            return false;
+        }
+
+        if (myBusiness.getBusinessEmail() != null || myBusiness.getBusinessName().equals("")){
+            return false;
+        }
+        return true;
+    }
+
     private void getPendingIntent(){
         Intent intent = getIntent();
         if (intent.hasExtra(getString(R.string.intent_order_reference))){
@@ -100,7 +114,7 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
         notiffragment.setArguments(bundle);
         adapter.addFragment(notiffragment, getString(R.string.item_shop_4));
 
-        MessagingFragment messagingfragment = new MessagingFragment();
+        NotificationsFragment messagingfragment = new NotificationsFragment();
         bundle = new Bundle();
         messagingfragment.setArguments(bundle);
         adapter.addFragment(messagingfragment, getString(R.string.item_shop_5));
@@ -130,4 +144,5 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
         else
             getViewPager().setCurrentItem(0);
     }
+
 }

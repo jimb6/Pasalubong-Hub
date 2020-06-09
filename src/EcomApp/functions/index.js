@@ -263,34 +263,127 @@ exports.creatingInbox = functions.firestore.document('chatrooms/{roomId}')
 
     });
 
-    exports.newMessageStored = functions.firestore.document('chatrooms/{roomId}/messages/{messageId}')
-    .onCreate((event, context) => {
+exports.newBusinessRegistered = functions.firestore.document('BUSINESS/{id}')
+    .onWrite((event, context) => {
 
+        console.log("Start event", "Creating business");
+        const businessEmail = event.after.data().businessEmail;
+        console.log("Business Email", businessEmail);
+        const businessName = event.after.data().businessName;
+        console.log("Business name", businessName);
+        const coverUri = event.after.data().coverUri;
+        console.log("COVER", coverUri);
+        const ownerId = event.after.data().ownerId;
+        console.log("OWNER", ownerId);
+        const lat = event.after.data().lat;
+        console.log("Lat", lat);
+        const lng = event.after.data().lng;
+        console.log("Lng", lng);
+
+        let data = {
+            businessEmail: businessEmail,
+            businessName: businessName,
+            coverUri: coverUri,
+            ownerId: ownerId,
+            lat: lat,
+            lng: lng,
+        };
+
+        var myDB = admin.database();
+        var ref = myDB.ref('business/');
+
+        return ref.child(context.params.id).set(data);
+    });
+
+exports.newMessageStored = functions.firestore.document('chatrooms/{roomId}/messages/{messageId}')
+    .onCreate((event, context) => {
+        console.log("System: starting");
+        console.log("snapshot: ", change);
+        console.log("snapshot.after: ", change);
+        console.log("snapshot.after.val(): ", change.val());
+
+        return null;
     });
 
 
-exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatroom_messages/{chatmessageId}')
-    .onWrite((snap, context) => {
+exports.sendNotification = functions.database.ref('/messages/{messageId}/{documentId}')
+    .onCreate((snap, context) => {
+
 
         console.log("System: starting");
         console.log("snapshot: ", snap);
-        console.log("snapshot.after: ", snap.after);
-        console.log("snapshot.after.val(): ", snap.after.val());
+        console.log("snapshot.after: ", snap);
+        console.log("snapshot.after.val(): ", snap.val());
+
+        let chatroom_id = context.params.messageId;
+        let businessId = snap.val().businessId;
+        let userId = snap.val().userId;
+        let lastMessage = snap.val().message;
+
+        var myDB = admin.database();
+        var ref = myDB.ref('users/');
+        var chatroomRef = myDB.ref('chatrooms/');
+        let tokenUser = "";
+        let tokenBusiness = "";
+
+        ref.child(userId).on("value", function (snapshot) {
+            tokenUser.push(snapshot.val().messaging_token);
+        });
+
+        ref.child(businessId).on("value", function (snapshot) {
+            tokenBusiness.push(snapshot.val().messaging_token);
+        });
+
+
+        var businessName;
+        var coverUri;
+
+        var bRef = db.ref('business/');
+        bRef.child(businessId).on("value", function (snapshot) {
+            businessName = snapshot.val().businessName;
+        });
+
+        bRef.child(businessId).on("value", function (snapshot) {
+            coverUri = snapshot.val().coverUri;
+        });
+
+        return usersRef.child(chatroom_id).set({
+            chatroomname: businessName,
+            createdAt: ServerValue.TIMESTAMP,
+            creatorId: userId,
+            image: coverUri,
+            inboxImage: coverUri,
+            lastmessage: message,
+            updatedAt: ServerValue.TIMESTAMP,
+            tokens: {
+                userId: {
+                    token: tokenUser,
+                },
+                businessId: {
+                    token: tokenBusiness,
+                }
+            }
+        });
+    });
+
+exports.newMessage = functions.database.ref('/messages/{chatroomId}/{messageID}/')
+    .onWrite((change, context) => {
+
+        console.log("System: starting");
+        console.log("snapshot: ", change);
+        console.log("snapshot.after: ", change.after);
+        console.log("snapshot.after.val(): ", change.after.val());
 
         //get the message that was written
-        let message = snap.after.val().message;
-        let messageUserId = snap.after.val().user_id;
+        let message = change.after.val().message;
+        let messageUserId = change.after.val().senderId;
         console.log("message: ", message);
-        console.log("user_id: ", messageUserId);
+        console.log("senderId: ", messageUserId);
 
-        //get the chatroom id
-        let chatroomId = context.params.chatroomId;
-        console.log("chatroom_id: ", chatroomId);
-
-        return snap.after.ref.parent.parent.once('value').then(snap => {
+        return change.after.ref.parent.parent.parent.once('value').then(snap => {
+            console.log("Snapshot: ", snap);
             let data = snap.child('users').val();
             console.log("data: ", data);
-
             //get the number of users in the chatroom
             let length = 0;
             for (value in data) {
@@ -359,7 +452,6 @@ exports.sendNotification = functions.database.ref('/chatrooms/{chatroomId}/chatr
         });
     });
 
-    
 
 
 

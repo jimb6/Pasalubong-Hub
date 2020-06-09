@@ -11,6 +11,8 @@ import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Me
 public class MessagingViewModel extends ViewModel {
     private MessagingRepository repository;
     private MutableLiveData<Result<Message>> messages;
+    private MutableLiveData<Result<Message>> newMessage;
+    private MutableLiveData<Result<Message>> messageListener;
 
 
     public static MessagingViewModel newInstance(MessagingRepository repository){
@@ -28,5 +30,25 @@ public class MessagingViewModel extends ViewModel {
 
     public MutableLiveData<Result<Message>> getAllInboxMessageMutableLiveData(){
         return messages;
+    }
+
+    public void sendMessage(String uid, Message message) {
+        newMessage = repository.sendMessage(uid, message);
+    }
+
+    public MutableLiveData<Result<Message>> sendMessageResult(){
+        return newMessage;
+    }
+
+    public void registerEventListener(Inbox inbox){
+        messageListener = repository.registerMessageListener(inbox.getChatroomId());
+    }
+
+    public void registerEventListener(String id){
+        messageListener = repository.registerMessageListener(id);
+    }
+
+    public MutableLiveData<Result<Message>> newMessageArrived(){
+        return messageListener;
     }
 }

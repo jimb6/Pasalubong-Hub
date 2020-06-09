@@ -22,8 +22,8 @@ import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.product.ItemDetailsViewModel;
+import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.common.widget.BottomSheetFragment;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.MerchantProfileActivity;
 import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;
 import com.allandroidprojects.ecomsample.util.ProductOrderStatus;
@@ -132,7 +132,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         });
 
         layout_message.setOnClickListener(v -> {
-            Intent intent = new Intent(ItemDetailsActivity.this, ChatroomActivity.class);
+            Intent intent = new Intent(ItemDetailsActivity.this, MessagingActivity.class);
             intent.putExtra(getString(R.string.message_with_product_item), item);
             intent.putExtra(getString(R.string.seller_id), item.getBusinessOwnerId());
             startActivity(intent);

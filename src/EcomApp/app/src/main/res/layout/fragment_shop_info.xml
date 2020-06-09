@@ -1,29 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dirty_white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:scrollbars="none"
     android:layout_margin="10dp"
-    android:importantForAutofill="noExcludeDescendants"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.composer.merchant.products.ProductFragment"
-    tools:ignore="UnusedAttribute">
+    tools:context=".ui.composer.merchant.products.ProductFragment">
 
-    <ScrollView
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="#fcfcfc"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/coverImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp" />
+
+                <ImageButton
+                    android:id="@+id/cover_image_selection"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/circle_background_dirty_white"
+                    android:src="@drawable/ic_menu_camera" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,29 +65,19 @@
                 android:text="No shop photo uploaded"
                 android:visibility="gone" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/uploadedImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:itemCount="1"
-                tools:listitem="@layout/image_item" />
 
-            <Button
-                android:id="@+id/btnChoose"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="+ Add Photo" />
 
             <View style="@style/proifleDetailsView" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shop_name_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:counterEnabled="true"
-                app:counterMaxLength="10"
+                app:endIconDrawable="@drawable/correct"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -68,8 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/shop_name"
-                    android:inputType="text"
-                    android:maxLength="20" />
+                    android:inputType="text" />
 
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -112,33 +128,52 @@
                     android:id="@+id/shop_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/shop_address"
+                    android:hint="Shop Email"
                     android:inputType="text"
                     android:maxLength="20" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View style="@style/proifleDetailsView" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:checked="true"
-                android:text="Store Open" />
+                android:text="Store Photos"
+                android:textSize="18sp" />
+
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_shop_menu"
+                android:id="@+id/uploadedImage"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/shop_menu_action" />
+                android:layout_height="wrap_content"
+                tools:itemCount="1"
+                tools:listitem="@layout/image_item" />
 
 
         </LinearLayout>
-    </ScrollView>
 
 
-    <!--    <include-->
-    <!--        android:id="@+id/llProgressBar"-->
-    <!--        android:visibility="visible"-->
-    <!--        layout="@layout/pasalubong_hub_dialog"/>-->
+        <com.flipboard.bottomsheet.BottomSheetLayout
+            android:id="@+id/bottomsheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/root"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+        </com.flipboard.bottomsheet.BottomSheetLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</ScrollView>

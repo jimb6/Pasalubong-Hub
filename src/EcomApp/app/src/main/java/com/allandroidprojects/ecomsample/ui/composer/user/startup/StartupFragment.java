@@ -11,10 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
@@ -22,9 +20,7 @@ import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.YoutubeVideo;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
-import com.allandroidprojects.ecomsample.ui.composer.user.product.adapter.ProductListAdapter;
-import com.faltenreich.skeletonlayout.Skeleton;
-import com.faltenreich.skeletonlayout.SkeletonLayoutUtils;
+import com.allandroidprojects.ecomsample.ui.composer.user.product.adapter.CustomProductListAdapter;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
@@ -109,7 +105,7 @@ public class StartupFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ProductListAdapter(getActivity(), recyclerView, products);
+        adapter = new CustomProductListAdapter(getActivity(), recyclerView, products);
         recyclerView.setAdapter(adapter);
 
     }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -31,9 +32,10 @@ public class DashboardFragment extends Fragment {
 //    Components
     private SimpleDraweeView coverImage;
     private CardView accountSettings, productMgmt, orderMgmt, notif, help;
+    private TextView errorTitle;
     private ImageButton message, camera;
     private DashboardViewModel dashboardViewModel;
-    private View root;
+    private View root, errorMessageLayout;
 
 //    Fragments
     DashboardFragment dashfragment;
@@ -54,8 +56,7 @@ public class DashboardFragment extends Fragment {
         initializeFragments();
         initializeComponents();
         initializeBusinessInfo();
-
-
+        checkBusinessState();
 
         return root;
     }
@@ -75,6 +76,8 @@ public class DashboardFragment extends Fragment {
 
 
     private void initializeComponents(){
+        this.errorMessageLayout = root.findViewById(R.id.error_message_layout);
+        this.errorTitle = root.findViewById(R.id.errorTitle);
         this.coverImage = root.findViewById(R.id.coverImage);
         this.accountSettings = root.findViewById(R.id.accountSettingsCard);
         this.productMgmt = root.findViewById(R.id.productManagementCard);
@@ -109,6 +112,24 @@ public class DashboardFragment extends Fragment {
         });
 
 
+    }
+
+    private void checkBusinessState() {
+        if (business.getBusinessName() != null || business.getBusinessName().equals("")){
+            errorMessageLayout.setVisibility(View.VISIBLE);
+            errorTitle.setText("Please complete your business info.");
+        }
+
+        if (business.getBusinessAddress() != null || business.getBusinessName().equals("")){
+            errorMessageLayout.setVisibility(View.VISIBLE);
+            errorTitle.setText("Please complete your business info.");
+
+        }
+
+        if (business.getBusinessEmail() != null || business.getBusinessName().equals("")){
+            errorMessageLayout.setVisibility(View.VISIBLE);
+            errorTitle.setText("Please complete your business info.");
+        }
     }
 
     @Override

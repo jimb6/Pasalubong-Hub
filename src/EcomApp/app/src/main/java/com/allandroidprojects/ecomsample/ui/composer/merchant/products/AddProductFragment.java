@@ -595,6 +595,8 @@ public class AddProductFragment extends Fragment {
                 holder.add_new_button.setVisibility(View.VISIBLE);
                 holder.add_new_button.setOnClickListener(v -> {
                     // Display the file chooser dialog
+
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         askForPermission();
                     } else {

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
@@ -16,6 +15,7 @@ import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.In
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Message;
 import com.allandroidprojects.ecomsample.util.ChatMessageType;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,11 +27,12 @@ public class ChatMessagesAdapter
     private RecyclerView mRecyclerView;
     private Context context;
     private Inbox inbox;
+    private String id;
 
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
         private final SimpleDraweeView mImageView;
-        private final EmojiTextView message;
+        private final TextView message;
         private final TextView date;
 
         public SenderViewHolder(View view) {
@@ -45,7 +46,7 @@ public class ChatMessagesAdapter
 
     public class ReceiverViewHolder extends RecyclerView.ViewHolder {
         private final SimpleDraweeView mImageView;
-        private final EmojiTextView message;
+        private final TextView message;
         private final TextView date;
 
         public ReceiverViewHolder(View view) {
@@ -75,16 +76,17 @@ public class ChatMessagesAdapter
         this.context = context;
         mValues = items;
         mRecyclerView = recyclerView;
+        id = FirebaseAuth.getInstance().getUid();
     }
 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == ChatMessageType.CUSTOMER.getData()) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.their_message, parent, false);
+        if (viewType == ChatMessageType.SELLER.getData()) {
+             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.their_message, parent, false);
             return new SenderViewHolder(view);
-        } else if (viewType == ChatMessageType.SELLER.getData()) {
+        } else if (viewType == ChatMessageType.CUSTOMER.getData()) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_message, parent, false);
             return new ReceiverViewHolder(view);
         } else {
@@ -121,35 +123,33 @@ public class ChatMessagesAdapter
         Message item = mValues.get(position);
         SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
-        if (getItemViewType(position) == ChatMessageType.CUSTOMER.getData()) {
-            ((SenderViewHolder) holder).message.setText(item.getText());
-            ((SenderViewHolder) holder).date.setText(sfd.format(item.getCreatedAt()));
+        if (getItemViewType(position) == ChatMessageType.SELLER.getData()) {
+            ((SenderViewHolder) holder).message.setText(item.getMessage());
+            ((SenderViewHolder) holder).date.setText(item.getCreatedAt());
             ((SenderViewHolder) holder).message.setOnClickListener(v -> {
                 if (((SenderViewHolder) holder).date.getVisibility() == View.GONE)
                     ((SenderViewHolder) holder).date.setVisibility(View.VISIBLE);
                 else
                     ((SenderViewHolder) holder).date.setVisibility(View.GONE);
             });
-        } else if (getItemViewType(position) == ChatMessageType.SELLER.getData()) {
-            ((ReceiverViewHolder) holder).message.setText(item.getText());
-            ((ReceiverViewHolder) holder).date.setText(sfd.format(item.getCreatedAt()));
+        } else if (getItemViewType(position) == ChatMessageType.CUSTOMER.getData()) {
+            ((ReceiverViewHolder) holder).message.setText(item.getMessage());
+            ((ReceiverViewHolder) holder).date.setText(item.getCreatedAt());
             ((ReceiverViewHolder) holder).message.setOnClickListener(v -> {
                 if (((ReceiverViewHolder) holder).date.getVisibility() == View.GONE)
                     ((ReceiverViewHolder) holder).date.setVisibility(View.VISIBLE);
                 else
                     ((ReceiverViewHolder) holder).date.setVisibility(View.GONE);
             });
+        } else {
+            ((ProductViewHolder) holder).productName.setText(item.getProduct().getName());
+            ((ProductViewHolder) holder).productDescription.setText(item.getProduct().getPrice());
+            ((ProductViewHolder) holder).productImage.setImageURI(Uri.parse(item.getProduct().getImage()));
+            ((ProductViewHolder) holder).productMessage.setText(item.getMessage());
+            ((ProductViewHolder) holder).date.setText(item.getCreatedAt());
+            ((ProductViewHolder) holder).productImage.setOnClickListener(v -> {
+            });
         }
-//        } else {
-//            ((ProductViewHolder) holder).productName.setText(sfd.format(item.getCreatedAt()));
-//            ((ProductViewHolder) holder).productDescription.setText(String.valueOf(item.getProduct().get("price")));
-//            ((ProductViewHolder) holder).productImage.setImageURI(Uri.parse(item.getProduct().getImageUrls().get(0)));
-//            ((ProductViewHolder) holder).productMessage.setText(item.getText());
-//            ((ProductViewHolder) holder).date.setText(item.getTimestamp());
-//            ((ProductViewHolder) holder).productImage.setOnClickListener(v -> {
-//
-//            });
-//        }
     }
 
     @Override
@@ -159,9 +159,9 @@ public class ChatMessagesAdapter
 
     @Override
     public int getItemViewType(int position) {
-//        if ((mValues.get(position).getProduct() != null)) {
-//            return ChatSenderType.PRODUC_ITEM.getData();
-//        }
+        if ((mValues.get(position).getProduct() != null)) {
+            return ChatMessageType.PRODUC_ITEM.getData();
+        }
         if (isBelongToCurrentUser(mValues.get(position))) {
             return ChatMessageType.CUSTOMER.getData();
         } else {
@@ -170,7 +170,7 @@ public class ChatMessagesAdapter
     }
 
     private boolean isBelongToCurrentUser(Message message){
-        return (message.getId().equals(inbox.getCreatorId()));
+        return (id.equals(message.getSenderId()));
     }
 
     private void showBadge(int position){
