@@ -62,15 +62,15 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
     }
 
     public boolean isBusinessValid(){
-        if (myBusiness.getBusinessName() != null || myBusiness.getBusinessName().equals("")){
+        if (myBusiness.getBusinessName() == null || myBusiness.getBusinessName().equals("")){
             return false;
         }
 
-        if (myBusiness.getBusinessAddress() != null || myBusiness.getBusinessName().equals("")){
+        if (myBusiness.getBusinessAddress() == null || myBusiness.getBusinessName().equals("")){
             return false;
         }
 
-        if (myBusiness.getBusinessEmail() != null || myBusiness.getBusinessName().equals("")){
+        if (myBusiness.getBusinessEmail() == null || myBusiness.getBusinessName().equals("")){
             return false;
         }
         return true;

@@ -303,7 +303,6 @@ public class ShopInfoFragment extends Fragment {
                 }
                 break;
             default:
-
         }
     }
 

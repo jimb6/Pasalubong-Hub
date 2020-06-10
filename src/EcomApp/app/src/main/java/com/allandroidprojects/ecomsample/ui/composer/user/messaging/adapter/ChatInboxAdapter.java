@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.adapter;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.adapter;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.models.Rating;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.data.models.Inbox;
+import com.allandroidprojects.ecomsample.data.models.Rating;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;

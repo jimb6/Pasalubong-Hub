@@ -1,11 +1,10 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.inbox;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
 

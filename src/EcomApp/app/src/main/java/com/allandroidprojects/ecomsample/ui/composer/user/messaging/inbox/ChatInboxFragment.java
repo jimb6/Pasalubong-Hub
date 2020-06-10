@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.inbox;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.adapter.ChatInboxAdapter;
 import com.allandroidprojects.ecomsample.data.models.Inbox;
+import com.allandroidprojects.ecomsample.data.models.Result;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.adapter.ChatInboxAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;

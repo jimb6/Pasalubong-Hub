@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
-import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages.MessagingViewModel;
 
 public class MessagingModelFactory extends ViewModelProvider.NewInstanceFactory {
 

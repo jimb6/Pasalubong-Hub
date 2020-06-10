@@ -12,12 +12,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagesViewModel;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages.MessagingViewModel;
 
 public class MessagesFragment extends Fragment {
 
-    private MessagesViewModel messagesViewModel;
+    private MessagingViewModel messagesViewModel;
     private ShopActivity shopActivity;
 
 
@@ -30,7 +30,7 @@ public class MessagesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         messagesViewModel =
-                ViewModelProviders.of(this).get(MessagesViewModel.class);
+                ViewModelProviders.of(this).get(MessagingViewModel.class);
         View root = inflater.inflate(R.layout.fragment_messages, container, false);
 
         RecyclerView rv = root.findViewById(R.id.messages_recycler_view);

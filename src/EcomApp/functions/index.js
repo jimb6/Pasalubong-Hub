@@ -11,7 +11,6 @@ const ALGOLIA_ADMIN_KEY = "db0c45890c653ad9cd188bb727397716";
 const ALGOLIA_INDEX_NAME = "products";
 
 
-
 // Set up Algolia.
 // The app id and API key are coming from the cloud functions environment, as we set up in Part 1, Step 3.
 const algoliaClient = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
@@ -140,9 +139,9 @@ exports.sendOrderNotificationCreate = functions.firestore.document('products/{pr
                                     console.log("Notification sent! ", tokens[i]);
                                     return null;
                                 }).catch(function (error) {
-                                    console.log("Error sending message:", error);
-                                    return null;
-                                });
+                                console.log("Error sending message:", error);
+                                return null;
+                            });
                         }
                         return null;
                     }).catch(function (error) {
@@ -232,9 +231,9 @@ exports.sendOrderNotificationUpdate = functions.firestore.document('products/{pr
                                     console.log("Notification sent! ", tokenId);
                                     return null;
                                 }).catch(function (error) {
-                                    console.log("Error sending message:", error);
-                                    return null;
-                                });
+                                console.log("Error sending message:", error);
+                                return null;
+                            });
                         }
                         return null;
                     }).catch(function (error) {
@@ -305,11 +304,85 @@ exports.newMessageStored = functions.firestore.document('chatrooms/{roomId}/mess
         return null;
     });
 
-
-exports.sendNotification = functions.database.ref('/messages/{messageId}/{documentId}')
+exports.storeInboxForBusiness = functions.database.ref('/messages/{messageId}/{documentId}')
     .onCreate((snap, context) => {
+        console.log("System: starting");
+        console.log("snapshot: ", snap);
+        console.log("snapshot.after: ", snap);
+        console.log("snapshot.after.val(): ", snap.val());
+
+        let chatroom_id = context.params.messageId;
+        let businessId = snap.val().businessId;
+        let userId = snap.val().userId;
+        let createdAt = snap.val().createdAt;
+        let lastMessage = snap.val().message;
+
+        console.log("CHATROOM ID: ", chatroom_id);
+        console.log("BUSINESS ID: ", businessId);
+        console.log("USER ID: ", userId);
+        console.log("CREATED A: T", createdAt);
+        console.log("LAST MESSAGE: ", lastMessage);
+
+        var myDB = admin.database();
+        var ref = myDB.ref('users/');
+        let tokenUser = "";
+        let tokenBusiness = "";
+
+        ref.child(userId).on("value", function (snapshot) {
+            tokenUser = snapshot.val().messaging_token;
+            console.log("USER TOKEN: ", tokenUser);
+        });
+
+        ref.child(businessId).on("value", function (snapshot) {
+            tokenBusiness = snapshot.val().messaging_token;
+            console.log("BUSINESS TOKEN: ", tokenBusiness);
+        });
 
 
+        var businessName = "";
+        var coverUri = "";
+
+        var bRef = myDB.ref('business/');
+        return bRef.child(businessId).on("value", function (snapshot) {
+            console.log("BUSINESS: ", snapshot.val());
+            businessName = snapshot.val().businessName;
+            console.log("BUSINESS NAME: ", businessName);
+
+            coverUri = snapshot.val().coverUri;
+            console.log("BUSINESS IMAGGE: ", coverUri);
+
+            let dataToSave = {
+                chatroomname: businessName,
+                createdAt: createdAt,
+                creatorId: userId,
+                image: coverUri,
+                inboxImage: coverUri,
+                lastmessage: lastMessage,
+                updatedAt: createdAt,
+                tokens: {
+                    userId: {
+                        token: tokenUser,
+                    },
+                    businessId: {
+                        token: tokenBusiness,
+                    }
+                }
+            };
+
+            var chaRef = myDB.ref('chatrooms_business/');
+            return chaRef.child(businessId).child(chatroom_id).set(dataToSave, function (error) {
+                if (error) {
+                    console.log("Data could not be saved." + error);
+                } else {
+                    console.log("Data saved successfully.");
+                }
+            });
+        });
+
+    });
+
+exports.storeInboxForUser = functions.database.ref('/messages/{messageId}/{documentId}')
+    .onCreate((snap, context) => {
         console.log("System: starting");
         console.log("snapshot: ", snap);
         console.log("snapshot.after: ", snap);
@@ -349,33 +422,41 @@ exports.sendNotification = functions.database.ref('/messages/{messageId}/{docume
         var bRef = myDB.ref('business/');
 
         return bRef.child(businessId).on("value", function (snapshot) {
-            console.log("BUSINESS NAME: ", snapshot.val());
+            console.log("BUSINESS: ", snapshot.val());
             businessName = snapshot.val().businessName;
+            console.log("BUSINESS NAME: ", businessName);
 
-            return bRef.child(businessId).on("value", function (snapshot) {
-                console.log("BUSINESS IMAGGE: ", snapshot.val());
-                coverUri = snapshot.val().coverUri;
+            coverUri = snapshot.val().coverUri;
+            console.log("BUSINESS IMAGGE: ", coverUri);
 
-                return ref.child(chatroom_id).set({
-                    chatroomname: businessName,
-                    createdAt: createdAt,
-                    creatorId: userId,
-                    image: coverUri,
-                    inboxImage: coverUri,
-                    lastmessage: lastMessage,
-                    updatedAt: createdAt,
-                    tokens: {
-                        userId: {
-                            token: tokenUser,
-                        },
-                        businessId: {
-                            token: tokenBusiness,
-                        }
+            let dataToSave = {
+                chatroomname: businessName,
+                createdAt: createdAt,
+                creatorId: userId,
+                image: coverUri,
+                inboxImage: coverUri,
+                lastmessage: lastMessage,
+                updatedAt: createdAt,
+                tokens: {
+                    userId: {
+                        token: tokenUser,
+                    },
+                    businessId: {
+                        token: tokenBusiness,
                     }
-                });
+                }
+            };
+
+            var chaRef = myDB.ref('chatrooms/');
+            return chaRef.child(userId).child(chatroom_id).set(dataToSave, function (error) {
+                if (error) {
+                    console.log("Data could not be saved." + error);
+                } else {
+                    console.log("Data saved successfully.");
+                }
             });
         });
-        
+
     });
 
 exports.newMessage = functions.database.ref('/messages/{chatroomId}/{messageID}/')

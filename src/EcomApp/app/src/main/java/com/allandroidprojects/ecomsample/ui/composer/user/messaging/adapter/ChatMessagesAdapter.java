@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.adapter;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.adapter;
 
 import android.content.Context;
 import android.net.Uri;

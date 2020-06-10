@@ -9,13 +9,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.factory.notification.MessagingModelFactory;
+import com.allandroidprojects.ecomsample.data.models.Inbox;
 import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
-import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
+import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
 import com.allandroidprojects.ecomsample.ui.composer.user.messaging.inbox.ChatInboxFragment;
 import com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages.MessagingFragment;
-import com.allandroidprojects.ecomsample.data.models.Inbox;
-import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages.MessagingViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

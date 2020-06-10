@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.messages;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages;
 
 import android.content.Context;
 
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox.ChatInboxViewModel;
 
 public class MessagingViewModelFactory extends ViewModelProvider.NewInstanceFactory{
 

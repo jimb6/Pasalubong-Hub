@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.messages;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

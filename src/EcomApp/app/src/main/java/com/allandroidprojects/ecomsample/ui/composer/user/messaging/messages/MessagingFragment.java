@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.messages;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,13 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
-import com.allandroidprojects.ecomsample.data.models.Product;
-import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.adapter.ChatMessagesAdapter;
 import com.allandroidprojects.ecomsample.data.models.Inbox;
 import com.allandroidprojects.ecomsample.data.models.Message;
 import com.allandroidprojects.ecomsample.data.models.MessageProduct;
+import com.allandroidprojects.ecomsample.data.models.Product;
+import com.allandroidprojects.ecomsample.data.models.Result;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.adapter.ChatMessagesAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
