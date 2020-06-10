@@ -1,10 +1,10 @@
 package com.allandroidprojects.ecomsample.ui.composer.merchant.account;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,19 +31,22 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
+import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.models.ShopMenuOption;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.products.AddProductActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.MerchantActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
+import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.labters.lottiealertdialoglibrary.DialogTypes;
 import com.labters.lottiealertdialoglibrary.LottieAlertDialog;
+import com.shivtechs.maplocationpicker.LocationPickerActivity;
+import com.shivtechs.maplocationpicker.MapUtility;
 
 import java.util.ArrayList;
-
-import info.androidhive.fontawesome.FontDrawable;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -53,8 +56,12 @@ public class ShopInfoFragment extends Fragment {
     private ShopInfoViewModel mViewModel;
     private View root;
     private ImageButton coverImageSelection;
+    private ImageView locationButton;
+    private SimpleDraweeView coverImage;
     private Business myBusiness;
-
+    private SwitchMaterial switcher;
+    private Button update_info_button;
+    private TextView coverImageSaveButton;
     private TextInputEditText businessName, businessAddress, businessEmail;
     private Button upload;
 
@@ -69,6 +76,8 @@ public class ShopInfoFragment extends Fragment {
     private BottomSheetLayout bottomSheet;
 
     private int REQUEST_CODE_READ_STORAGE = 1;
+    private int REQUEST_CODE_COVER_IMAGE = 3;
+    private int ADDRESS_PICKER_REQUEST = 2;
 
     public static ShopInfoFragment newInstance() {
         return new ShopInfoFragment();
@@ -84,9 +93,11 @@ public class ShopInfoFragment extends Fragment {
     private void setupBusinessInfo() {
         myBusiness = activity.myBusiness;
 
+
         businessName.setText(myBusiness.getBusinessName());
         businessAddress.setText(myBusiness.getBusinessAddress());
         businessEmail.setText(myBusiness.getBusinessEmail());
+        coverImage.setImageURI(myBusiness.getCoverUri());
         for(String url:myBusiness.getBusinessPhotos()){
             images.add(url);
             adapter.notifyDataSetChanged();
@@ -97,29 +108,89 @@ public class ShopInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_shop_info, container, false);
+        MapUtility.apiKey = getResources().getString(R.string.google_api_key);
+
         this.myBusiness = ShopActivity.myBusiness;
         initComponents();
         initPreferences();
+        disabledComponent();
         setupBusinessInfo();
         return root;
     }
 
     private void initComponents() {
+
+        switcher = root.findViewById(R.id.edit_swithcer);
+        switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    enabledComponent();
+                else
+                    disabledComponent();
+            }
+        });
+        update_info_button = root.findViewById(R.id.update_info_button);
+        update_info_button.setOnClickListener(v -> {
+            updateBusinessInfo();
+        });
+
+        coverImageSaveButton = root.findViewById(R.id.coverImageSaveButton);
+
+
         coverImageSelection = root.findViewById(R.id.cover_image_selection);
         bottomSheet = (BottomSheetLayout) root.findViewById(R.id.bottomsheet);
         businessName = root.findViewById(R.id.shop_name);
         businessAddress = root.findViewById(R.id.shop_address);
         businessEmail = root.findViewById(R.id.shop_email);
+        coverImage = root.findViewById(R.id.coverImage);
 
+        images.add(null);
         recyclerView = root.findViewById(R.id.uploadedImage);
         recylerViewLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(recylerViewLayoutManager);
         adapter = new ShopImagesRecyclerViewAdapter(recyclerView, images);
         recyclerView.setAdapter(adapter);
 
-        coverImageSelection.setOnClickListener(v -> {
-
+        locationButton = root.findViewById(R.id.location);
+        locationButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LocationPickerActivity.class);
+            if (myBusiness.getLat() != null && myBusiness.getLng() != null) {
+                intent.putExtra(MapUtility.LATITUDE, myBusiness.getLat());
+                intent.putExtra(MapUtility.LONGITUDE, myBusiness.getLng());
+            }
+            startActivityForResult(intent, ADDRESS_PICKER_REQUEST);
         });
+
+
+        coverImageSelection.setOnClickListener(v -> {
+            showChooser();
+        });
+
+        coverImageSaveButton.setOnClickListener(v -> {
+            if (!myBusiness.getCoverUri().equals(activity.myBusiness.getCoverUri())){
+                saveCoverImage();
+            }
+        });
+    }
+
+    private void disabledComponent() {
+        update_info_button.setVisibility(View.GONE);
+        coverImageSelection.setEnabled(false);
+        businessName.setEnabled(false);
+        businessAddress.setEnabled(false);
+        businessEmail.setEnabled(false);
+        coverImage.setEnabled(false);
+        locationButton.setEnabled(false);
+    }
+
+    private void enabledComponent() {
+        update_info_button.setVisibility(View.VISIBLE);
+        coverImageSelection.setEnabled(true);
+        businessName.setEnabled(true);
+        businessAddress.setEnabled(true);
+        businessEmail.setEnabled(true);
+        coverImage.setEnabled(true);
+        locationButton.setEnabled(true);
     }
 
     private void initPreferences() {
@@ -137,7 +208,11 @@ public class ShopInfoFragment extends Fragment {
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, REQUEST_CODE_READ_STORAGE);
+        startActivityForResult(intent, REQUEST_CODE_COVER_IMAGE);
+    }
+
+    private void saveCoverImage(){
+
     }
 
     private void removeImage(int position) {
@@ -161,24 +236,39 @@ public class ShopInfoFragment extends Fragment {
                 .setPositiveText("Update")
                 .setPositiveListener(lottieAlertDialog -> {
                     saveState();
+                    lottieAlertDialog.dismiss();
                 }).setNegativeText("Cancel")
-                .setNegativeListener(lottieAlertDialog -> {})
+                .setNegativeListener(lottieAlertDialog -> {
+                    lottieAlertDialog.dismiss();
+                })
                 .build();
         alertDialog.show();
     }
 
-
-    private boolean stateChanegd(){
-        if (myBusiness.getBusinessEmail().equals(String.valueOf(businessEmail.getText())) ||
-           myBusiness.getBusinessAddress().equals(String.valueOf(businessAddress.getText())) ||
-           myBusiness.getBusinessName().equals(String.valueOf(businessName.getText()))){
-            return false;
+    private void updateBusinessInfo() {
+        if (myBusiness.getBusinessEmail().equals(String.valueOf(businessEmail.getText())) &&
+                myBusiness.getBusinessAddress().equals(String.valueOf(businessAddress.getText())) &&
+                myBusiness.getBusinessName().equals(String.valueOf(businessName.getText())) &&
+                myBusiness.getLat().equals(activity.myBusiness.getLat()) &&
+                myBusiness.getLng().equals(activity.myBusiness.getLng()) &&
+                myBusiness.getBusinessPhotos().equals(activity.myBusiness.getBusinessPhotos())) {
+            Toast.makeText(activity, "No changes happen.", Toast.LENGTH_SHORT).show();
+            return;
         }
-        return true;
+        String title = "Business Info Changes.";
+        String message = "Do you want to continue update your business info?";
+        showAlertSaveState(title, message);
     }
 
-    private void saveState(){
+    private void saveState() {
         mViewModel.saveState(myBusiness);
+        mViewModel.getSavingStateResult().observe(getViewLifecycleOwner(), result -> {
+            if (result instanceof Result.Success) {
+                Toast.makeText(activity, "Updated Successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(activity, "Unable to Update.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -200,7 +290,6 @@ public class ShopInfoFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -217,7 +306,6 @@ public class ShopInfoFragment extends Fragment {
 
         }
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -244,23 +332,18 @@ public class ShopInfoFragment extends Fragment {
                             try {
                                 images.add(String.valueOf(imageUri));
                                 adapter.notifyItemInserted(images.size() - 1);
-//                                MyAdapter mAdapter = new MyAdapter(MainActivity.this, arrayList);
-//                                listView.setAdapter(mAdapter);
-
+                                coverImage.setImageURI(imageUri);
                             } catch (Exception e) {
                                 Log.e("File Chooser", "File select error", e);
                             }
                         }
                     } else if (resultData.getData() != null) {
-
                         final Uri uri = resultData.getData();
                         Log.i("URI Closing", "Uri = " + uri.toString());
-
                         try {
                             images.add(String.valueOf(uri));
                             adapter.notifyItemInserted(images.size() - 1);
-//                            MyAdapter mAdapter = new MyAdapter(activity, arrayList);
-//                            listView.setAdapter(mAdapter);
+                            coverImage.setImageURI(uri);
 
                         } catch (Exception e) {
                             Log.e("File Chooser", "File select error", e);
@@ -268,19 +351,62 @@ public class ShopInfoFragment extends Fragment {
                     }
                 }
             }
+            if (requestCode == REQUEST_CODE_COVER_IMAGE) {
+                if (resultData != null) {
+                    if (resultData.getClipData() != null) {
+                        int count = resultData.getClipData().getItemCount();
+                        int currentItem = 0;
+                        while (currentItem < count) {
+                            Uri imageUri = resultData.getClipData().getItemAt(currentItem).getUri();
+                            currentItem = currentItem + 1;
+                            Log.d("Uri Selected", imageUri.toString());
+                            try {
+
+                                coverImage.setImageURI(imageUri);
+                                myBusiness.setCoverUri(imageUri.toString());
+                                coverImageSaveButton.setVisibility(View.VISIBLE);
+                            } catch (Exception e) {
+                                Log.e("File Chooser", "File select error", e);
+                            }
+                        }
+                    } else if (resultData.getData() != null) {
+                        final Uri uri = resultData.getData();
+                        Log.i("URI Closing", "Uri = " + uri.toString());
+                        try {
+                            myBusiness.setCoverUri(uri.toString());
+                            coverImage.setImageURI(uri);
+                            coverImageSaveButton.setVisibility(View.VISIBLE);
+
+                        } catch (Exception e) {
+                            Log.e("File Chooser", "File select error", e);
+                        }
+                    }
+                }
+            }
+
+            if (requestCode == ADDRESS_PICKER_REQUEST) {
+                try {
+                    if (resultData != null && resultData.getStringExtra(MapUtility.ADDRESS) != null) {
+                        String address = resultData.getStringExtra(MapUtility.ADDRESS);
+                        double selectedLatitude = resultData.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                        double selectedLongitude = resultData.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
+//                        txtAddress.setText("Address: "+address);
+//                        txtLatLong.setText("Lat:"+selectedLatitude+"  Long:"+selectedLongitude);
+                        businessAddress.setText(address);
+                        myBusiness.setLat(String.valueOf(selectedLatitude));
+                        myBusiness.setLng(String.valueOf(selectedLongitude));
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
-        adapter.notifyDataSetChanged();
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        if(stateChanegd()){
-            String title = "Business Info Update";
-            String message = "Some changes in your business info. Do you want to update it?";
-            showAlertSaveState(title, message);
-        }
     }
 
     public class ShopImagesRecyclerViewAdapter
@@ -288,6 +414,52 @@ public class ShopInfoFragment extends Fragment {
 
         private ArrayList<String> imageUri;
         private RecyclerView mRecyclerView;
+
+        @Override
+        public void onBindViewHolder(final ShopImagesRecyclerViewAdapter.ViewHolder holder, final int position) {
+            final String uri = imageUri.get(position);
+
+            if (uri == null) {
+                holder.add_new_button.setVisibility(View.VISIBLE);
+                holder.add_new_button.setOnClickListener(v -> {
+                    // Display the file chooser dialog
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        askForPermission();
+                    } else {
+                        showChooser();
+                    }
+                });
+                holder.deleteImage.setVisibility(View.GONE);
+            } else {
+
+                holder.mImageView.setImageURI(Uri.parse(uri));
+                holder.mImageView.setOnClickListener(v -> {
+
+                    //Image Viewr will show when Image are greater than 1
+//                    because we set image 1 as null in order to show add button
+
+                    if (imageUri.size() > 1) {
+                        ArrayList<String> imageUriString = new ArrayList<>();
+                        for (String uriStr : imageUri) {
+                            if (uriStr == null)
+                                continue;
+                            imageUriString.add(uriStr.toString());
+                        }
+
+                        Intent intent = new Intent(getActivity(), ViewPagerActivity.class);
+                        intent.putExtra("position", position);
+                        intent.putStringArrayListExtra("images", imageUriString);
+                        startActivity(intent);
+                    }
+                });
+                holder.deleteImage.setVisibility(View.GONE);
+                holder.deleteImage.setOnClickListener(v -> {
+                    removeImage(position);
+                });
+            }
+
+
+        }
 
         public ShopImagesRecyclerViewAdapter(RecyclerView recyclerView, ArrayList<String> imagesUri) {
             imageUri = imagesUri;
@@ -311,25 +483,13 @@ public class ShopInfoFragment extends Fragment {
             }
         }
 
-        @Override
-        public void onBindViewHolder(final ShopImagesRecyclerViewAdapter.ViewHolder holder, final int position) {
-            holder.mImageView.setImageURI(Uri.parse(imageUri.get(position)));
-            holder.mImageView.setOnClickListener(v -> {
-            });
-            holder.deleteImage.setOnClickListener(v -> {
-                removeImage(position);
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return imageUri.size();
-        }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
             public final SimpleDraweeView mImageView;
             public final ImageView deleteImage;
+            public final View add_new_button;
+
 
             public ViewHolder(View view) {
                 super(view);
@@ -337,64 +497,15 @@ public class ShopInfoFragment extends Fragment {
                 mImageView = view.findViewById(R.id.image1);
                 deleteImage = view.findViewById(R.id.delete_image_button);
                 deleteImage.bringToFront();
+                add_new_button = view.findViewById(R.id.add_image_item);
+
             }
-        }
-    }
-
-    public class ShopMenuRecyclerViewAdapter
-            extends RecyclerView.Adapter<ShopMenuRecyclerViewAdapter.ViewHolder> {
-
-        private ArrayList<ShopMenuOption> menus;
-        private RecyclerView mRecyclerView;
-        private Context context;
-
-        public ShopMenuRecyclerViewAdapter(RecyclerView recyclerView, Context context, ArrayList<ShopMenuOption> menus) {
-            this.menus = menus;
-            this.context = context;
-            mRecyclerView = recyclerView;
-        }
-
-        @Override
-        public ShopMenuRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_menu_action, parent, false);
-            return new ShopMenuRecyclerViewAdapter.ViewHolder(view);
-        }
-
-        @Override
-        public void onViewRecycled(ShopMenuRecyclerViewAdapter.ViewHolder holder) {
-
-        }
-
-        @Override
-        public void onBindViewHolder(final ShopMenuRecyclerViewAdapter.ViewHolder holder, final int position) {
-            ShopMenuOption item = menus.get(position);
-
-
-            FontDrawable drawable = new FontDrawable(context, item.getMenuIcon(), true, false);
-            drawable.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-            drawable.setTextSize(20);
-            holder.icon.setImageDrawable(drawable);
-            holder.menu.setText(item.getMenuName());
         }
 
         @Override
         public int getItemCount() {
-            return menus.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView menu;
-            public final ImageView icon;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                menu = view.findViewById(R.id.tvMenuname);
-                icon = view.findViewById(R.id.ivMenuIcon);
-            }
+            return imageUri.size();
         }
     }
-
 
 }

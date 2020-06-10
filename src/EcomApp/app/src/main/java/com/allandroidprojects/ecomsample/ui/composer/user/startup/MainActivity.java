@@ -29,10 +29,9 @@ import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.interfaces.IDataHelper;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.ordermanagement.BuyProductActivity;
 import com.allandroidprojects.ecomsample.ui.common.components.EmptyActivity;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.ChatroomActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.accounts.AccountActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
@@ -189,9 +188,9 @@ public class MainActivity extends AppCompatActivity
         Intent intent = getIntent();
         if (intent.hasExtra(getString(R.string.intent_chatroom))) {
             Chatroom chatroom = intent.getParcelableExtra(getString(R.string.intent_chatroom));
-            Intent chatroomIntent = new Intent(MainActivity.this, ChatroomActivity.class);
-            chatroomIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
-            startActivity(chatroomIntent);
+//            Intent chatroomIntent = new Intent(MainActivity.this, ChatroomActivity.class);
+//            chatroomIntent.putExtra(getString(R.string.intent_chatroom), chatroom);
+//            startActivity(chatroomIntent);
         } else if (intent.hasExtra(getString(R.string.intent_order_reference))) {
             if (intent.getStringExtra(getString(R.string.intent_order_reference)).equals("Update")){
                 startActivity(new Intent(MainActivity.this, BuyProductActivity.class));

@@ -1,51 +1,109 @@
 package com.allandroidprojects.ecomsample.data.models;
 
-public class Message {
-    private String text;
-    private int position;
-    private String timestamp;
-    private Product product;
-    private boolean belongsToCurrentUser;
+import com.allandroidprojects.ecomsample.data.models.MessageProduct;
 
+public class Message/*and this one is for custom content type (in this case - voice message)*/ {
 
-    public Message(String text, String timestamp, boolean belongsToCurrentUser) {
-        this.text = text;
-        this.timestamp = timestamp;
-        this.belongsToCurrentUser = belongsToCurrentUser;
+    private String senderId;
+    private String receiverId;
+    private String message;
+    private String createdAt;
+    private MessageProduct product;
+    private String businessId;
+    private String userId;
+
+    public Message(){}
+
+    public Message(String senderId, String receiverId, String message, String createdAt){
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.message = message;
+        this.createdAt = createdAt;
     }
 
-    public Message(String text, String timestamp, boolean belongsToCurrentUser, Product product) {
-        this.text = text;
-        this.timestamp = timestamp;
-        this.belongsToCurrentUser = belongsToCurrentUser;
+    public Message(String senderId, String receiverId, String message, String createdAt, MessageProduct product, String businessId, String userId){
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.message = message;
+        this.createdAt = createdAt;
         this.product = product;
+        this.businessId = businessId;
+        this.userId = userId;
     }
 
-    public int getPosition() {
-        return position;
+    public Message(String senderId, String receiverId, String message, String createdAt, String businessId, String userId){
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.message = message;
+        this.createdAt = createdAt;
+        this.businessId = businessId;
+        this.userId = userId;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public Message(String senderId, String message, String createdAt){
+        this.senderId = senderId;
+        this.message = message;
+        this.createdAt = createdAt;
     }
 
-    public Message(Product product) {
-        this.product = product;
+    public Message(String message, String createdAt) {
+        this.message = message;
+        this.createdAt = createdAt;
     }
 
-    public String getText() {
-        return text;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public boolean isBelongsToCurrentUser() {
-        return belongsToCurrentUser;
+    public String getMessage() {
+        return message;
     }
 
-    public Product getProduct() {
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public MessageProduct getProduct() {
         return product;
+    }
+
+    public void setProduct(MessageProduct product) {
+        this.product = product;
     }
 }

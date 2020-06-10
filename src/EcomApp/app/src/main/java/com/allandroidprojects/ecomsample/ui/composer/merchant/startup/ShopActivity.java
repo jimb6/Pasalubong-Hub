@@ -17,7 +17,7 @@ import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.models.LoggedInUser;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.ShopViewModel;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.authentication.login.LoginActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;

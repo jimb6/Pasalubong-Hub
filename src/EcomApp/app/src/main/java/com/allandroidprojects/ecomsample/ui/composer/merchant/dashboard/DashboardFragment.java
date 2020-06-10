@@ -1,5 +1,6 @@
 package com.allandroidprojects.ecomsample.ui.composer.merchant.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Business;
 import com.allandroidprojects.ecomsample.data.viewmodel.account.DashboardViewModel;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages.MessagingFragment;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages.MessagingFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.account.ShopInfoFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.notifications.NotificationsFragment;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.ordermanagement.OrderManagement;
@@ -108,25 +110,27 @@ public class DashboardFragment extends Fragment {
         });
 
         message.setOnClickListener(view -> {
-            ((MerchantActivity)getActivity()).getViewPager().setCurrentItem(4);
+            Intent intent = new Intent(getActivity(), MessagingActivity.class);
+            intent.putExtra(getString(R.string.message_from_merchant), business.getOwnerId());
+            startActivity(intent);
         });
 
 
     }
 
     private void checkBusinessState() {
-        if (business.getBusinessName() != null || business.getBusinessName().equals("")){
+        if (business.getBusinessName() == null || !business.getBusinessName().equals("")){
             errorMessageLayout.setVisibility(View.VISIBLE);
             errorTitle.setText("Please complete your business info.");
         }
 
-        if (business.getBusinessAddress() != null || business.getBusinessName().equals("")){
+        if (business.getBusinessAddress() == null || !business.getBusinessName().equals("")){
             errorMessageLayout.setVisibility(View.VISIBLE);
             errorTitle.setText("Please complete your business info.");
 
         }
 
-        if (business.getBusinessEmail() != null || business.getBusinessName().equals("")){
+        if (business.getBusinessEmail() == null || !business.getBusinessName().equals("")){
             errorMessageLayout.setVisibility(View.VISIBLE);
             errorTitle.setText("Please complete your business info.");
         }

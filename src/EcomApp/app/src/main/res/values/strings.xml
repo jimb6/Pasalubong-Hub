@@ -401,4 +401,5 @@
     <string name="customer_id">customer_id</string>
     <string name="seller_id">seller_id</string>
     <string name="search_conversation">Search conversation</string>
+    <string name="message_from_merchant">MERCHANT_MESSAGE</string>
 </resources>

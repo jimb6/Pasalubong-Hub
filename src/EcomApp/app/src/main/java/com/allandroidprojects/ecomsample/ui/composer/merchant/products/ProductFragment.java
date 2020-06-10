@@ -71,13 +71,13 @@ public class ProductFragment extends Fragment implements IDataHelper {
 
         products = new ArrayList<>();
         initializeCompoinents();
-        skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.shop_list_item, 4);
-        skeleton.showSkeleton();
+//        skeleton = SkeletonLayoutUtils.applySkeleton(recyclerView, R.layout.shop_list_item, 4);
+//        skeleton.showSkeleton();
 
         products.add(new Product());
         viewModel.myProducts(MerchantActivity.myBusiness);
         viewModel.getMyProducts().observe(getViewLifecycleOwner(), p -> {
-            skeleton.showOriginal();
+//            skeleton.showOriginal();
             initializeCompoinents();
             if (p instanceof Result.Success) {
                 products.add((Product) ((Result.Success) p).getData());

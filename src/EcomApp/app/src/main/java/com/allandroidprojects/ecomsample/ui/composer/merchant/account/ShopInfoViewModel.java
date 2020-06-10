@@ -31,6 +31,10 @@ public class ShopInfoViewModel extends ViewModel {
 
 
     public void saveState(Business myBusiness) {
-        repository.update(myBusiness);
+        business = repository.update(myBusiness);
+    }
+
+    public MutableLiveData<Result<Business>> getSavingStateResult(){
+        return business;
     }
 }

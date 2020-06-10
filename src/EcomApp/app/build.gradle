@@ -16,7 +16,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -24,6 +25,7 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
 }
 
 dependencies {
@@ -60,10 +62,10 @@ dependencies {
 
 //    Firebase Dependencies
     implementation 'com.google.firebase:firebase-storage:19.1.1'
-    implementation 'com.google.firebase:firebase-analytics:17.4.2'
+    implementation 'com.google.firebase:firebase-analytics:17.4.3'
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation "com.google.firebase:firebase-core:17.4.2"
+    implementation "com.google.firebase:firebase-core:17.4.3"
     implementation "com.google.firebase:firebase-firestore:21.4.3"
     implementation 'com.google.firebase:firebase-messaging:20.2.0'
     implementation 'com.google.firebase:firebase-auth:19.3.1'
@@ -136,6 +138,5 @@ dependencies {
 
 //    Multi Snap recyclerview
 //    implementation 'com.github.takusemba:multisnaprecyclerview:2.0.1'
-
-
+    implementation 'com.github.shivpujan12:LocationPicker:v1.2'
 }

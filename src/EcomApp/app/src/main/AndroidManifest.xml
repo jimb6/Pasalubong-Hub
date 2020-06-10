@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+
     <application
         android:name=".util.FrescoApplication"
         android:allowBackup="true"
@@ -20,6 +21,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/BadgeTheme">
+
+
         <activity android:name=".ui.composer.merchant.ordermanagement.OrderInfoActivity"></activity>
         <activity
             android:name=".ui.common.components.termsandcondition.TermsConditionActivity"
@@ -56,8 +59,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".ui.common.components.messaging.MessagingActivity" />
-        <activity android:name=".ui.common.components.messaging.ChatroomActivity" />
+        <activity android:name=".ui.composer.user.messaging.MessagingActivity" />
         <activity
             android:name=".ui.composer.merchant.startup.ShopActivity"
             android:label="@string/title_activity_shop" />

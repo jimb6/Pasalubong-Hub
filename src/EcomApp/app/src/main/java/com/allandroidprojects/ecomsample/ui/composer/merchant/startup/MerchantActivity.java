@@ -139,7 +139,7 @@ public class MerchantActivity extends AppCompatActivity implements IDataHelper {
 
     @Override
     public void onBackPressed() {
-        if (getViewPager().getCurrentItem() == 1)
+        if (getViewPager().getCurrentItem() == 0)
             super.onBackPressed();
         else
             getViewPager().setCurrentItem(0);

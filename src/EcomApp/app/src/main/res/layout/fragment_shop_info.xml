@@ -34,7 +34,7 @@
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/coverImage"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp" />
+                    android:layout_height="200dp" />
 
                 <ImageButton
                     android:id="@+id/cover_image_selection"
@@ -47,6 +47,19 @@
                     android:background="@drawable/circle_background_dirty_white"
                     android:src="@drawable/ic_menu_camera" />
 
+                <TextView
+                    android:id="@+id/coverImageSaveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:background="@color/transparentGrey"
+                    android:layout_marginBottom="10dp"
+                    android:text="Save Cover Image"
+                    android:textSize="14dp" />
+
 
             </RelativeLayout>
 
@@ -54,7 +67,36 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/edit_swithcer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_screen1"
+                android:checked="false"
+                android:padding="20dp"
+                android:text="EDIT YOUR BUSINESS INFO"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/update_info_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Save Changes"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/ic_add_to_photos_white_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -64,7 +106,6 @@
                 android:gravity="center"
                 android:text="No shop photo uploaded"
                 android:visibility="gone" />
-
 
 
             <View style="@style/proifleDetailsView" />
@@ -85,32 +126,50 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/shop_name"
-                    android:inputType="text" />
+                    android:inputType="textMultiLine" />
 
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <View style="@style/proifleDetailsView" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="60"
-                app:errorEnabled="true">
+                android:elevation="30dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/shop_address"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/shop_address"
-                    android:inputType="text"
-                    android:maxLength="20" />
+                    app:counterEnabled="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/location"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/shop_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="51dp"
+                        android:hint="@string/shop_address"
+                        android:inputType="textPostalAddress" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/location"
+                    android:layout_width="67dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_google_maps"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <View style="@style/proifleDetailsView" />
 
@@ -121,7 +180,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:counterEnabled="true"
-                app:counterMaxLength="50"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -129,8 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Shop Email"
-                    android:inputType="text"
-                    android:maxLength="20" />
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <View style="@style/proifleDetailsView" />
@@ -153,26 +210,10 @@
 
         </LinearLayout>
 
-
         <com.flipboard.bottomsheet.BottomSheetLayout
             android:id="@+id/bottomsheet"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/root"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <View
-                    android:id="@+id/view1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
-
-        </com.flipboard.bottomsheet.BottomSheetLayout>
+            android:layout_height="wrap_content" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -145,4 +145,24 @@ public class BusinessRepository {
         return documentChangeMutableLiveData;
     }
 
+    public static MutableLiveData<Result<Business>> updateCoverImage(Business business){
+        final MutableLiveData<Result<Business>> businessRegistrationMutableData = new MutableLiveData<>();
+        BusinessDataMapping mapping = new BusinessDataMapping(business);
+        ref.document(business.getOwnerId())
+                .update(mapping.getMapData())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        businessRegistrationMutableData.setValue(new Result.Success<>(business));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        businessRegistrationMutableData.setValue(new Result.Error(e));
+                    }
+                });
+        return businessRegistrationMutableData;
+    }
+
 }

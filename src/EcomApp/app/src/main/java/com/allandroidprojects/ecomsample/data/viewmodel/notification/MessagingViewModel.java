@@ -4,9 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.data.models.Result;
-import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
+import com.allandroidprojects.ecomsample.data.models.Inbox;
 
 public class MessagingViewModel extends ViewModel {
 

@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.model;
+package com.allandroidprojects.ecomsample.data.models;
 
 import java.util.Map;
 

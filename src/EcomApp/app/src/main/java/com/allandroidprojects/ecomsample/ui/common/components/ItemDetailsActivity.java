@@ -22,7 +22,7 @@ import com.allandroidprojects.ecomsample.data.models.ProductOrder;
 import com.allandroidprojects.ecomsample.data.models.Rating;
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.viewmodel.product.ItemDetailsViewModel;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.common.widget.BottomSheetFragment;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.MerchantProfileActivity;
 import com.allandroidprojects.ecomsample.ui.startup.ViewPagerActivity;

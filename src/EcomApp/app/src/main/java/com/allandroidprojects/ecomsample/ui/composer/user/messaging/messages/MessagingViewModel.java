@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Message;
+import com.allandroidprojects.ecomsample.data.models.Inbox;
+import com.allandroidprojects.ecomsample.data.models.Message;
 
 public class MessagingViewModel extends ViewModel {
     private MessagingRepository repository;

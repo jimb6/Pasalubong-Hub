@@ -21,7 +21,7 @@ import com.allandroidprojects.ecomsample.ui.composer.user.startup.MainActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.SplashActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.startup.WelcomeActivity;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.MessagingActivity;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.startup.ShopActivity;
 import com.allandroidprojects.ecomsample.ui.composer.user.merchant.maps.MapsActivity;
 import com.google.firebase.auth.FirebaseAuth;

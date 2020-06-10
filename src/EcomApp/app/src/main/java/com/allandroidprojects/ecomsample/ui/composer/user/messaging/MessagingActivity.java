@@ -1,4 +1,4 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging;
+package com.allandroidprojects.ecomsample.ui.composer.user.messaging;
 
 import android.os.Bundle;
 import android.widget.ListView;
@@ -12,11 +12,10 @@ import com.allandroidprojects.ecomsample.data.factory.notification.MessagingMode
 import com.allandroidprojects.ecomsample.data.models.Product;
 import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
 import com.allandroidprojects.ecomsample.data.viewmodel.notification.MessagingViewModel;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox.ChatInboxFragment;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.messages.MessagingFragment;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.inbox.ChatInboxFragment;
+import com.allandroidprojects.ecomsample.ui.composer.user.messaging.messages.MessagingFragment;
+import com.allandroidprojects.ecomsample.data.models.Inbox;
 import com.allandroidprojects.ecomsample.ui.composer.merchant.main.SectionsPagerAdapter;
-import com.allandroidprojects.ecomsample.util.MessageAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -34,7 +33,6 @@ public class MessagingActivity extends AppCompatActivity {
 
 //    private Scaledrone scaledrone;
     private ArrayList<Chatroom> messages;
-    private MessageAdapter messageAdapter;
     private ListView messagesView;
     private String TAG = "Firebase Messaging Service-";
     public static Inbox inbox;
@@ -60,8 +58,16 @@ public class MessagingActivity extends AppCompatActivity {
 
         inboxFragment = new ChatInboxFragment();
         adapter.addFragment(inboxFragment, "Inbox");
+        if (getIntent().hasExtra(getString(R.string.message_from_merchant))){
+//            getViewPager().setCurrentItem(1);
+            String businessID = getIntent().getStringExtra(getString(R.string.message_from_merchant));
+            bundle.putString(getString(R.string.message_from_merchant), businessID);
+        }
+        inboxFragment.setArguments(bundle);
+
 
         messagesFragment = new MessagingFragment();
+        bundle = new Bundle();
         if (getIntent().hasExtra(getString(R.string.message_with_product_item))){
             Product product = getIntent().getParcelableExtra(getString(R.string.message_with_product_item));
             bundle.putParcelable(getString(R.string.message_with_product_item), product);
@@ -113,6 +119,11 @@ public class MessagingActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra(getString(R.string.message_with_product_item))){
             getViewPager().setCurrentItem(1);
+        }
+
+        if (getIntent().hasExtra(getString(R.string.message_from_merchant))){
+//            getViewPager().setCurrentItem(1);
+            goToInbox();
         }
 
     }

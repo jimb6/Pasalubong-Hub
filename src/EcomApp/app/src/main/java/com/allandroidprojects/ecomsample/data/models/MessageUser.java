@@ -1,8 +1,8 @@
-package com.allandroidprojects.ecomsample.ui.common.components.messaging.model;
+package com.allandroidprojects.ecomsample.data.models;
 
 
 
-public class User {
+public class MessageUser {
 
     private String id;
     private String name;
@@ -11,7 +11,7 @@ public class User {
     private String lastMessageRead;
     private int lastMessageSeen;
 
-    public User(String id, String name, String avatar, boolean online) {
+    public MessageUser(String id, String name, String avatar, boolean online) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;

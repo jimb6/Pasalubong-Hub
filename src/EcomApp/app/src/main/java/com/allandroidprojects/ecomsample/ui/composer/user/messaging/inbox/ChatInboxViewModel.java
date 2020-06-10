@@ -1,13 +1,11 @@
 package com.allandroidprojects.ecomsample.ui.common.components.messaging.inbox;
 
-import android.content.Context;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.allandroidprojects.ecomsample.data.models.Result;
 import com.allandroidprojects.ecomsample.data.repository.notification.MessagingRepository;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
+import com.allandroidprojects.ecomsample.data.models.Inbox;
 
 public class ChatInboxViewModel extends ViewModel {
     // TODO: Implement the ViewModel

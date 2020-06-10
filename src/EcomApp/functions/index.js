@@ -338,7 +338,7 @@ exports.sendNotification = functions.database.ref('/messages/{messageId}/{docume
         var businessName;
         var coverUri;
 
-        var bRef = db.ref('business/');
+        var bRef = myDB.ref('business/');
         bRef.child(businessId).on("value", function (snapshot) {
             businessName = snapshot.val().businessName;
         });

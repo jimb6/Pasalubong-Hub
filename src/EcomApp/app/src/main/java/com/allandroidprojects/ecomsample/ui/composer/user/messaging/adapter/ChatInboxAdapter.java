@@ -11,14 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.allandroidprojects.ecomsample.R;
 import com.allandroidprojects.ecomsample.data.models.Rating;
-import com.allandroidprojects.ecomsample.data.models.fcm.Chatroom;
-import com.allandroidprojects.ecomsample.data.models.fcm.ChatroomUsers;
 import com.allandroidprojects.ecomsample.ui.common.components.messaging.MessagingActivity;
-import com.allandroidprojects.ecomsample.ui.common.components.messaging.model.Inbox;
+import com.allandroidprojects.ecomsample.data.models.Inbox;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class ChatInboxAdapter
         extends RecyclerView.Adapter<ChatInboxAdapter.ViewHolder> {

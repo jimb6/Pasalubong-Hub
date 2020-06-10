@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:clipToPadding="false"
     android:focusableInTouchMode="true"
-    tools:context=".ui.common.components.messaging.MessagingActivity">
+    tools:context=".ui.composer.user.messaging.MessagingActivity">
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
