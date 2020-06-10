@@ -318,52 +318,64 @@ exports.sendNotification = functions.database.ref('/messages/{messageId}/{docume
         let chatroom_id = context.params.messageId;
         let businessId = snap.val().businessId;
         let userId = snap.val().userId;
+        let createdAt = snap.val().createdAt;
         let lastMessage = snap.val().message;
+
+        console.log("CHATROOM ID: ", chatroom_id);
+        console.log("BUSINESS ID: ", businessId);
+        console.log("USER ID: ", userId);
+        console.log("CREATED A: T", createdAt);
+        console.log("LAST MESSAGE: ", lastMessage);
 
         var myDB = admin.database();
         var ref = myDB.ref('users/');
-        var chatroomRef = myDB.ref('chatrooms/');
         let tokenUser = "";
         let tokenBusiness = "";
 
         ref.child(userId).on("value", function (snapshot) {
-            tokenUser.push(snapshot.val().messaging_token);
+            tokenUser = snapshot.val().messaging_token;
+            console.log("USER TOKEN: ", tokenUser);
         });
 
         ref.child(businessId).on("value", function (snapshot) {
-            tokenBusiness.push(snapshot.val().messaging_token);
+            tokenBusiness = snapshot.val().messaging_token;
+            console.log("BUSINESS TOKEN: ", tokenBusiness);
         });
 
 
-        var businessName;
-        var coverUri;
+        var businessName = "";
+        var coverUri = "";
 
         var bRef = myDB.ref('business/');
-        bRef.child(businessId).on("value", function (snapshot) {
+
+        return bRef.child(businessId).on("value", function (snapshot) {
+            console.log("BUSINESS NAME: ", snapshot.val());
             businessName = snapshot.val().businessName;
-        });
 
-        bRef.child(businessId).on("value", function (snapshot) {
-            coverUri = snapshot.val().coverUri;
-        });
+            return bRef.child(businessId).on("value", function (snapshot) {
+                console.log("BUSINESS IMAGGE: ", snapshot.val());
+                coverUri = snapshot.val().coverUri;
 
-        return usersRef.child(chatroom_id).set({
-            chatroomname: businessName,
-            createdAt: ServerValue.TIMESTAMP,
-            creatorId: userId,
-            image: coverUri,
-            inboxImage: coverUri,
-            lastmessage: message,
-            updatedAt: ServerValue.TIMESTAMP,
-            tokens: {
-                userId: {
-                    token: tokenUser,
-                },
-                businessId: {
-                    token: tokenBusiness,
-                }
-            }
+                return ref.child(chatroom_id).set({
+                    chatroomname: businessName,
+                    createdAt: createdAt,
+                    creatorId: userId,
+                    image: coverUri,
+                    inboxImage: coverUri,
+                    lastmessage: lastMessage,
+                    updatedAt: createdAt,
+                    tokens: {
+                        userId: {
+                            token: tokenUser,
+                        },
+                        businessId: {
+                            token: tokenBusiness,
+                        }
+                    }
+                });
+            });
         });
+        
     });
 
 exports.newMessage = functions.database.ref('/messages/{chatroomId}/{messageID}/')
